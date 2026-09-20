@@ -429,3 +429,28 @@
 .entity-reward-panel .entity-chip-row {
   margin-bottom: 7px;
 }
+
+
+.entity-threat-progress {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 10px;
+  padding: 7px 9px;
+  color: white;
+  background: var(--entity-black);
+  border-left: 4px solid var(--entity-red);
+}
+
+.entity-roll-history {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  margin: 7px 0;
+}
+
+.entity-encounter-record {
+  margin-top: 8px;
+  padding-top: 8px;
+  border-top: 1px solid #d3cdc3;
+}
