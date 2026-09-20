@@ -116,20 +116,44 @@
           {{/if}}
 
           {{#if currentEncounter.keywords.length}}
-            <div class="entity-keywords">
-              {{#each currentEncounter.keywords as |keyword|}}
-                <button type="button" data-action="rollEncounterAbility" data-ability="{{keyword.key}}">
-                  <i class="fa-solid fa-dice-d10"></i> {{keyword.label}}
-                </button>
-              {{/each}}
-            </div>
+            {{#if currentEncounter.canRollEncounterAction}}
+              <div class="entity-keywords">
+                {{#each currentEncounter.keywords as |keyword|}}
+                  <button type="button" data-action="rollEncounterAbility" data-ability="{{keyword.key}}">
+                    <i class="fa-solid fa-dice-d10"></i> {{keyword.label}}
+                  </button>
+                {{/each}}
+              </div>
+            {{/if}}
           {{/if}}
 
           {{#if currentEncounter.isChallenge}}
-            <div class="entity-two-actions">
-              <button type="button" class="entity-primary" data-action="encounterSuccess"><i class="fa-solid fa-check"></i> Défi réussi</button>
-              <button type="button" class="entity-danger-button" data-action="encounterFailure"><i class="fa-solid fa-xmark"></i> Défi échoué</button>
+            <div class="entity-threat-progress">
+              <span>Jets enregistrés</span>
+              <strong>{{currentEncounter.challengeRollCount}} / {{currentEncounter.threat}}</strong>
             </div>
+            {{#if currentEncounter.challengeRolls.length}}
+              <div class="entity-roll-history">
+                {{#each currentEncounter.challengeRolls as |roll|}}
+                  <span class="entity-chip">{{roll.abilityLabel}} — {{roll.resultLabel}}</span>
+                {{/each}}
+              </div>
+            {{/if}}
+
+            {{#if currentEncounter.challengeOutcomeReady}}
+              {{#if currentEncounter.challengeSucceeded}}
+                <div class="entity-two-actions">
+                  <button type="button" class="entity-primary" data-action="encounterSuccess"><i class="fa-solid fa-check"></i> Valider le Défi réussi</button>
+                </div>
+              {{/if}}
+              {{#if currentEncounter.challengeFailed}}
+                <div class="entity-two-actions">
+                  <button type="button" class="entity-danger-button" data-action="encounterFailure"><i class="fa-solid fa-xmark"></i> Valider le Défi échoué</button>
+                </div>
+              {{/if}}
+            {{else}}
+              <p class="entity-dialog-note">Effectuez un jet via un mot-clé puis cliquez <strong>Enregistrer pour le Défi</strong> dans le Chat. Tous les jets de VM doivent être enregistrés, même si l’un d’eux échoue.</p>
+            {{/if}}
           {{/if}}
           {{#if currentEncounter.isOpportunity}}
             {{#if currentEncounter.hasRewards}}
