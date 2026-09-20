@@ -46,6 +46,10 @@ function currentEncounterView(workflow, actor) {
     Boolean(converter) &&
     Number(actor.system.resources?.value || 0) >= converterCost;
 
+  const challengeRolls = Array.from(encounter.rolls || []);
+  const threat = Math.max(1, Number(encounter.threat || 1));
+  const challengeOutcomeReady = encounter.type === "challenge" && challengeRolls.length >= threat && Boolean(encounter.challengeOutcome);
+
   return {
     ...encounter,
     rewards,
@@ -61,6 +65,13 @@ function currentEncounterView(workflow, actor) {
     isFind: encounter.type === "find",
     isAspect: encounter.type === "aspect",
     multiThreat: Number(encounter.threat || 0) > 1,
+    challengeRolls,
+    challengeRollCount: challengeRolls.length,
+    challengeRollRemaining: Math.max(0, threat - challengeRolls.length),
+    challengeOutcomeReady,
+    challengeSucceeded: encounter.challengeOutcome === "success",
+    challengeFailed: encounter.challengeOutcome === "failed",
+    canRollEncounterAction: encounter.type !== "challenge" || !challengeOutcomeReady,
     converterAvailable,
     converterCost,
     canConvertData: converterAvailable && Number(actor.system.data?.value || 0) < Number(actor.system.data?.max || 10),
