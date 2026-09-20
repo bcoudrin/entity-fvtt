@@ -1,0 +1,23 @@
+{
+  "id": "entity",
+  "title": "Entité",
+  "description": "Système Foundry VTT v14 pour Entité — Jeu de rôle solo NASA Punk.",
+  "version": "0.1.0",
+  "type": "system",
+  "compatibility": { "minimum": "14", "verified": "14", "maximum": "14" },
+  "authors": [{ "name": "Benjamin" }],
+  "esmodules": ["module/main.mjs"],
+  "styles": ["styles/entity.css"],
+  "languages": [{ "lang": "fr", "name": "Français", "path": "lang/fr.json" }],
+  "documentTypes": {
+    "Actor": { "pia": { "htmlFields": ["notes"] } },
+    "Item": {
+      "improvement": { "htmlFields": ["description"] },
+      "structure": { "htmlFields": ["description"] },
+      "mission": { "htmlFields": ["description"] }
+    }
+  },
+  "packs": [],
+  "primaryTokenAttribute": "energy.value",
+  "secondaryTokenAttribute": "resources.value"
+}
