@@ -83,9 +83,9 @@ Les conséquences d’un jet restent volontairement **explicites** dans le Chat 
 ## Limites actuelles
 
 - pas encore d’assistant de création ;
-- les gains décrits dans les Opportunités et Trouvailles ne sont pas encore interprétés/appliqués automatiquement ;
-- l’Unité de conversion adaptative des Ressources n’est pas encore intégrée au panneau de Rencontre ;
-- le suivi de VM guide le nombre de jets à effectuer mais laisse au joueur la validation finale du Défi ;
+- les gains d’Opportunités et de Trouvailles sont détectés et proposés par boutons explicites ; les rares gains alternatifs (« ou ») restent un choix du joueur ;
+- l’Unité de conversion adaptative des Ressources est disponible explicitement lors des Opportunités et Trouvailles de Lieu ;
+- le suivi de VM guide le nombre de jets à effectuer mais laisse encore au joueur la validation finale du Défi ;
 - règles avancées exclues ;
 - Extras exclus.
 
