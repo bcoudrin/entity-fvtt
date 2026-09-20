@@ -398,3 +398,34 @@
     grid-template-columns: 1fr;
   }
 }
+
+
+.entity-reward-panel,
+.entity-converter-panel {
+  margin-top: 10px;
+  padding: 9px;
+  border: 1px solid #c9c4bb;
+  background: #f7f4ed;
+}
+
+.entity-reward-panel {
+  border-left: 4px solid #4b8e67;
+}
+
+.entity-converter-panel {
+  border-left: 4px solid var(--entity-cyan);
+  background: #eef7f8;
+}
+
+.entity-reward-panel > strong,
+.entity-converter-panel > strong {
+  display: block;
+  margin-bottom: 6px;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: .05em;
+}
+
+.entity-reward-panel .entity-chip-row {
+  margin-bottom: 7px;
+}
