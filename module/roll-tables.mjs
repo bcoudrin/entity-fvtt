@@ -1,3 +1,4 @@
+import { ABILITIES } from "./constants.mjs";
 import { CORE_TABLES } from "./data/tables.mjs";
 
 function toRange(range) {
@@ -5,17 +6,45 @@ function toRange(range) {
 }
 
 function resultData(entry) {
-  const text = entry.keywords?.length
-    ? entry.text + "<hr><strong>Mots-clés :</strong> " + entry.keywords.join(", ")
+  const labels = (entry.keywords || []).map((key) => ABILITIES[key]?.label || key);
+  const text = labels.length
+    ? entry.text + "<hr><strong>Mots-clés :</strong> " + labels.join(", ")
     : entry.text;
 
   return {
     type: CONST.TABLE_RESULT_TYPES.TEXT,
     text,
     range: toRange(entry.range),
-    weight: 1,
+    weight: toRange(entry.range)[1] - toRange(entry.range)[0] + 1,
     drawn: false
   };
+}
+
+async function upsertRollTable(definition) {
+  let table = game.tables.find((candidate) => candidate.getFlag("entity", "coreKey") === definition.key);
+  const results = definition.entries.map(resultData);
+
+  if (table) {
+    const ids = table.results.map((result) => result.id);
+    if (ids.length) await table.deleteEmbeddedDocuments("TableResult", ids);
+    await table.update({
+      name: definition.name,
+      formula: definition.formula,
+      replacement: true,
+      displayRoll: true
+    });
+    await table.createEmbeddedDocuments("TableResult", results);
+    return table;
+  }
+
+  return RollTable.create({
+    name: definition.name,
+    formula: definition.formula,
+    replacement: true,
+    displayRoll: true,
+    results,
+    flags: { entity: { coreKey: definition.key } }
+  });
 }
 
 export async function createCoreRollTables() {
@@ -24,20 +53,11 @@ export async function createCoreRollTables() {
     return [];
   }
 
-  const created = [];
+  const tables = [];
   for (const definition of CORE_TABLES) {
-    let table = game.tables.find((candidate) => candidate.getFlag("entity", "coreKey") === definition.key);
-    if (!table) {
-      table = await RollTable.create({
-        name: definition.name,
-        formula: definition.formula,
-        results: definition.entries.map(resultData),
-        flags: { entity: { coreKey: definition.key } }
-      });
-    }
-    created.push(table);
+    tables.push(await upsertRollTable(definition));
   }
 
-  ui.notifications.info(created.length + " RollTables Entité disponibles dans ce monde.");
-  return created;
+  ui.notifications.info(tables.length + " RollTables Entité synchronisées.");
+  return tables;
 }

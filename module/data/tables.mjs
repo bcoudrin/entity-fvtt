@@ -1,3 +1,8 @@
+import { CHALLENGE_TABLE } from "./challenges.mjs";
+import { OPPORTUNITY_TABLE } from "./opportunities.mjs";
+import { FIND_TABLE } from "./finds.mjs";
+import { LOCATION_TABLE } from "./locations.mjs";
+
 export const CORE_TABLES = [
   {
     key: "travel-encounter",
@@ -23,5 +28,29 @@ export const CORE_TABLES = [
       { range: [9, 9], text: "Défi + Opportunité + Trouvaille" },
       { range: [10, 10], text: "Défi + Opportunité + Trouvaille + Aspect" }
     ]
+  },
+  {
+    key: "challenges",
+    name: "Entité — Rencontres — Défis",
+    formula: "1d100",
+    entries: CHALLENGE_TABLE
+  },
+  {
+    key: "opportunities",
+    name: "Entité — Rencontres — Opportunités",
+    formula: "1d100",
+    entries: OPPORTUNITY_TABLE
+  },
+  {
+    key: "finds",
+    name: "Entité — Rencontres — Trouvailles",
+    formula: "1d100",
+    entries: FIND_TABLE
+  },
+  {
+    key: "locations",
+    name: "Entité — Lieux",
+    formula: "1d100",
+    entries: LOCATION_TABLE
   }
 ];

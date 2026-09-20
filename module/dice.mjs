@@ -2,11 +2,21 @@ import { ABILITIES, ROLL_MODES, SYSTEM_ID } from "./constants.mjs";
 import { renderTemplate } from "./foundry-compat.mjs";
 import { consumePendingEffects } from "./improvements.mjs";
 
+function matchingStructures(actor, effectType, abilityKey) {
+  return actor.items.filter((item) =>
+    item.type === "structure" &&
+    item.system.effectType === effectType &&
+    item.system.effectKey === abilityKey
+  );
+}
+
 function structureBonus(actor, abilityKey) {
-  return actor.items
-    .filter((item) => item.type === "structure")
-    .filter((item) => item.system.effectType === "abilityBonus" && item.system.effectKey === abilityKey)
+  return matchingStructures(actor, "abilityBonus", abilityKey)
     .reduce((sum, item) => sum + Number(item.system.effectValue || 0) * Number(item.system.ranks || 1), 0);
+}
+
+function hasStructureReroll(actor, abilityKey) {
+  return matchingStructures(actor, "reroll", abilityKey).length > 0;
 }
 
 function computeKeptIndexes(dice, mode) {
@@ -106,7 +116,7 @@ export async function rollAction(actor, abilityKey, { mode = "normal" } = {}) {
     diceDisplay: [],
     result: "",
     resultLabel: "",
-    rerollAvailable: effects.some((effect) => effect.type === "reroll"),
+    rerollAvailable: hasStructureReroll(actor, abilityKey) || effects.some((effect) => effect.type === "reroll"),
     rerollUsed: false,
     consequenceApplied: false,
     shieldUsed: false,

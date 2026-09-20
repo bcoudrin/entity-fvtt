@@ -3,7 +3,22 @@ import { rollAction } from "../dice.mjs";
 import { activateImprovement } from "../improvements.mjs";
 import { openPiaJournal } from "../journal.mjs";
 
+function structureTotal(actor, effectType) {
+  return actor.items
+    .filter((item) => item.type === "structure" && item.system.effectType === effectType)
+    .reduce((sum, item) => sum + Number(item.system.effectValue || 0) * Number(item.system.ranks || 1), 0);
+}
+
 export class EntityActor extends Actor {
+  prepareDerivedData() {
+    super.prepareDerivedData();
+    if (this.type !== "pia" || !this.system) return;
+
+    this.system.energy.max = 10 + structureTotal(this, "maxEnergy");
+    this.system.resources.max = 10 + structureTotal(this, "maxResources");
+    this.system.data.max = 10 + structureTotal(this, "maxData");
+  }
+
   get suitState() {
     const improvements = this.items.filter((item) => item.type === "improvement");
     const constraints = Array.from(this.system.constraints || []);
@@ -58,18 +73,21 @@ export class EntityActor extends Actor {
   }
 
   async removeCondition(kind, index) {
-    if (!["constraints", "failures"].includes(kind)) return;
-    const values = Array.from(this.system[kind] || []);
+    if (kind !== "constraints") {
+      ui.notifications.warn("Une Défaillance est permanente jusqu’à la destruction du PIA.");
+      return;
+    }
+    const values = Array.from(this.system.constraints || []);
     if (index < 0 || index >= values.length) return;
     values.splice(index, 1);
-    await this.update({ ["system." + kind]: values });
+    await this.update({ "system.constraints": values });
   }
 
   async #checkDestruction() {
     if (!this.suitState.destroyed) return;
     await ChatMessage.create({
       speaker: ChatMessage.getSpeaker({ actor: this }),
-      content: "<div class=\"entity-chat entity-destroyed\"><strong>PIA DÉTRUIT</strong><p>Les 20 emplacements de la Combinaison sont occupés par des Contraintes et/ou Défaillances.</p></div>"
+      content: "<div class=\"entity-chat entity-destroyed\"><strong>PIA DÉTRUIT</strong><p>Les 20 emplacements de la Combinaison sont occupés par des Contraintes et/ou Défaillances. Les Améliorations et la progression de Mission sont perdues ; les Structures persistent.</p></div>"
     });
   }
 }
