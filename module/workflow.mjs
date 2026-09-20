@@ -82,6 +82,7 @@ async function rollDetailedEncounter(type, meta = {}) {
   const rewardSpec = parseEncounterRewards(entry?.text || "");
 
   return {
+    id: (meta.context || "location") + "-" + type + "-" + value + "-" + Date.now(),
     type,
     label: encounterLabel(type),
     detailRoll: value,
@@ -92,7 +93,9 @@ async function rollDetailedEncounter(type, meta = {}) {
     context: meta.context || "location",
     rewardMode: rewardSpec.mode,
     rewards: rewardSpec.rewards,
-    rewardApplied: false
+    rewardApplied: false,
+    rolls: [],
+    challengeOutcome: null
   };
 }
 
@@ -112,13 +115,16 @@ async function loadNextLocationEncounter(actor, workflow) {
   const next = workflow.queue.shift();
   if (next.type === "aspect") {
     workflow.currentEncounter = {
+      id: "location-aspect-" + Date.now(),
       type: "aspect",
       label: "Aspect",
       context: "location",
       text: "Vous découvrez un Aspect utile à la Mission en cours.",
       keywords: [],
       threat: 0,
-      disadvantage: false
+      disadvantage: false,
+      rolls: [],
+      challengeOutcome: null
     };
   } else {
     workflow.currentEncounter = await rollDetailedEncounter(next.type, {
@@ -430,8 +436,58 @@ export async function rollEncounterAbility(actor, abilityKey) {
   }
 
   await actor.rollAction(abilityKey, {
-    mode: encounter.disadvantage ? "disadvantage" : "normal"
+    mode: encounter.disadvantage ? "disadvantage" : "normal",
+    workflow: encounter.type === "challenge"
+      ? { encounter: true, encounterId: encounter.id }
+      : null
   });
+  return true;
+}
+
+export async function recordEncounterRoll(message) {
+  const state = foundry.utils.deepClone(message.getFlag(SYSTEM_ID, "actionRoll"));
+  if (!state?.workflow?.encounter || state.encounterRecorded) return false;
+
+  const actor = await fromUuid(state.actorUuid);
+  if (!actor) return false;
+
+  const workflow = workflowCopy(actor);
+  const encounter = workflow.currentEncounter;
+  if (!encounter || encounter.type !== "challenge" || encounter.id !== state.workflow.encounterId) {
+    ui.notifications.warn("Ce jet ne correspond plus au Défi actuellement affiché.");
+    return false;
+  }
+
+  const rolls = Array.from(encounter.rolls || []);
+  const threat = Math.max(1, Number(encounter.threat || 1));
+  if (rolls.length >= threat) {
+    ui.notifications.info("Tous les jets requis par la Valeur de Menace ont déjà été enregistrés.");
+    return false;
+  }
+
+  rolls.push({
+    abilityKey: state.abilityKey,
+    abilityLabel: ABILITIES[state.abilityKey]?.label || state.actionLabel || "Jet d’Action",
+    result: state.result,
+    resultLabel: state.resultLabel
+  });
+  encounter.rolls = rolls;
+
+  if (rolls.length >= threat) {
+    encounter.challengeOutcome = rolls.some((roll) => roll.result === "failure") ? "failed" : "success";
+  }
+
+  workflow.currentEncounter = encounter;
+  state.encounterRecorded = true;
+
+  await refreshActionRollMessage(message, state, actor);
+  await saveWorkflow(actor, workflow);
+
+  await appendJournalEntry(
+    actor,
+    "Défi — jet " + rolls.length + "/" + threat,
+    "<p><strong>" + rolls[rolls.length - 1].abilityLabel + "</strong> : " + state.resultLabel + ".</p>"
+  );
   return true;
 }
 
@@ -439,6 +495,14 @@ export async function advanceEncounter(actor, outcome = "resolved") {
   const workflow = workflowCopy(actor);
   const current = workflow.currentEncounter;
   if (!current) return false;
+
+  if (current.type === "challenge") {
+    if (!current.challengeOutcome) {
+      ui.notifications.warn("Enregistrez tous les jets requis par la Valeur de Menace avant de résoudre le Défi.");
+      return false;
+    }
+    outcome = current.challengeOutcome;
+  }
 
   if (current.type === "challenge" && outcome === "failed" && current.context === "location") {
     workflow.currentEncounter = null;
