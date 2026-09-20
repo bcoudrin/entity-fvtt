@@ -100,3 +100,14 @@ export function parseEncounterRewards(text) {
 
   return { mode, rewards };
 }
+
+
+export function resolveChallengeOutcome(results, threat = 1) {
+  const required = Math.max(1, Number(threat) || 1);
+  const values = Array.from(results || []);
+  if (values.length < required) return null;
+  return values.slice(0, required).some((result) => {
+    const value = typeof result === "string" ? result : result?.result;
+    return value === "failure";
+  }) ? "failed" : "success";
+}
