@@ -35,7 +35,8 @@
         <label><span>Aspects requis</span><input type="number" name="system.aspectsRequired" value="{{system.aspectsRequired}}" /></label>
         <label><span>Aspects acquis</span><input type="number" name="system.aspectsCurrent" value="{{system.aspectsCurrent}}" /></label>
         <label><span>Structure</span><input type="text" name="system.structureName" value="{{system.structureName}}" /></label>
-        <label><span>Découverte</span><input type="number" name="system.discoveryIndex" value="{{system.discoveryIndex}}" /></label>
+        <label class="entity-check"><input type="checkbox" name="system.repeatable" {{checked system.repeatable}} /> Répétable</label>
+        <label><span>Maximum</span><input type="number" name="system.maxRepeats" value="{{system.maxRepeats}}" min="1" /></label>
         <label class="entity-check"><input type="checkbox" name="system.completed" {{checked system.completed}} /> Terminée</label>
       </div>
       <label class="entity-long-field"><span>Description</span><textarea name="system.description">{{system.description}}</textarea></label>

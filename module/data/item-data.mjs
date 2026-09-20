@@ -43,7 +43,6 @@ export class MissionData extends foundry.abstract.TypeDataModel {
       aspectsRequired: number(0),
       aspectsCurrent: number(0),
       structureName: text(),
-      discoveryIndex: number(0),
       repeatable: new fields.BooleanField({ required: true, nullable: false, initial: false }),
       maxRepeats: number(1, 1),
       completed: new fields.BooleanField({ required: true, nullable: false, initial: false }),

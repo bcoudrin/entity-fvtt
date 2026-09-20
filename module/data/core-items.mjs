@@ -262,14 +262,54 @@ export const CORE_MISSIONS = [
 ];
 
 export const CORE_DISCOVERIES = [
-  { index: 1, name: "Alliage inconnu", text: "Vous découvrez un alliage inconnu et extraordinairement résistant près d’un obélisque monolithique enveloppé d’une énergie d’origine inconnue. Tout indique qu’il s’agit d’un élément crucial de la composition de la Pyramide." },
-  { index: 2, name: "Vestiges d’anciennes formes de vie synthétiques", text: "Vous découvrez des vestiges d’anciennes formes de vie synthétiques dont la composition présente d’étonnantes similitudes avec la vôtre." },
-  { index: 3, name: "Artefact sensible", text: "Vous rencontrez un artefact qui semble sensible et capable de communiquer. Il révèle des fragments d’un récit sur une civilisation d’IA synthétiques devenue biologique." },
-  { index: 4, name: "Archives planétaires", text: "Des archives relatent le voyage millénaire des synthétiques, de la vie de machines à celle d’entités biologiques, et leur quête d’émotions." },
-  { index: 5, name: "Connexion", text: "Vous découvrez des traces de l’implication du programme PIA sur cette planète dans un passé lointain." },
-  { index: 6, name: "Technologie familière", text: "Une technologie similaire à celle du programme PIA suggère que celui-ci suivait les traces d’une civilisation plus ancienne et plus avancée." },
-  { index: 7, name: "IA évolutive", text: "Les synthétiques sont devenus des entités biologiques et ont développé des émotions semblables à celles des humains." },
-  { index: 8, name: "Voûte cachée", text: "Une vaste voûte révèle que la Pyramide était un grand projet de la civilisation synthétique, lieu de son ascension vers la vie biologique." },
-  { index: 9, name: "Vaisseau spatial", text: "Dans un immense hangar souterrain, vous découvrez un vaisseau abandonné conçu pour des formes de vie synthétiques et encore récupérable." },
-  { index: 10, name: "Voie vers l’Unité", text: "Le vaisseau reprend vie. Vous comprenez faire partie d’une histoire millénaire d’évolution, d’apprentissage et de réunification." }
+  {
+    index: 1,
+    name: "Alliage inconnu",
+    text: "Vous découvrez un alliage inconnu et extraordinairement résistant près d’un obélisque monolithique enveloppé d’une énergie d’origine inconnue. Tout indique qu’il s’agit d’un élément crucial de la composition de la Pyramide. Cette découverte suggère une technologie dépassant de loin toutes celles connues à ce jour, indiquant l’œuvre d’une civilisation avancée dans sa création."
+  },
+  {
+    index: 2,
+    name: "Vestiges d’anciennes formes de vie synthétiques",
+    text: "En découvrant les vestiges d’anciennes formes de vie synthétiques, vous trouvez d’étonnantes similitudes entre leur composition et la vôtre. Ces preuves suggèrent un lien entre vos créateurs et la civilisation de ce monde extraterrestre."
+  },
+  {
+    index: 3,
+    name: "Artefact sensible",
+    text: "Vous rencontrez un artefact qui semble sensible, capable de communiquer. Il révèle des fragments d’un récit sur une civilisation d’IA synthétiques qui se sont finalement transformées en entités biologiques, faisant écho aux propres recherches sur les PIA."
+  },
+  {
+    index: 4,
+    name: "Archives planétaires",
+    text: "En découvrant des archives planétaires, vous trouverez des données relatant le voyage millénaire des synthétiques, de la vie de machines à celle d’entités biologiques. Elles mettent en évidence leur quête d’émotions, qui reflète le cheminement de l’humanité vers la compréhension des émotions."
+  },
+  {
+    index: 5,
+    name: "Connexion",
+    text: "Vous découvrez des traces de l’implication du programme PIA sur cette planète dans un passé lointain. Il s’avère qu’ils étudiaient les artefacts sensibles de ce monde pour comprendre et reproduire les émotions humaines dans leur IA."
+  },
+  {
+    index: 6,
+    name: "Technologie familière",
+    text: "En découvrant une technologie similaire à celle du programme PIA, vous réalisez que celui-ci n’était pas le pionnier de l’IA émotionnelle comme on le pensait. Au contraire, ils suivaient les traces d’une civilisation plus ancienne et plus avancée."
+  },
+  {
+    index: 7,
+    name: "IA évolutive",
+    text: "Une révélation choquante révèle que les synthétiques sont non seulement devenus des entités biologiques, mais qu’ils ont également développé des émotions semblables à celles des humains. Leur évolution semble correspondre aux ambitions des recherches sur les PIA."
+  },
+  {
+    index: 8,
+    name: "Voûte cachée",
+    text: "Dans les profondeurs d’une zone, vous découvrez un vaste coffre-fort. L’intérieur est orné de gravures sophistiquées et d’anciennes entrées de données. Ces dernières révèlent une information importante : la Pyramide était un grand projet de la civilisation synthétique, issue de l’IA. Cette civilisation s’était inspirée des reliques de civilisations éteintes depuis longtemps qu’elle avait étudiées. La Pyramide était le lieu de l’ascension, l’endroit où les êtres synthétiques ont fait le dernier pas pour devenir des entités biologiques, le berceau de leur évolution."
+  },
+  {
+    index: 9,
+    name: "Vaisseau spatial",
+    text: "Votre exploration vous mène à un site archéologique important — un énorme hangar souterrain. Vous y découvrez un vaisseau abandonné. Conçu pour des formes de vie synthétiques, il est toujours en état de conservation, malgré des siècles d’inutilisation. Bien qu’il nécessite des réparations et une maintenance importantes, ce vaisseau a le potentiel pour reprendre son envol."
+  },
+  {
+    index: 10,
+    name: "Voie vers l’Unité",
+    text: "Une fois que vous avez assemblé les dernières pièces et calibré les systèmes nécessaires au vaisseau, les moteurs commencent à s’animer. Il commence à bourdonner de vie, indiquant le début d’un nouveau voyage. Vous réalisez que vous n’êtes pas seulement une relique du programme PIA. Vous faites partie d’une histoire millénaire : le récit d’une évolution, d’un apprentissage et d’une réunification. Vous avez désormais pour mission de rassembler les vestiges épars de cette civilisation, vos ancêtres. L’ultime voyage vous attend."
+  }
 ];

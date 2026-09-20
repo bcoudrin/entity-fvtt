@@ -25,11 +25,7 @@ async function upsertCoreItem(definition, type, folderId) {
   const data = toItemData(definition, type, folderId);
 
   if (existing) {
-    await existing.update({
-      name: data.name,
-      folder: data.folder,
-      system: data.system
-    });
+    await existing.update({ name: data.name, folder: data.folder, system: data.system });
     return existing;
   }
   return Item.create(data);
@@ -56,8 +52,7 @@ export async function seedCoreContent() {
   }
 
   const missions = [];
-  for (let index = 0; index < CORE_MISSIONS.length; index += 1) {
-    const definition = { ...CORE_MISSIONS[index], discoveryIndex: index + 1 };
+  for (const definition of CORE_MISSIONS) {
     missions.push(await upsertCoreItem(definition, "mission", missionFolder.id));
   }
 
