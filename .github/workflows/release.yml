@@ -50,4 +50,4 @@ jobs:
           TAG: ${{ steps.manifest.outputs.tag }}
         shell: bash
         run: |
-          gh release create "$TAG" entity.zip system.json             --target "$GITHUB_SHA"             --title "Entité $TAG"             --notes "Première release installable du système Entité pour Foundry VTT v14. Cette version couvre le socle de jeu p. 1–30 : fiche PIA, jets d’Action, Combinaison, Améliorations, Structures, Missions, Découvertes et RollTables."
+          gh release create "$TAG" entity.zip system.json             --target "$GITHUB_SHA"             --title "Entité $TAG"             --notes "Release installable du système Entité pour Foundry VTT v14. Consultez l’historique du dépôt et README.md pour le périmètre fonctionnel de cette version."
