@@ -1,0 +1,53 @@
+name: Release
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - system.json
+      - .github/workflows/release.yml
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Read manifest version
+        id: manifest
+        shell: bash
+        run: |
+          VERSION="$(node -p "require('./system.json').version")"
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+          echo "tag=v$VERSION" >> "$GITHUB_OUTPUT"
+
+      - name: Validate release does not already exist
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TAG: ${{ steps.manifest.outputs.tag }}
+        shell: bash
+        run: |
+          if gh release view "$TAG" >/dev/null 2>&1; then
+            echo "::error::Release $TAG already exists. Bump system.json version before publishing."
+            exit 1
+          fi
+
+      - name: Build Foundry package
+        shell: bash
+        run: |
+          rm -f entity.zip
+          zip -r entity.zip             system.json             lang             module             styles             templates             README.md
+
+      - name: Create tag and GitHub release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TAG: ${{ steps.manifest.outputs.tag }}
+        shell: bash
+        run: |
+          gh release create "$TAG" entity.zip system.json             --target "$GITHUB_SHA"             --title "Entité $TAG"             --notes "Première release installable du système Entité pour Foundry VTT v14. Cette version couvre le socle de jeu p. 1–30 : fiche PIA, jets d’Action, Combinaison, Améliorations, Structures, Missions, Découvertes et RollTables."
