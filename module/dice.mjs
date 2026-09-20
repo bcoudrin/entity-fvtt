@@ -1,4 +1,4 @@
-import { ABILITIES, ROLL_MODES, SYSTEM_ID } from "./constants.mjs";
+import { ABILITIES, ROLL_MODES, SYSTEM_ID, TRAITS } from "./constants.mjs";
 import { renderTemplate } from "./foundry-compat.mjs";
 import { consumePendingEffects } from "./improvements.mjs";
 
@@ -16,7 +16,7 @@ function structureBonus(actor, abilityKey) {
 }
 
 function hasStructureReroll(actor, abilityKey) {
-  return matchingStructures(actor, "reroll", abilityKey).length > 0;
+  return Boolean(abilityKey) && matchingStructures(actor, "reroll", abilityKey).length > 0;
 }
 
 function computeKeptIndexes(dice, mode) {
@@ -86,13 +86,36 @@ function rerollImprovement(actor) {
     : null;
 }
 
+function actionDescriptor(state) {
+  if (state.abilityKey && ABILITIES[state.abilityKey]) {
+    const ability = ABILITIES[state.abilityKey];
+    return {
+      label: ability.label,
+      trait: TRAITS[ability.trait]?.label || ability.trait
+    };
+  }
+  return {
+    label: state.actionLabel || "Jet d’Action",
+    trait: state.traitLabel || "Activité"
+  };
+}
+
 async function renderCard(state, actor) {
+  const rerollsLocked = Boolean(state.consequenceApplied || state.secondaryApplied);
   return renderTemplate("systems/entity/templates/chat/action-roll.hbs", {
     state,
     actor,
-    ability: ABILITIES[state.abilityKey],
+    ability: actionDescriptor(state),
     shields: state.result === "partial" && !state.consequenceApplied ? shieldItems(actor) : [],
-    rerollItem: rerollImprovement(actor)
+    rerollItem: rerollsLocked ? null : rerollImprovement(actor),
+    rerollsLocked
+  });
+}
+
+export async function refreshActionRollMessage(message, state, actor) {
+  await message.update({
+    content: await renderCard(state, actor),
+    ["flags." + SYSTEM_ID + ".actionRoll"]: state
   });
 }
 
@@ -102,11 +125,23 @@ async function rerollDieAndRefresh(message, state, actor, dieIndex) {
   const reroll = await new Roll("1d10").evaluate();
   state.dice[dieIndex] = reroll.dice[0]?.results?.[0]?.result ?? state.dice[dieIndex];
   recalculate(state);
+  await refreshActionRollMessage(message, state, actor);
+}
 
-  await message.update({
-    content: await renderCard(state, actor),
-    ["flags." + SYSTEM_ID + ".actionRoll"]: state
+async function createActionRoll(actor, state, formula) {
+  const roll = await new Roll(formula).evaluate();
+  state.dice = roll.dice[0]?.results?.map((result) => result.result) || [];
+  recalculate(state);
+
+  const content = await renderCard(state, actor);
+  const message = await ChatMessage.create({
+    speaker: ChatMessage.getSpeaker({ actor }),
+    content,
+    rolls: [roll],
+    flags: { [SYSTEM_ID]: { actionRoll: state } }
   });
+
+  return { message, state, roll };
 }
 
 export async function rollAction(actor, abilityKey, { mode = "normal" } = {}) {
@@ -123,13 +158,12 @@ export async function rollAction(actor, abilityKey, { mode = "normal" } = {}) {
     .reduce((sum, effect) => sum + Number(effect.value || 0), 0);
 
   const finalMode = resolveMode(mode, effects);
-  const roll = await new Roll(finalMode === "normal" ? "2d10" : "3d10").evaluate();
-  const dice = roll.dice[0]?.results?.map((result) => result.result) || [];
-
-  const state = recalculate({
+  const state = {
     actorUuid: actor.uuid,
     abilityKey,
+    actionLabel: ability.label,
     traitKey: ability.trait,
+    traitLabel: TRAITS[ability.trait]?.label || ability.trait,
     target: traitValue + abilityValue + passiveBonus + improvementBonus,
     traitValue,
     abilityValue,
@@ -137,7 +171,10 @@ export async function rollAction(actor, abilityKey, { mode = "normal" } = {}) {
     improvementBonus,
     mode: finalMode,
     manualMode: mode,
-    dice,
+    customAction: false,
+    targetBreakdown: "",
+    workflow: null,
+    dice: [],
     keptIndexes: [],
     discardedIndexes: [],
     diceDisplay: [],
@@ -146,24 +183,60 @@ export async function rollAction(actor, abilityKey, { mode = "normal" } = {}) {
     structureRerollAvailable: hasStructureReroll(actor, abilityKey),
     structureRerollUsed: false,
     consequenceApplied: false,
+    secondaryApplied: false,
     shieldUsed: false,
     activatedImprovements: effects.map((effect) => effect.name)
-  });
+  };
 
-  const content = await renderCard(state, actor);
-  const message = await ChatMessage.create({
-    speaker: ChatMessage.getSpeaker({ actor }),
-    content,
-    rolls: [roll],
-    flags: { [SYSTEM_ID]: { actionRoll: state } }
-  });
+  return createActionRoll(actor, state, finalMode === "normal" ? "2d10" : "3d10");
+}
 
-  return { message, state, roll };
+export async function rollThresholdAction(actor, {
+  label,
+  traitLabel = "",
+  target,
+  mode = "normal",
+  workflow = null
+} = {}) {
+  const effects = await consumePendingEffects(actor, null);
+  const finalMode = resolveMode(mode, effects);
+  const state = {
+    actorUuid: actor.uuid,
+    abilityKey: null,
+    actionLabel: label || "Jet d’Action",
+    traitKey: null,
+    traitLabel,
+    target: Number(target || 0),
+    traitValue: 0,
+    abilityValue: 0,
+    passiveBonus: 0,
+    improvementBonus: 0,
+    mode: finalMode,
+    manualMode: mode,
+    customAction: true,
+    targetBreakdown: "Niveau de Difficulté fixé à " + Number(target || 0),
+    workflow,
+    dice: [],
+    keptIndexes: [],
+    discardedIndexes: [],
+    diceDisplay: [],
+    result: "",
+    resultLabel: "",
+    structureRerollAvailable: false,
+    structureRerollUsed: false,
+    consequenceApplied: false,
+    secondaryApplied: false,
+    shieldUsed: false,
+    activatedImprovements: effects.map((effect) => effect.name)
+  };
+
+  return createActionRoll(actor, state, finalMode === "normal" ? "2d10" : "3d10");
 }
 
 export async function rerollWithStructure(message, dieIndex) {
   const state = foundry.utils.deepClone(message.getFlag(SYSTEM_ID, "actionRoll"));
-  if (!state || !state.structureRerollAvailable || state.structureRerollUsed) return;
+  if (!state || state.consequenceApplied || state.secondaryApplied) return;
+  if (!state.structureRerollAvailable || state.structureRerollUsed) return;
 
   const actor = await fromUuid(state.actorUuid);
   if (!actor || !hasStructureReroll(actor, state.abilityKey)) return;
@@ -174,7 +247,7 @@ export async function rerollWithStructure(message, dieIndex) {
 
 export async function rerollWithImprovement(message, dieIndex, itemId) {
   const state = foundry.utils.deepClone(message.getFlag(SYSTEM_ID, "actionRoll"));
-  if (!state) return;
+  if (!state || state.consequenceApplied || state.secondaryApplied) return;
 
   const actor = await fromUuid(state.actorUuid);
   if (!actor) return;
@@ -202,19 +275,17 @@ export async function applyRollConsequence(message, kind) {
   const actor = await fromUuid(state.actorUuid);
   if (!actor) return;
 
+  const label = state.actionLabel || ABILITIES[state.abilityKey]?.label || "Jet d’Action";
   let applied = false;
   if (kind === "constraint" && state.result === "partial") {
-    applied = await actor.addConstraint("Contrainte — " + ABILITIES[state.abilityKey].label);
+    applied = await actor.addConstraint("Contrainte — " + label);
   } else if (kind === "failure" && state.result === "failure") {
-    applied = await actor.addFailure("Défaillance — " + ABILITIES[state.abilityKey].label);
+    applied = await actor.addFailure("Défaillance — " + label);
   }
   if (!applied) return;
 
   state.consequenceApplied = true;
-  await message.update({
-    content: await renderCard(state, actor),
-    ["flags." + SYSTEM_ID + ".actionRoll"]: state
-  });
+  await refreshActionRollMessage(message, state, actor);
 }
 
 export async function useShieldForRoll(message, itemId) {
@@ -238,8 +309,5 @@ export async function useShieldForRoll(message, itemId) {
   state.consequenceApplied = true;
   state.shieldUsed = true;
   state.shieldName = item.name;
-  await message.update({
-    content: await renderCard(state, actor),
-    ["flags." + SYSTEM_ID + ".actionRoll"]: state
-  });
+  await refreshActionRollMessage(message, state, actor);
 }
