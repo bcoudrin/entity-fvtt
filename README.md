@@ -85,7 +85,7 @@ Les conséquences d’un jet restent volontairement **explicites** dans le Chat 
 - pas encore d’assistant de création ;
 - les gains d’Opportunités et de Trouvailles sont détectés et proposés par boutons explicites ; les rares gains alternatifs (« ou ») restent un choix du joueur ;
 - l’Unité de conversion adaptative des Ressources est disponible explicitement lors des Opportunités et Trouvailles de Lieu ;
-- le suivi de VM guide le nombre de jets à effectuer mais laisse encore au joueur la validation finale du Défi ;
+- la Valeur de Menace est suivie jet par jet : chaque résultat est enregistré explicitement depuis le Chat, puis le panneau détermine si le Défi est réussi ou échoué avant validation ;
 - règles avancées exclues ;
 - Extras exclus.
 
