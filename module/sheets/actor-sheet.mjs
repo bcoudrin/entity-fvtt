@@ -1,6 +1,7 @@
 import { ABILITIES, SUIT_SLOTS, TRAITS } from "../constants.mjs";
 import { chooseRollMode } from "../dialogs.mjs";
 import { clearPendingEffects, getPendingEffects } from "../improvements.mjs";
+import { ExpeditionPanel } from "../apps/expedition-panel.mjs";
 
 const { ActorSheetV2 } = foundry.applications.sheets;
 const { HandlebarsApplicationMixin } = foundry.applications.api;
@@ -65,7 +66,8 @@ export class PiaSheet extends HandlebarsApplicationMixin(ActorSheetV2) {
       deleteItem: PiaSheet.#deleteItem,
       createImprovement: PiaSheet.#createImprovement,
       createStructure: PiaSheet.#createStructure,
-      openJournal: PiaSheet.#openJournal
+      openJournal: PiaSheet.#openJournal,
+      openExpedition: PiaSheet.#openExpedition
     }
   };
 
@@ -226,5 +228,11 @@ export class PiaSheet extends HandlebarsApplicationMixin(ActorSheetV2) {
 
   static async #openJournal() {
     await this.actor.openJournal();
+  }
+
+  static #openExpedition() {
+    const existing = foundry.applications.instances.get("entity-expedition-panel");
+    if (existing) existing.close();
+    new ExpeditionPanel(this.actor).render({ force: true });
   }
 }
