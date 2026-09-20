@@ -317,10 +317,43 @@ Effectuer une Expédition complète et vérifier que le Journal reçoit au minim
 
 Le texte doit rester librement éditable après génération.
 
+## 14. Gains de Rencontre et conversion adaptative
+
+### Trouvaille
+
+1. Obtenir une Trouvaille de Voyage ou de Lieu.
+2. Vérifier que le gain extrait du texte est affiché.
+3. Cliquer **Appliquer le gain**.
+
+Attendu :
+- la bonne ressource augmente ;
+- le maximum de capacité est respecté ;
+- le bouton de continuation apparaît après application du gain.
+
+### Opportunité
+
+1. Obtenir une Opportunité.
+2. Effectuer le jet d’Action via l’un des mots-clés.
+3. En cas de succès, appliquer explicitement le gain.
+4. Tester une entrée proposant plusieurs gains avec « et ».
+5. Tester l’entrée proposant « 2 Données ou 3 Ressources ».
+
+Attendu :
+- les gains avec « et » sont appliqués ensemble ;
+- les gains avec « ou » sont proposés comme deux boutons de choix ;
+- **Passer sans gain** reste disponible.
+
+### Unité de conversion adaptative
+
+Sur une Opportunité ou une Trouvaille de **Lieu** :
+1. disposer d’au moins 2 Ressources ;
+2. utiliser le bouton +1 Donnée ou +1 Énergie ;
+3. vérifier le coût de 2 Ressources ;
+4. vérifier que la conversion n’est pas proposée pour une Rencontre de Voyage ;
+5. vérifier qu’elle est désactivée si la capacité cible est pleine.
+
 ## Limites connues de la Phase 2A
 
-- les récompenses textuelles des Opportunités et Trouvailles ne sont pas encore appliquées automatiquement ;
-- l’Unité de conversion adaptative des Ressources n’est pas encore exposée dans le panneau de Rencontre ;
 - le système indique la VM mais ne compte pas encore automatiquement les jets réussis/échoués d’un Défi multi-jet ;
 - l’assistant de création reste reporté ;
 - règles avancées et Extras toujours exclus.
