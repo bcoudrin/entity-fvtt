@@ -72,3 +72,31 @@ export function secondaryGain(result, traitValue) {
   if (result === "partial") return Math.floor(value / 2);
   return 0;
 }
+
+
+export function parseEncounterRewards(text) {
+  const source = String(text || "");
+  const matches = [...source.matchAll(/(\d+)\s+(Donnée(?:s)?|Énergie(?:s)?|Ressource(?:s)?)/gi)];
+  const rewards = matches.map((match) => {
+    const label = match[2].toLowerCase();
+    const resourceKey = label.startsWith("donnée")
+      ? "data"
+      : label.startsWith("énergie")
+        ? "energy"
+        : "resources";
+    return {
+      resourceKey,
+      amount: Number(match[1])
+    };
+  });
+
+  if (!rewards.length) return { mode: "none", rewards: [] };
+
+  const firstIndex = matches[0]?.index ?? 0;
+  const lastMatch = matches[matches.length - 1];
+  const lastIndex = (lastMatch?.index ?? 0) + (lastMatch?.[0]?.length ?? 0);
+  const rewardPhrase = source.slice(firstIndex, lastIndex).toLowerCase();
+  const mode = rewards.length > 1 && /\bou\b/.test(rewardPhrase) ? "choice" : "all";
+
+  return { mode, rewards };
+}
