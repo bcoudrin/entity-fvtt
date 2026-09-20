@@ -8,6 +8,7 @@ import {
   locationEncounterPlan,
   missionNumberFromKey,
   parseEncounterRewards,
+  resolveChallengeOutcome,
   resolveRangedEntry,
   secondaryGain,
   travelEncounterType
@@ -473,9 +474,7 @@ export async function recordEncounterRoll(message) {
   });
   encounter.rolls = rolls;
 
-  if (rolls.length >= threat) {
-    encounter.challengeOutcome = rolls.some((roll) => roll.result === "failure") ? "failed" : "success";
-  }
+  encounter.challengeOutcome = resolveChallengeOutcome(rolls, threat);
 
   workflow.currentEncounter = encounter;
   state.encounterRecorded = true;
