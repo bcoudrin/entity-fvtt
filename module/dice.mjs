@@ -237,7 +237,7 @@ export async function rollThresholdAction(actor, {
 
 export async function rerollWithStructure(message, dieIndex) {
   const state = foundry.utils.deepClone(message.getFlag(SYSTEM_ID, "actionRoll"));
-  if (!state || state.consequenceApplied || state.secondaryApplied) return;
+  if (!state || state.consequenceApplied || state.secondaryApplied || state.encounterRecorded) return;
   if (!state.structureRerollAvailable || state.structureRerollUsed) return;
 
   const actor = await fromUuid(state.actorUuid);
@@ -249,7 +249,7 @@ export async function rerollWithStructure(message, dieIndex) {
 
 export async function rerollWithImprovement(message, dieIndex, itemId) {
   const state = foundry.utils.deepClone(message.getFlag(SYSTEM_ID, "actionRoll"));
-  if (!state || state.consequenceApplied || state.secondaryApplied) return;
+  if (!state || state.consequenceApplied || state.secondaryApplied || state.encounterRecorded) return;
 
   const actor = await fromUuid(state.actorUuid);
   if (!actor) return;
