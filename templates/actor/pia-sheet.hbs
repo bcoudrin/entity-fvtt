@@ -1,0 +1,160 @@
+<div class="entity-pia-shell">
+  <header class="entity-header">
+    <div class="entity-brand">
+      <span class="entity-kicker">PIONNIER INTERPLANÉTAIRE ADAPTATIF</span>
+      <h1>ENTITÉ</h1>
+    </div>
+    <div class="entity-identity">
+      <label>
+        <span>Nom / Désignation</span>
+        <input name="name" type="text" value="{{actor.name}}" />
+      </label>
+      <button type="button" data-action="openJournal"><i class="fa-solid fa-book"></i> Journal de bord</button>
+    </div>
+  </header>
+
+  <section class="entity-resource-strip">
+    <label><span>Énergie</span><input type="number" name="system.energy.value" value="{{system.energy.value}}" /><b>/ {{system.energy.max}}</b></label>
+    <label><span>Ressources</span><input type="number" name="system.resources.value" value="{{system.resources.value}}" /><b>/ {{system.resources.max}}</b></label>
+    <label><span>Données</span><input type="number" name="system.data.value" value="{{system.data.value}}" /><b>/ {{system.data.max}}</b></label>
+    <label class="entity-roll-mode"><span>Jet</span>
+      <select data-roll-mode>
+        {{#each rollModes as |mode|}}<option value="{{mode.key}}">{{mode.label}}</option>{{/each}}
+      </select>
+    </label>
+  </section>
+
+  <nav class="entity-tabs tabs" data-group="primary">
+    <a class="{{tabs.systems.cssClass}}" data-action="tab" data-group="primary" data-tab="systems"><i class="fa-solid fa-microchip"></i> Systèmes</a>
+    <a class="{{tabs.suit.cssClass}}" data-action="tab" data-group="primary" data-tab="suit"><i class="fa-solid fa-user-astronaut"></i> Combinaison</a>
+    <a class="{{tabs.structures.cssClass}}" data-action="tab" data-group="primary" data-tab="structures"><i class="fa-solid fa-building"></i> Structures</a>
+    <a class="{{tabs.journal.cssClass}}" data-action="tab" data-group="primary" data-tab="journal"><i class="fa-solid fa-book"></i> Journal</a>
+  </nav>
+
+  <section class="entity-body">
+    <section class="tab {{tabs.systems.cssClass}}" data-group="primary" data-tab="systems">
+      <div class="entity-traits-grid">
+        {{#each traits as |trait|}}
+          <section class="entity-panel entity-trait">
+            <header>
+              <h2>{{trait.label}}</h2>
+              <input type="number" name="system.traits.{{trait.key}}.value" value="{{trait.value}}" min="0" />
+            </header>
+            <div class="entity-ability-list">
+              {{#each trait.abilities as |ability|}}
+                <div class="entity-ability-row">
+                  <button type="button" class="entity-die" data-action="rollAbility" data-ability="{{ability.key}}" title="Lancer {{ability.label}}">
+                    <i class="fa-solid fa-dice-d10"></i>
+                  </button>
+                  <span class="entity-ability-name">{{ability.label}}</span>
+                  <input type="number" name="system.traits.{{trait.key}}.abilities.{{ability.key}}.value" value="{{ability.value}}" min="0" />
+                  <span class="entity-target" title="Niveau de Difficulté avec bonus de Structures">≤ {{ability.target}}</span>
+                </div>
+              {{/each}}
+            </div>
+          </section>
+        {{/each}}
+      </div>
+
+      {{#if pendingEffects.length}}
+        <section class="entity-panel entity-pending">
+          <header class="entity-panel-title">
+            <h2>Améliorations activées</h2>
+            <button type="button" data-action="clearPending"><i class="fa-solid fa-rotate-left"></i> Annuler et rembourser</button>
+          </header>
+          <div class="entity-chip-row">
+            {{#each pendingEffects}}<span class="entity-chip">{{name}}</span>{{/each}}
+          </div>
+        </section>
+      {{/if}}
+    </section>
+
+    <section class="tab {{tabs.suit.cssClass}}" data-group="primary" data-tab="suit">
+      <section class="entity-panel">
+        <header class="entity-panel-title">
+          <div>
+            <h2>Combinaison spatiale</h2>
+            <p>{{suit.used}} / {{suit.max}} emplacements occupés</p>
+          </div>
+          <div class="entity-inline-actions">
+            <button type="button" data-action="addConstraint"><i class="fa-solid fa-triangle-exclamation"></i> Contrainte</button>
+            <button type="button" data-action="addFailure"><i class="fa-solid fa-burst"></i> Défaillance</button>
+          </div>
+        </header>
+
+        <div class="entity-suit-grid">
+          {{#each suitSlots as |slot|}}
+            <div class="entity-slot entity-slot-{{slot.kind}}" title="{{slot.label}}">
+              {{#if slot.itemId}}
+                <button type="button" class="entity-slot-main" data-action="openItem" data-item-id="{{slot.itemId}}">
+                  <i class="{{slot.icon}}"></i><span>{{slot.label}}</span>
+                </button>
+              {{else}}
+                <span>{{#if slot.icon}}<i class="{{slot.icon}}"></i>{{/if}} {{slot.label}}</span>
+              {{/if}}
+              {{#if slot.removable}}
+                <button type="button" class="entity-slot-remove" data-action="removeCondition" data-kind="{{slot.kind}}s" data-index="{{slot.index}}" title="Retirer"><i class="fa-solid fa-xmark"></i></button>
+              {{/if}}
+            </div>
+          {{/each}}
+        </div>
+      </section>
+
+      <section class="entity-panel">
+        <header class="entity-panel-title">
+          <h2>Améliorations</h2>
+          <button type="button" data-action="createImprovement"><i class="fa-solid fa-plus"></i> Ajouter</button>
+        </header>
+        <ol class="entity-item-list">
+          {{#each improvements as |item|}}
+            <li>
+              <button type="button" class="entity-item-name" data-action="openItem" data-item-id="{{item.id}}">{{item.name}}</button>
+              <span class="entity-cost">{{item.system.energyCost}}E</span>
+              <button type="button" data-action="activateImprovement" data-item-id="{{item.id}}"><i class="fa-solid fa-bolt"></i> Activer</button>
+              <button type="button" class="entity-danger" data-action="deleteItem" data-item-id="{{item.id}}" title="Défausser"><i class="fa-solid fa-trash"></i></button>
+            </li>
+          {{else}}
+            <li class="entity-empty">Aucune Amélioration.</li>
+          {{/each}}
+        </ol>
+      </section>
+    </section>
+
+    <section class="tab {{tabs.structures.cssClass}}" data-group="primary" data-tab="structures">
+      <section class="entity-panel">
+        <header class="entity-panel-title">
+          <div>
+            <h2>Structures</h2>
+            <p>Les Structures sont permanentes et n’occupent pas la Combinaison.</p>
+          </div>
+          <button type="button" data-action="createStructure"><i class="fa-solid fa-plus"></i> Ajouter</button>
+        </header>
+        <ol class="entity-item-list">
+          {{#each structures as |item|}}
+            <li>
+              <button type="button" class="entity-item-name" data-action="openItem" data-item-id="{{item.id}}">{{item.name}}</button>
+              <span class="entity-chip">rang {{item.system.ranks}}</span>
+              <span></span>
+              <button type="button" class="entity-danger" data-action="deleteItem" data-item-id="{{item.id}}"><i class="fa-solid fa-trash"></i></button>
+            </li>
+          {{else}}
+            <li class="entity-empty">Aucune Structure construite.</li>
+          {{/each}}
+        </ol>
+      </section>
+    </section>
+
+    <section class="tab {{tabs.journal.cssClass}}" data-group="primary" data-tab="journal">
+      <section class="entity-panel entity-notes">
+        <header class="entity-panel-title">
+          <div>
+            <h2>Notes rapides</h2>
+            <p>Le Journal Foundry lié au PIA accueillera ensuite les entrées automatiques du cycle de jeu.</p>
+          </div>
+          <button type="button" data-action="openJournal"><i class="fa-solid fa-book-open"></i> Ouvrir le Journal</button>
+        </header>
+        <textarea name="system.notes">{{system.notes}}</textarea>
+      </section>
+    </section>
+  </section>
+</div>

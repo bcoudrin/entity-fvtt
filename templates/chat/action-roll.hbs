@@ -1,0 +1,48 @@
+<div class="entity-chat entity-action-card">
+  <header>
+    <span class="entity-kicker">{{ability.trait}}</span>
+    <h3>{{ability.label}} — {{state.resultLabel}}</h3>
+  </header>
+
+  <div class="entity-chat-target">
+    <strong>Seuil ≤ {{state.target}}</strong>
+    <span>Trait {{state.traitValue}} + Capacité {{state.abilityValue}}{{#if state.passiveBonus}} + Structure {{state.passiveBonus}}{{/if}}{{#if state.improvementBonus}} + Amélioration {{state.improvementBonus}}{{/if}}</span>
+  </div>
+
+  <div class="entity-dice-row">
+    {{#each state.diceDisplay as |die|}}
+      <div class="entity-chat-die {{#if die.discarded}}discarded{{/if}}">
+        <span>{{die.value}}</span>
+        {{#if ../state.rerollAvailable}}
+          {{#unless ../state.rerollUsed}}
+            <button type="button" data-entity-chat-action="reroll" data-die-index="{{die.index}}" title="Relancer ce dé"><i class="fa-solid fa-rotate"></i></button>
+          {{/unless}}
+        {{/if}}
+      </div>
+    {{/each}}
+  </div>
+
+  {{#if state.activatedImprovements.length}}
+    <p class="entity-chat-note"><strong>Activées :</strong> {{#each state.activatedImprovements}}{{this}}{{#unless @last}}, {{/unless}}{{/each}}</p>
+  {{/if}}
+
+  {{#if state.shieldUsed}}
+    <p class="entity-chat-success"><i class="fa-solid fa-shield-halved"></i> {{state.shieldName}} : Contrainte évitée.</p>
+  {{/if}}
+
+  {{#unless state.consequenceApplied}}
+    {{#if (eq state.result "partial")}}
+      <div class="entity-chat-actions">
+        <button type="button" data-entity-chat-action="constraint"><i class="fa-solid fa-triangle-exclamation"></i> Ajouter une Contrainte</button>
+        {{#each shields as |shield|}}
+          <button type="button" data-entity-chat-action="shield" data-item-id="{{shield.id}}"><i class="fa-solid fa-shield-halved"></i> {{shield.name}} ({{shield.cost}}E)</button>
+        {{/each}}
+      </div>
+    {{/if}}
+    {{#if (eq state.result "failure")}}
+      <div class="entity-chat-actions">
+        <button type="button" data-entity-chat-action="failure"><i class="fa-solid fa-burst"></i> Ajouter une Défaillance</button>
+      </div>
+    {{/if}}
+  {{/unless}}
+</div>

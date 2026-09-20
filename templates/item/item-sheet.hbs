@@ -1,0 +1,44 @@
+<div class="entity-item-shell">
+  <header class="entity-header entity-item-header">
+    <div class="entity-brand">
+      <span class="entity-kicker">MODULE DE DONNÉES</span>
+      <h1>{{item.name}}</h1>
+    </div>
+    <label><span>Nom</span><input name="name" type="text" value="{{item.name}}" /></label>
+  </header>
+
+  <section class="entity-panel">
+    {{#if isImprovement}}
+      <h2>Amélioration</h2>
+      <div class="entity-form-grid">
+        <label><span>Coût Énergie</span><input type="number" name="system.energyCost" value="{{system.energyCost}}" min="0" /></label>
+        <label><span>Type d’effet</span><input type="text" name="system.effectType" value="{{system.effectType}}" /></label>
+        <label><span>Cible</span><input type="text" name="system.effectKey" value="{{system.effectKey}}" /></label>
+        <label><span>Valeur</span><input type="number" name="system.effectValue" value="{{system.effectValue}}" /></label>
+        <label class="entity-check"><input type="checkbox" name="system.starting" {{checked system.starting}} /> Amélioration de départ</label>
+      </div>
+      <label class="entity-long-field"><span>Description</span><textarea name="system.description">{{system.description}}</textarea></label>
+    {{else if isStructure}}
+      <h2>Structure</h2>
+      <div class="entity-form-grid">
+        <label><span>Type d’effet</span><input type="text" name="system.effectType" value="{{system.effectType}}" /></label>
+        <label><span>Cible</span><input type="text" name="system.effectKey" value="{{system.effectKey}}" /></label>
+        <label><span>Valeur</span><input type="number" name="system.effectValue" value="{{system.effectValue}}" /></label>
+        <label><span>Rang</span><input type="number" name="system.ranks" value="{{system.ranks}}" min="1" /></label>
+        <label><span>Rang max</span><input type="number" name="system.maxRanks" value="{{system.maxRanks}}" min="1" /></label>
+        <label class="entity-check"><input type="checkbox" name="system.repeatable" {{checked system.repeatable}} /> Répétable</label>
+      </div>
+      <label class="entity-long-field"><span>Description</span><textarea name="system.description">{{system.description}}</textarea></label>
+    {{else if isMission}}
+      <h2>Mission</h2>
+      <div class="entity-form-grid">
+        <label><span>Aspects requis</span><input type="number" name="system.aspectsRequired" value="{{system.aspectsRequired}}" /></label>
+        <label><span>Aspects acquis</span><input type="number" name="system.aspectsCurrent" value="{{system.aspectsCurrent}}" /></label>
+        <label><span>Structure</span><input type="text" name="system.structureName" value="{{system.structureName}}" /></label>
+        <label><span>Découverte</span><input type="number" name="system.discoveryIndex" value="{{system.discoveryIndex}}" /></label>
+        <label class="entity-check"><input type="checkbox" name="system.completed" {{checked system.completed}} /> Terminée</label>
+      </div>
+      <label class="entity-long-field"><span>Description</span><textarea name="system.description">{{system.description}}</textarea></label>
+    {{/if}}
+  </section>
+</div>
