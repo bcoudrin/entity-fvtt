@@ -1,0 +1,1 @@
+export class EntityItem extends Item {}
