@@ -31,7 +31,8 @@ function currentEncounterView(workflow) {
     isChallenge: encounter.type === "challenge",
     isOpportunity: encounter.type === "opportunity",
     isFind: encounter.type === "find",
-    isAspect: encounter.type === "aspect"
+    isAspect: encounter.type === "aspect",
+    multiThreat: Number(encounter.threat || 0) > 1
   };
 }
 
