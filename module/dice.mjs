@@ -101,7 +101,7 @@ function actionDescriptor(state) {
 }
 
 async function renderCard(state, actor) {
-  const rerollsLocked = Boolean(state.consequenceApplied || state.secondaryApplied);
+  const rerollsLocked = Boolean(state.consequenceApplied || state.secondaryApplied || state.encounterRecorded);
   return renderTemplate("systems/entity/templates/chat/action-roll.hbs", {
     state,
     actor,
@@ -144,7 +144,7 @@ async function createActionRoll(actor, state, formula) {
   return { message, state, roll };
 }
 
-export async function rollAction(actor, abilityKey, { mode = "normal" } = {}) {
+export async function rollAction(actor, abilityKey, { mode = "normal", workflow = null } = {}) {
   const ability = ABILITIES[abilityKey];
   if (!ability) throw new Error("Capacité inconnue : " + abilityKey);
 
@@ -173,7 +173,8 @@ export async function rollAction(actor, abilityKey, { mode = "normal" } = {}) {
     manualMode: mode,
     customAction: false,
     targetBreakdown: "",
-    workflow: null,
+    workflow,
+    encounterRecorded: false,
     dice: [],
     keptIndexes: [],
     discardedIndexes: [],
@@ -216,6 +217,7 @@ export async function rollThresholdAction(actor, {
     customAction: true,
     targetBreakdown: "Niveau de Difficulté fixé à " + Number(target || 0),
     workflow,
+    encounterRecorded: false,
     dice: [],
     keptIndexes: [],
     discardedIndexes: [],
