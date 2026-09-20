@@ -1,6 +1,7 @@
 import assert from "node:assert/strict";
 import { CORE_DISCOVERIES, CORE_IMPROVEMENTS, CORE_MISSIONS, CORE_STRUCTURES } from "../module/data/core-items.mjs";
 import { CORE_TABLES } from "../module/data/tables.mjs";
+import { clampDataSpend, locationEncounterPlan, secondaryGain, travelEncounterType } from "../module/workflow-rules.mjs";
 
 function coveredValues(entries) {
   const values = [];
@@ -46,5 +47,19 @@ for (const table of CORE_TABLES) {
     validateCoverage(table, 1, 10);
   }
 }
+
+assert.equal(clampDataSpend(3, 2), 2, "La dépense de Données est limitée au stock disponible");
+assert.equal(clampDataSpend(-2, 10), 0, "La dépense de Données ne peut pas être négative");
+assert.equal(travelEncounterType(4), "challenge");
+assert.equal(travelEncounterType(5), "none");
+assert.equal(travelEncounterType(9), "opportunity");
+assert.equal(travelEncounterType(10), "find");
+assert.deepEqual(locationEncounterPlan(2), [{ type: "challenge", threat: 3, disadvantage: false }]);
+assert.equal(locationEncounterPlan(6).length, 2, "Un 6 génère Défi + Opportunité");
+assert.ok(locationEncounterPlan(6).every((entry) => entry.disadvantage), "Le résultat 6 conserve le marqueur (D)");
+assert.deepEqual(locationEncounterPlan(10).map((entry) => entry.type), ["challenge", "opportunity", "find", "aspect"]);
+assert.equal(secondaryGain("full", 5), 5);
+assert.equal(secondaryGain("partial", 5), 2);
+assert.equal(secondaryGain("failure", 5), 0);
 
 console.log("Validation Entité OK");
