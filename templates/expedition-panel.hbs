@@ -1,0 +1,213 @@
+<div class="entity-expedition-shell">
+  <header class="entity-expedition-header">
+    <span class="entity-kicker">PROTOCOLE D’EXPLORATION</span>
+    <h2>{{actor.name}}</h2>
+    <div class="entity-expedition-resources">
+      <span><i class="fa-solid fa-bolt"></i> {{system.energy.value}} / {{system.energy.max}}</span>
+      <span><i class="fa-solid fa-cubes"></i> {{system.resources.value}} / {{system.resources.max}}</span>
+      <span><i class="fa-solid fa-database"></i> {{system.data.value}} / {{system.data.max}}</span>
+    </div>
+  </header>
+
+  <div class="entity-expedition-body">
+    {{#unless hasMission}}
+      <section class="entity-panel">
+        <h3>Choisir une Mission</h3>
+        <p>Une Mission se poursuit par Expéditions successives jusqu’à réunir les Aspects requis.</p>
+        <select name="missionKey">
+          {{#each missions as |mission|}}
+            {{#if mission.available}}
+              <option value="{{mission.key}}">{{mission.name}} — {{mission.aspectsRequired}} Aspect(s){{#if mission.repeatable}} ({{mission.completed}}/{{mission.max}}){{/if}}</option>
+            {{/if}}
+          {{/each}}
+        </select>
+        <button type="button" data-action="startMission"><i class="fa-solid fa-flag-checkered"></i> Commencer la Mission</button>
+      </section>
+    {{else}}
+      <section class="entity-panel entity-mission-card">
+        <span class="entity-kicker">MISSION ACTIVE</span>
+        <h3>{{system.mission.name}}</h3>
+        <div class="entity-progress-line">
+          <span>Aspects</span>
+          <strong>{{system.mission.aspectsCurrent}} / {{system.mission.aspectsRequired}}</strong>
+        </div>
+        {{#if missionReady}}
+          <button type="button" class="entity-primary" data-action="completeMission"><i class="fa-solid fa-circle-check"></i> Accomplir la Mission</button>
+        {{/if}}
+      </section>
+
+      {{#if (eq workflow.stage "idle")}}
+        <section class="entity-panel entity-step-card">
+          <span class="entity-step-number">01</span>
+          <h3>Nouvelle Expédition</h3>
+          <p>Une Expédition comprend une Exploration puis une Activité Secondaire.</p>
+          <button type="button" data-action="startExpedition"><i class="fa-solid fa-rocket"></i> Commencer l’Expédition</button>
+        </section>
+      {{/if}}
+
+      {{#if workflow.powerConstraintPending}}
+        <section class="entity-panel entity-warning-panel">
+          <h3><i class="fa-solid fa-battery-empty"></i> Manque de puissance</h3>
+          <p>L’Énergie est à 0 au début de l’Expédition. La règle impose de marquer une Contrainte.</p>
+          <button type="button" data-action="markPowerConstraint"><i class="fa-solid fa-triangle-exclamation"></i> Ajouter la Contrainte</button>
+        </section>
+      {{/if}}
+
+      {{#if (eq workflow.stage "identify")}}
+        <section class="entity-panel entity-step-card">
+          <span class="entity-step-number">02</span>
+          <h3>Identification du Lieu</h3>
+          <p>Lancez 1d100 sur la table des Lieux.</p>
+          <button type="button" data-action="rollLocation" {{#if workflow.powerConstraintPending}}disabled{{/if}}><i class="fa-solid fa-location-crosshairs"></i> Identifier le Lieu</button>
+        </section>
+      {{/if}}
+
+      {{#if workflow.location}}
+        <section class="entity-panel entity-result-panel">
+          <span class="entity-kicker">LIEU — d100 {{workflow.location.roll}}</span>
+          <p>{{workflow.location.text}}</p>
+        </section>
+      {{/if}}
+
+      {{#if (eq workflow.stage "travel")}}
+        <section class="entity-panel entity-step-card">
+          <span class="entity-step-number">03</span>
+          <h3>Voyage</h3>
+          <p>Avant le d10, vous pouvez dépenser des Données. Chaque Donnée ajoute +1 au résultat.</p>
+          <label class="entity-inline-field">
+            <span>Données dépensées</span>
+            <input type="number" name="travelData" value="0" min="0" max="{{system.data.value}}" />
+          </label>
+          <button type="button" data-action="rollTravel"><i class="fa-solid fa-route"></i> Lancer la Rencontre de Voyage</button>
+        </section>
+      {{/if}}
+
+      {{#if workflow.travel}}
+        <section class="entity-panel entity-result-panel">
+          <span class="entity-kicker">VOYAGE</span>
+          <p>d10 {{workflow.travel.roll}}{{#if workflow.travel.dataSpent}} + {{workflow.travel.dataSpent}} Donnée(s){{/if}} = <strong>{{workflow.travel.total}}</strong></p>
+        </section>
+      {{/if}}
+
+      {{#if (eq workflow.stage "locationEncounter")}}
+        <section class="entity-panel entity-step-card">
+          <span class="entity-step-number">04</span>
+          <h3>Rencontre de Lieu</h3>
+          <p>Avant le d10, vous pouvez à nouveau dépenser des Données.</p>
+          <label class="entity-inline-field">
+            <span>Données dépensées</span>
+            <input type="number" name="locationData" value="0" min="0" max="{{system.data.value}}" />
+          </label>
+          <button type="button" data-action="rollLocationEncounter"><i class="fa-solid fa-satellite-dish"></i> Lancer la Rencontre de Lieu</button>
+        </section>
+      {{/if}}
+
+      {{#if currentEncounter}}
+        <section class="entity-panel entity-encounter-panel">
+          <span class="entity-kicker">{{currentEncounter.context}} — {{currentEncounter.label}}</span>
+          {{#if currentEncounter.detailRoll}}<div class="entity-roll-badge">d100 {{currentEncounter.detailRoll}}</div>{{/if}}
+          <p>{{currentEncounter.text}}</p>
+
+          {{#if currentEncounter.disadvantage}}
+            <p class="entity-warning-text"><i class="fa-solid fa-angles-up"></i> Désavantage (D)</p>
+          {{/if}}
+          {{#if (gt currentEncounter.threat 1)}}
+            <p><strong>Valeur de Menace {{currentEncounter.threat}}</strong> — effectuez {{currentEncounter.threat}} jets d’Action avant de statuer sur le Défi.</p>
+          {{/if}}
+
+          {{#if currentEncounter.keywords.length}}
+            <div class="entity-keywords">
+              {{#each currentEncounter.keywords as |keyword|}}
+                <button type="button" data-action="rollEncounterAbility" data-ability="{{keyword.key}}">
+                  <i class="fa-solid fa-dice-d10"></i> {{keyword.label}}
+                </button>
+              {{/each}}
+            </div>
+          {{/if}}
+
+          {{#if currentEncounter.isChallenge}}
+            <div class="entity-two-actions">
+              <button type="button" class="entity-primary" data-action="encounterSuccess"><i class="fa-solid fa-check"></i> Défi réussi</button>
+              <button type="button" class="entity-danger-button" data-action="encounterFailure"><i class="fa-solid fa-xmark"></i> Défi échoué</button>
+            </div>
+          {{/if}}
+          {{#if currentEncounter.isOpportunity}}
+            <div class="entity-two-actions">
+              <button type="button" class="entity-primary" data-action="encounterResolved"><i class="fa-solid fa-check"></i> Opportunité résolue</button>
+              <button type="button" data-action="encounterResolved"><i class="fa-solid fa-forward"></i> Passer</button>
+            </div>
+          {{/if}}
+          {{#if currentEncounter.isFind}}
+            <button type="button" class="entity-primary" data-action="encounterResolved"><i class="fa-solid fa-box-open"></i> Continuer</button>
+          {{/if}}
+          {{#if currentEncounter.isAspect}}
+            <button type="button" class="entity-primary" data-action="addAspect"><i class="fa-solid fa-diamond"></i> Ajouter l’Aspect à la Mission</button>
+          {{/if}}
+        </section>
+      {{/if}}
+
+      {{#if (eq workflow.stage "secondary")}}
+        <section class="entity-panel entity-secondary-panel">
+          <span class="entity-step-number">05</span>
+          <h3>Activité Secondaire</h3>
+          <p>Choisissez exactement une activité pour achever cette Expédition.</p>
+
+          <div class="entity-secondary-grid">
+            <button type="button" data-action="secondaryRoll" data-kind="data">
+              <i class="fa-solid fa-database"></i>
+              <strong>Collecte de Données</strong>
+              <small>Analyse + 4</small>
+            </button>
+            <button type="button" data-action="secondaryRoll" data-kind="energy">
+              <i class="fa-solid fa-bolt"></i>
+              <strong>Recharge d’Énergie</strong>
+              <small>Technologie + 4</small>
+            </button>
+            <button type="button" data-action="secondaryRoll" data-kind="resources">
+              <i class="fa-solid fa-cubes"></i>
+              <strong>Collecte de Ressources</strong>
+              <small>Adaptabilité + 4</small>
+            </button>
+          </div>
+
+          <hr>
+          <h4>Amélioration — 10 Ressources</h4>
+          <div class="entity-inline-select">
+            <select name="improvementId">
+              {{#each availableImprovements as |item|}}
+                <option value="{{item.id}}">{{item.name}}</option>
+              {{/each}}
+            </select>
+            <button type="button" data-action="installImprovement" {{#unless canInstall}}disabled{{/unless}}><i class="fa-solid fa-screwdriver-wrench"></i> Installer</button>
+          </div>
+
+          <hr>
+          <h4>Autoréparation — 5 Ressources</h4>
+          {{#if constraints.length}}
+            <div class="entity-repair-list">
+              {{#each constraints as |constraint|}}
+                <button type="button" data-action="selfRepair" data-index="{{constraint.index}}" {{#unless ../canRepair}}disabled{{/unless}}>
+                  <i class="fa-solid fa-wrench"></i> {{constraint.label}}
+                </button>
+              {{/each}}
+            </div>
+          {{else}}
+            <p class="entity-empty">Aucune Contrainte à éliminer.</p>
+          {{/if}}
+        </section>
+      {{/if}}
+
+      {{#if (eq workflow.stage "done")}}
+        <section class="entity-panel entity-step-card entity-done-panel">
+          <h3><i class="fa-solid fa-circle-check"></i> Expédition terminée</h3>
+          {{#if missionReady}}
+            <p>Les Aspects requis sont réunis. Vous pouvez accomplir la Mission maintenant.</p>
+            <button type="button" class="entity-primary" data-action="completeMission">Accomplir la Mission</button>
+          {{else}}
+            <button type="button" data-action="startExpedition"><i class="fa-solid fa-rotate-right"></i> Nouvelle Expédition</button>
+          {{/if}}
+        </section>
+      {{/if}}
+    {{/unless}}
+  </div>
+</div>
