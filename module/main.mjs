@@ -7,8 +7,8 @@ import { EntityItem } from "./documents/item.mjs";
 import { PiaSheet } from "./sheets/actor-sheet.mjs";
 import { EntityItemSheet } from "./sheets/item-sheet.mjs";
 import { ensurePiaJournal } from "./journal.mjs";
-import { applyRollConsequence, rerollActionDie, useShieldForRoll } from "./dice.mjs";
-import { clearPendingEffects } from "./improvements.mjs";
+import { applyRollConsequence, rerollWithImprovement, rerollWithStructure, useShieldForRoll } from "./dice.mjs";
+import { clearPendingEffects, removePendingEffectsForItem } from "./improvements.mjs";
 import { createCoreRollTables } from "./roll-tables.mjs";
 import { seedCoreContent } from "./content-seed.mjs";
 
@@ -95,24 +95,27 @@ async function normalizeEmbeddedItem(item) {
       ((key && candidate.getFlag(SYSTEM_ID, "coreKey") === key) || candidate.name === item.name)
     );
 
-    if (!duplicate) return;
-
-    if (item.system.repeatable) {
-      const maxRanks = Number(duplicate.system.maxRanks || 1);
-      const ranks = Number(duplicate.system.ranks || 1);
-      if (ranks < maxRanks) {
-        await duplicate.update({ "system.ranks": ranks + 1 });
-        ui.notifications.info(duplicate.name + " passe au rang " + (ranks + 1) + ".");
-      } else {
-        ui.notifications.warn(duplicate.name + " a déjà atteint son rang maximal.");
+    if (duplicate) {
+      if (item.system.repeatable) {
+        const maxRanks = Number(duplicate.system.maxRanks || 1);
+        const ranks = Number(duplicate.system.ranks || 1);
+        if (ranks < maxRanks) {
+          await duplicate.update({ "system.ranks": ranks + 1 });
+          ui.notifications.info(duplicate.name + " passe au rang " + (ranks + 1) + ".");
+        } else {
+          ui.notifications.warn(duplicate.name + " a déjà atteint son rang maximal.");
+        }
+        await item.delete();
+        return;
       }
+
+      ui.notifications.warn("Cette Structure ne peut être construite qu’une seule fois.");
       await item.delete();
       return;
     }
-
-    ui.notifications.warn("Cette Structure ne peut être construite qu’une seule fois.");
-    await item.delete();
   }
+
+  actor.sheet?.render({ force: true });
 }
 
 function chatRoot(html) {
@@ -160,6 +163,18 @@ Hooks.on("createItem", async (item) => {
   await normalizeEmbeddedItem(item);
 });
 
+Hooks.on("deleteItem", async (item) => {
+  const actor = item.parent;
+  if (!actor || actor.documentName !== "Actor" || actor.type !== "pia") return;
+  await removePendingEffectsForItem(actor, item.id);
+  actor.sheet?.render({ force: true });
+});
+
+Hooks.on("updateItem", (item) => {
+  const actor = item.parent;
+  if (actor?.documentName === "Actor" && actor.type === "pia") actor.sheet?.render({ force: true });
+});
+
 Hooks.on("renderChatMessageHTML", (message, html) => {
   const root = chatRoot(html);
   if (!root) return;
@@ -170,7 +185,8 @@ Hooks.on("renderChatMessageHTML", (message, html) => {
       const action = button.dataset.entityChatAction;
       if (action === "constraint") await applyRollConsequence(message, "constraint");
       if (action === "failure") await applyRollConsequence(message, "failure");
-      if (action === "reroll") await rerollActionDie(message, Number(button.dataset.dieIndex));
+      if (action === "reroll-structure") await rerollWithStructure(message, Number(button.dataset.dieIndex));
+      if (action === "reroll-improvement") await rerollWithImprovement(message, Number(button.dataset.dieIndex), button.dataset.itemId);
       if (action === "shield") await useShieldForRoll(message, button.dataset.itemId);
     });
   });

@@ -1,4 +1,5 @@
-import { ABILITIES, ROLL_MODES, SUIT_SLOTS, TRAITS } from "../constants.mjs";
+import { ABILITIES, SUIT_SLOTS, TRAITS } from "../constants.mjs";
+import { chooseRollMode } from "../dialogs.mjs";
 import { clearPendingEffects, getPendingEffects } from "../improvements.mjs";
 
 const { ActorSheetV2 } = foundry.applications.sheets;
@@ -9,6 +10,29 @@ function passiveAbilityBonus(actor, abilityKey) {
     .filter((item) => item.type === "structure")
     .filter((item) => item.system.effectType === "abilityBonus" && item.system.effectKey === abilityKey)
     .reduce((sum, item) => sum + Number(item.system.effectValue || 0) * Number(item.system.ranks || 1), 0);
+}
+
+function improvementSlot(item, pendingIds) {
+  const type = item.system.effectType;
+  const activatable = ["abilityBonus", "advantage"].includes(type);
+  let status = "Module";
+
+  if (type === "reroll") status = "Réactif au résultat";
+  else if (type === "preventConstraint") status = "Réactif sur réussite partielle";
+  else if (type === "convertResource") status = "Réactif en Rencontre";
+  else if (["installResource", "installData"].includes(type)) status = "Effet d’installation";
+  else if (activatable) status = pendingIds.has(item.id) ? "Armé" : "À activer";
+
+  return {
+    kind: "improvement",
+    label: item.name,
+    itemId: item.id,
+    icon: "fa-solid fa-puzzle-piece",
+    cost: Number(item.system.energyCost || 0),
+    activatable,
+    pending: pendingIds.has(item.id),
+    status
+  };
 }
 
 export class PiaSheet extends HandlebarsApplicationMixin(ActorSheetV2) {
@@ -54,7 +78,6 @@ export class PiaSheet extends HandlebarsApplicationMixin(ActorSheetV2) {
     const actor = this.actor;
 
     context.system = actor.system;
-    context.rollModes = Object.entries(ROLL_MODES).map(([key, value]) => ({ key, ...value }));
     context.traits = Object.entries(TRAITS).map(([traitKey, trait]) => {
       const traitData = actor.system.traits?.[traitKey];
       return {
@@ -81,16 +104,17 @@ export class PiaSheet extends HandlebarsApplicationMixin(ActorSheetV2) {
     context.missions = actor.items.filter((item) => item.type === "mission");
     context.pendingEffects = getPendingEffects(actor);
 
-    const slots = [];
-    for (const item of context.improvements) {
-      slots.push({ kind: "improvement", label: item.name, itemId: item.id, icon: "fa-solid fa-puzzle-piece" });
-    }
+    const pendingIds = new Set(context.pendingEffects.map((effect) => effect.itemId));
+    const slots = context.improvements.map((item) => improvementSlot(item, pendingIds));
+
     Array.from(actor.system.constraints || []).forEach((label, index) => {
       slots.push({ kind: "constraint", label, index, removable: true, icon: "fa-solid fa-triangle-exclamation" });
     });
+
     Array.from(actor.system.failures || []).forEach((label, index) => {
-      slots.push({ kind: "failure", label, index, removable: true, icon: "fa-solid fa-burst" });
+      slots.push({ kind: "failure", label, index, removable: false, icon: "fa-solid fa-burst" });
     });
+
     while (slots.length < SUIT_SLOTS) slots.push({ kind: "empty", label: "Libre" });
 
     context.suitSlots = slots.slice(0, SUIT_SLOTS);
@@ -100,26 +124,41 @@ export class PiaSheet extends HandlebarsApplicationMixin(ActorSheetV2) {
 
   async _onRender(context, options) {
     await super._onRender(context, options);
+
     this.element.querySelectorAll("input[name], textarea[name], select[name]").forEach((field) => {
       field.addEventListener("change", (event) => this.#updateField(event.currentTarget));
     });
+
+    const nameField = this.element.querySelector('input[name="name"]');
+    if (nameField) {
+      nameField.addEventListener("input", () => {
+        clearTimeout(this._entityNameTimer);
+        this._entityNameTimer = setTimeout(() => this.actor.update({ name: nameField.value }), 200);
+      });
+      nameField.addEventListener("blur", () => this.actor.update({ name: nameField.value }));
+    }
   }
 
   async #updateField(field) {
     const path = field.name;
     if (!path || field.disabled) return;
+
     let value;
     if (field.type === "checkbox") value = field.checked;
     else if (field.type === "number") {
       if (field.value === "") return;
       value = Number(field.value);
     } else value = field.value;
-    await this.actor.update({ [path]: value });
+
+    if (path === "name") await this.actor.update({ name: value });
+    else await this.actor.update({ [path]: value });
   }
 
   static async #rollAbility(event, target) {
-    const mode = this.element.querySelector("[data-roll-mode]")?.value || "normal";
-    await this.actor.rollAction(target.dataset.ability, { mode });
+    const abilityKey = target.dataset.ability;
+    const mode = await chooseRollMode(ABILITIES[abilityKey]?.label || abilityKey, getPendingEffects(this.actor));
+    if (!mode) return;
+    await this.actor.rollAction(abilityKey, { mode });
   }
 
   static async #activateImprovement(event, target) {
@@ -158,6 +197,10 @@ export class PiaSheet extends HandlebarsApplicationMixin(ActorSheetV2) {
   }
 
   static async #createImprovement() {
+    if (this.actor.suitState.used >= SUIT_SLOTS) {
+      ui.notifications.warn("La Combinaison ne dispose d’aucun emplacement libre.");
+      return;
+    }
     await this.actor.createEmbeddedDocuments("Item", [{ name: "Nouvelle Amélioration", type: "improvement" }]);
     this.render({ force: true });
   }

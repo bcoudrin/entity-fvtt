@@ -13,14 +13,27 @@
     {{#each state.diceDisplay as |die|}}
       <div class="entity-chat-die {{#if die.discarded}}discarded{{/if}}">
         <span>{{die.value}}</span>
-        {{#if ../state.rerollAvailable}}
-          {{#unless ../state.rerollUsed}}
-            <button type="button" data-entity-chat-action="reroll" data-die-index="{{die.index}}" title="Relancer ce dé"><i class="fa-solid fa-rotate"></i></button>
-          {{/unless}}
-        {{/if}}
+        <div class="entity-die-tools">
+          {{#if ../state.structureRerollAvailable}}
+            {{#unless ../state.structureRerollUsed}}
+              <button type="button" data-entity-chat-action="reroll-structure" data-die-index="{{die.index}}" title="Relance gratuite de Structure">
+                <i class="fa-solid fa-rotate"></i>
+              </button>
+            {{/unless}}
+          {{/if}}
+          {{#if ../rerollItem}}
+            <button type="button" data-entity-chat-action="reroll-improvement" data-die-index="{{die.index}}" data-item-id="{{../rerollItem.id}}" title="{{../rerollItem.name}} — {{../rerollItem.cost}}E">
+              <i class="fa-solid fa-screwdriver-wrench"></i>
+            </button>
+          {{/if}}
+        </div>
       </div>
     {{/each}}
   </div>
+
+  {{#if rerollItem}}
+    <p class="entity-chat-note"><i class="fa-solid fa-screwdriver-wrench"></i> {{rerollItem.name}} disponible : cliquez sur l’outil du dé à relancer ({{rerollItem.cost}}E).</p>
+  {{/if}}
 
   {{#if state.activatedImprovements.length}}
     <p class="entity-chat-note"><strong>Activées :</strong> {{#each state.activatedImprovements}}{{this}}{{#unless @last}}, {{/unless}}{{/each}}</p>

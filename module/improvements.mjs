@@ -1,7 +1,7 @@
 import { ABILITIES, SYSTEM_ID } from "./constants.mjs";
 
-function isRollEffect(item) {
-  return ["abilityBonus", "advantage", "reroll"].includes(item.system.effectType);
+function isPreRollEffect(item) {
+  return ["abilityBonus", "advantage"].includes(item.system.effectType);
 }
 
 export async function activateImprovement(actor, item) {
@@ -10,8 +10,13 @@ export async function activateImprovement(actor, item) {
   const effectType = item.system.effectType;
   const cost = Number(item.system.energyCost || 0);
 
+  if (effectType === "reroll") {
+    ui.notifications.info("Cette Amélioration est proposée directement sur le résultat d’un jet.");
+    return false;
+  }
+
   if (effectType === "preventConstraint") {
-    ui.notifications.info("Le bouclier s’active depuis le résultat d’un jet partiel.");
+    ui.notifications.info("Le bouclier est proposé directement après une Réussite partielle.");
     return false;
   }
 
@@ -20,7 +25,12 @@ export async function activateImprovement(actor, item) {
     return false;
   }
 
-  if (!isRollEffect(item)) {
+  if (["installResource", "installData"].includes(effectType)) {
+    ui.notifications.info("L’effet de cette Amélioration s’applique automatiquement lors de son installation.");
+    return false;
+  }
+
+  if (!isPreRollEffect(item)) {
     ui.notifications.info("Cette Amélioration ne possède pas encore d’automatisation directe.");
     return false;
   }
@@ -66,6 +76,14 @@ export async function consumePendingEffects(actor, abilityKey) {
 
   if (used.length) await actor.setFlag(SYSTEM_ID, "pendingEffects", remaining);
   return used;
+}
+
+export async function removePendingEffectsForItem(actor, itemId) {
+  const pending = getPendingEffects(actor);
+  const remaining = pending.filter((effect) => effect.itemId !== itemId);
+  if (remaining.length === pending.length) return;
+  if (remaining.length) await actor.setFlag(SYSTEM_ID, "pendingEffects", remaining);
+  else await actor.unsetFlag(SYSTEM_ID, "pendingEffects");
 }
 
 export async function clearPendingEffects(actor, { refund = false } = {}) {

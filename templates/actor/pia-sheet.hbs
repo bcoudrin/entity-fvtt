@@ -17,11 +17,6 @@
     <label><span>Énergie</span><input type="number" name="system.energy.value" value="{{system.energy.value}}" /><b>/ {{system.energy.max}}</b></label>
     <label><span>Ressources</span><input type="number" name="system.resources.value" value="{{system.resources.value}}" /><b>/ {{system.resources.max}}</b></label>
     <label><span>Données</span><input type="number" name="system.data.value" value="{{system.data.value}}" /><b>/ {{system.data.max}}</b></label>
-    <label class="entity-roll-mode"><span>Jet</span>
-      <select data-roll-mode>
-        {{#each rollModes as |mode|}}<option value="{{mode.key}}">{{mode.label}}</option>{{/each}}
-      </select>
-    </label>
   </section>
 
   <nav class="entity-tabs tabs" data-group="primary">
@@ -59,7 +54,7 @@
       {{#if pendingEffects.length}}
         <section class="entity-panel entity-pending">
           <header class="entity-panel-title">
-            <h2>Améliorations activées</h2>
+            <h2>Améliorations armées</h2>
             <button type="button" data-action="clearPending"><i class="fa-solid fa-rotate-left"></i> Annuler et rembourser</button>
           </header>
           <div class="entity-chip-row">
@@ -70,13 +65,14 @@
     </section>
 
     <section class="tab {{tabs.suit.cssClass}}" data-group="primary" data-tab="suit">
-      <section class="entity-panel">
+      <section class="entity-panel entity-suit-panel">
         <header class="entity-panel-title">
           <div>
             <h2>Combinaison spatiale</h2>
             <p>{{suit.used}} / {{suit.max}} emplacements occupés</p>
           </div>
           <div class="entity-inline-actions">
+            <button type="button" data-action="createImprovement"><i class="fa-solid fa-plus"></i> Module</button>
             <button type="button" data-action="addConstraint"><i class="fa-solid fa-triangle-exclamation"></i> Contrainte</button>
             <button type="button" data-action="addFailure"><i class="fa-solid fa-burst"></i> Défaillance</button>
           </div>
@@ -84,39 +80,43 @@
 
         <div class="entity-suit-grid">
           {{#each suitSlots as |slot|}}
-            <div class="entity-slot entity-slot-{{slot.kind}}" title="{{slot.label}}">
+            <div class="entity-slot entity-slot-{{slot.kind}} {{#if slot.pending}}entity-slot-pending{{/if}}" title="{{slot.label}}" {{#if slot.itemId}}data-item-id="{{slot.itemId}}"{{/if}}>
               {{#if slot.itemId}}
-                <button type="button" class="entity-slot-main" data-action="openItem" data-item-id="{{slot.itemId}}">
-                  <i class="{{slot.icon}}"></i><span>{{slot.label}}</span>
+                <button type="button" class="entity-slot-name" data-action="openItem" data-item-id="{{slot.itemId}}">
+                  <i class="{{slot.icon}}"></i>
+                  <span>{{slot.label}}</span>
                 </button>
+                <div class="entity-slot-meta">
+                  <span class="entity-cost">{{slot.cost}}E</span>
+                  <span class="entity-slot-status">{{slot.status}}</span>
+                </div>
+                <div class="entity-slot-actions">
+                  {{#if slot.activatable}}
+                    <button type="button" data-action="activateImprovement" data-item-id="{{slot.itemId}}" title="Activer">
+                      <i class="fa-solid fa-bolt"></i>
+                    </button>
+                  {{/if}}
+                  <button type="button" data-action="openItem" data-item-id="{{slot.itemId}}" title="Détails">
+                    <i class="fa-solid fa-circle-info"></i>
+                  </button>
+                  <button type="button" class="entity-danger" data-action="deleteItem" data-item-id="{{slot.itemId}}" title="Défausser">
+                    <i class="fa-solid fa-trash"></i>
+                  </button>
+                </div>
               {{else}}
-                <span>{{#if slot.icon}}<i class="{{slot.icon}}"></i>{{/if}} {{slot.label}}</span>
-              {{/if}}
-              {{#if slot.removable}}
-                <button type="button" class="entity-slot-remove" data-action="removeCondition" data-kind="{{slot.kind}}s" data-index="{{slot.index}}" title="Retirer"><i class="fa-solid fa-xmark"></i></button>
+                <div class="entity-slot-condition">
+                  {{#if slot.icon}}<i class="{{slot.icon}}"></i>{{/if}}
+                  <span>{{slot.label}}</span>
+                </div>
+                {{#if slot.removable}}
+                  <button type="button" class="entity-slot-remove" data-action="removeCondition" data-kind="{{slot.kind}}s" data-index="{{slot.index}}" title="Retirer">
+                    <i class="fa-solid fa-xmark"></i>
+                  </button>
+                {{/if}}
               {{/if}}
             </div>
           {{/each}}
         </div>
-      </section>
-
-      <section class="entity-panel">
-        <header class="entity-panel-title">
-          <h2>Améliorations</h2>
-          <button type="button" data-action="createImprovement"><i class="fa-solid fa-plus"></i> Ajouter</button>
-        </header>
-        <ol class="entity-item-list">
-          {{#each improvements as |item|}}
-            <li>
-              <button type="button" class="entity-item-name" data-action="openItem" data-item-id="{{item.id}}">{{item.name}}</button>
-              <span class="entity-cost">{{item.system.energyCost}}E</span>
-              <button type="button" data-action="activateImprovement" data-item-id="{{item.id}}"><i class="fa-solid fa-bolt"></i> Activer</button>
-              <button type="button" class="entity-danger" data-action="deleteItem" data-item-id="{{item.id}}" title="Défausser"><i class="fa-solid fa-trash"></i></button>
-            </li>
-          {{else}}
-            <li class="entity-empty">Aucune Amélioration.</li>
-          {{/each}}
-        </ol>
       </section>
     </section>
 

@@ -73,12 +73,39 @@ function shieldItems(actor) {
     .map((item) => ({ id: item.id, name: item.name, cost: Number(item.system.energyCost || 0) }));
 }
 
+function rerollImprovement(actor) {
+  const item = actor.items
+    .filter((candidate) => candidate.type === "improvement")
+    .find((candidate) =>
+      candidate.system.effectType === "reroll" &&
+      (actor.system.energy?.value ?? 0) >= Number(candidate.system.energyCost || 0)
+    );
+
+  return item
+    ? { id: item.id, name: item.name, cost: Number(item.system.energyCost || 0) }
+    : null;
+}
+
 async function renderCard(state, actor) {
   return renderTemplate("systems/entity/templates/chat/action-roll.hbs", {
     state,
     actor,
     ability: ABILITIES[state.abilityKey],
-    shields: state.result === "partial" && !state.consequenceApplied ? shieldItems(actor) : []
+    shields: state.result === "partial" && !state.consequenceApplied ? shieldItems(actor) : [],
+    rerollItem: rerollImprovement(actor)
+  });
+}
+
+async function rerollDieAndRefresh(message, state, actor, dieIndex) {
+  if (dieIndex < 0 || dieIndex >= state.dice.length) return;
+
+  const reroll = await new Roll("1d10").evaluate();
+  state.dice[dieIndex] = reroll.dice[0]?.results?.[0]?.result ?? state.dice[dieIndex];
+  recalculate(state);
+
+  await message.update({
+    content: await renderCard(state, actor),
+    ["flags." + SYSTEM_ID + ".actionRoll"]: state
   });
 }
 
@@ -116,8 +143,8 @@ export async function rollAction(actor, abilityKey, { mode = "normal" } = {}) {
     diceDisplay: [],
     result: "",
     resultLabel: "",
-    rerollAvailable: hasStructureReroll(actor, abilityKey) || effects.some((effect) => effect.type === "reroll"),
-    rerollUsed: false,
+    structureRerollAvailable: hasStructureReroll(actor, abilityKey),
+    structureRerollUsed: false,
     consequenceApplied: false,
     shieldUsed: false,
     activatedImprovements: effects.map((effect) => effect.name)
@@ -134,23 +161,38 @@ export async function rollAction(actor, abilityKey, { mode = "normal" } = {}) {
   return { message, state, roll };
 }
 
-export async function rerollActionDie(message, dieIndex) {
+export async function rerollWithStructure(message, dieIndex) {
   const state = foundry.utils.deepClone(message.getFlag(SYSTEM_ID, "actionRoll"));
-  if (!state || !state.rerollAvailable || state.rerollUsed) return;
-  if (dieIndex < 0 || dieIndex >= state.dice.length) return;
+  if (!state || !state.structureRerollAvailable || state.structureRerollUsed) return;
+
+  const actor = await fromUuid(state.actorUuid);
+  if (!actor || !hasStructureReroll(actor, state.abilityKey)) return;
+
+  state.structureRerollUsed = true;
+  await rerollDieAndRefresh(message, state, actor, dieIndex);
+}
+
+export async function rerollWithImprovement(message, dieIndex, itemId) {
+  const state = foundry.utils.deepClone(message.getFlag(SYSTEM_ID, "actionRoll"));
+  if (!state) return;
 
   const actor = await fromUuid(state.actorUuid);
   if (!actor) return;
 
-  const reroll = await new Roll("1d10").evaluate();
-  state.dice[dieIndex] = reroll.dice[0]?.results?.[0]?.result ?? state.dice[dieIndex];
-  state.rerollUsed = true;
-  recalculate(state);
+  const item = actor.items.get(itemId);
+  if (!item || item.type !== "improvement" || item.system.effectType !== "reroll") return;
 
-  await message.update({
-    content: await renderCard(state, actor),
-    ["flags." + SYSTEM_ID + ".actionRoll"]: state
-  });
+  const cost = Number(item.system.energyCost || 0);
+  if ((actor.system.energy?.value ?? 0) < cost) {
+    ui.notifications.warn("Énergie insuffisante pour cette relance.");
+    return;
+  }
+
+  if (cost > 0) {
+    await actor.update({ "system.energy.value": actor.system.energy.value - cost });
+  }
+
+  await rerollDieAndRefresh(message, state, actor, dieIndex);
 }
 
 export async function applyRollConsequence(message, kind) {
