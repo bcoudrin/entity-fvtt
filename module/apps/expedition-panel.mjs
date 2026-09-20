@@ -2,7 +2,9 @@ import { ABILITIES, SYSTEM_ID } from "../constants.mjs";
 import {
   addAspectAndAdvance,
   advanceEncounter,
+  applyEncounterRewards,
   completeMission,
+  convertEncounterResource,
   getMissionCatalog,
   getWorkflow,
   installImprovementAsSecondary,
@@ -19,11 +21,37 @@ import {
 
 const { ApplicationV2, HandlebarsApplicationMixin } = foundry.applications.api;
 
-function currentEncounterView(workflow) {
+function rewardLabel(reward) {
+  if (reward.resourceKey === "data") return reward.amount + " Donnée(s)";
+  if (reward.resourceKey === "energy") return reward.amount + " Énergie";
+  return reward.amount + " Ressource(s)";
+}
+
+function currentEncounterView(workflow, actor) {
   const encounter = workflow.currentEncounter;
   if (!encounter) return null;
+
+  const rewards = (encounter.rewards || []).map((reward, index) => ({
+    ...reward,
+    index,
+    label: rewardLabel(reward)
+  }));
+  const converter = actor.items.find((item) =>
+    item.type === "improvement" && item.system.effectType === "convertResource"
+  );
+  const converterCost = Number(converter?.system.effectValue || 2);
+  const converterAvailable =
+    encounter.context === "location" &&
+    ["opportunity", "find"].includes(encounter.type) &&
+    Boolean(converter) &&
+    Number(actor.system.resources?.value || 0) >= converterCost;
+
   return {
     ...encounter,
+    rewards,
+    hasRewards: rewards.length > 0,
+    rewardChoice: encounter.rewardMode === "choice",
+    rewardAll: encounter.rewardMode === "all",
     keywords: (encounter.keywords || []).map((key) => ({
       key,
       label: ABILITIES[key]?.label || key
@@ -32,7 +60,11 @@ function currentEncounterView(workflow) {
     isOpportunity: encounter.type === "opportunity",
     isFind: encounter.type === "find",
     isAspect: encounter.type === "aspect",
-    multiThreat: Number(encounter.threat || 0) > 1
+    multiThreat: Number(encounter.threat || 0) > 1,
+    converterAvailable,
+    converterCost,
+    canConvertData: converterAvailable && Number(actor.system.data?.value || 0) < Number(actor.system.data?.max || 10),
+    canConvertEnergy: converterAvailable && Number(actor.system.energy?.value || 0) < Number(actor.system.energy?.max || 10)
   };
 }
 
@@ -60,6 +92,8 @@ export class ExpeditionPanel extends HandlebarsApplicationMixin(ApplicationV2) {
       encounterSuccess: ExpeditionPanel.#encounterSuccess,
       encounterFailure: ExpeditionPanel.#encounterFailure,
       encounterResolved: ExpeditionPanel.#encounterResolved,
+      applyEncounterReward: ExpeditionPanel.#applyEncounterReward,
+      convertEncounter: ExpeditionPanel.#convertEncounter,
       addAspect: ExpeditionPanel.#addAspect,
       secondaryRoll: ExpeditionPanel.#secondaryRoll,
       installImprovement: ExpeditionPanel.#installImprovement,
@@ -81,7 +115,7 @@ export class ExpeditionPanel extends HandlebarsApplicationMixin(ApplicationV2) {
     context.actor = actor;
     context.system = actor.system;
     context.workflow = workflow;
-    context.currentEncounter = currentEncounterView(workflow);
+    context.currentEncounter = currentEncounterView(workflow, actor);
     context.missions = missions;
     context.hasMission = Boolean(activeKey);
     context.missionReady =
@@ -109,7 +143,7 @@ export class ExpeditionPanel extends HandlebarsApplicationMixin(ApplicationV2) {
     return root.querySelector(selector)?.value ?? fallback;
   }
 
-  static async #startMission(event, target) {
+  static async #startMission() {
     const key = this.#formValue(this.element, "[name='missionKey']");
     if (await startMission(this.actor, key)) this.render({ force: true });
   }
@@ -154,6 +188,15 @@ export class ExpeditionPanel extends HandlebarsApplicationMixin(ApplicationV2) {
 
   static async #encounterResolved() {
     if (await advanceEncounter(this.actor, "resolved")) this.render({ force: true });
+  }
+
+  static async #applyEncounterReward(event, target) {
+    const choice = target.dataset.rewardIndex === undefined ? null : Number(target.dataset.rewardIndex);
+    if (await applyEncounterRewards(this.actor, choice)) this.render({ force: true });
+  }
+
+  static async #convertEncounter(event, target) {
+    if (await convertEncounterResource(this.actor, target.dataset.resource)) this.render({ force: true });
   }
 
   static async #addAspect() {
