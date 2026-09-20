@@ -49,6 +49,18 @@
     <p class="entity-chat-success"><i class="fa-solid fa-shield-halved"></i> {{state.shieldName}} : Contrainte évitée.</p>
   {{/if}}
 
+  {{#if state.workflow.encounter}}
+    {{#unless state.encounterRecorded}}
+      <div class="entity-chat-actions entity-encounter-record">
+        <button type="button" data-entity-chat-action="record-encounter-roll">
+          <i class="fa-solid fa-list-check"></i> Enregistrer pour le Défi
+        </button>
+      </div>
+    {{else}}
+      <p class="entity-chat-success"><i class="fa-solid fa-check"></i> Jet enregistré pour la Valeur de Menace.</p>
+    {{/unless}}
+  {{/if}}
+
   {{#unless state.consequenceApplied}}
     {{#if (eq state.result "partial")}}
       <div class="entity-chat-actions">
