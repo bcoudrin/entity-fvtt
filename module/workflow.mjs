@@ -2,7 +2,7 @@ import { ABILITIES, SYSTEM_ID, TRAITS } from "./constants.mjs";
 import { CORE_DISCOVERIES } from "./data/core-items.mjs";
 import { CORE_TABLES } from "./data/tables.mjs";
 import { appendJournalEntry } from "./journal.mjs";
-import { rollThresholdAction } from "./dice.mjs";
+import { refreshActionRollMessage, rollThresholdAction } from "./dice.mjs";
 import {
   clampDataSpend,
   locationEncounterPlan,
@@ -156,12 +156,13 @@ function missionCatalog() {
 }
 
 function cloneEmbeddedItem(source) {
+  const object = source.toObject();
   return {
     name: source.name,
     type: source.type,
     img: source.img,
-    system: foundry.utils.deepClone(source.system),
-    flags: foundry.utils.deepClone(source.flags)
+    system: foundry.utils.deepClone(object.system),
+    flags: foundry.utils.deepClone(object.flags)
   };
 }
 
@@ -498,18 +499,27 @@ export async function rollSecondaryActivity(actor, kind) {
   if (!definition) return false;
 
   const traitValue = Number(actor.system.traits?.[definition.traitKey]?.value || 0);
-  return rollThresholdAction(actor, {
-    label: definition.label,
-    traitLabel: TRAITS[definition.traitKey]?.label || definition.traitKey,
-    target: traitValue + 4,
-    mode: "normal",
-    workflow: {
-      secondary: true,
-      secondaryKind: kind,
-      traitKey: definition.traitKey,
-      resourceKey: definition.resourceKey
-    }
-  });
+  workflow.stage = "secondaryRoll";
+  await saveWorkflow(actor, workflow);
+
+  try {
+    return await rollThresholdAction(actor, {
+      label: definition.label,
+      traitLabel: TRAITS[definition.traitKey]?.label || definition.traitKey,
+      target: traitValue + 4,
+      mode: "normal",
+      workflow: {
+        secondary: true,
+        secondaryKind: kind,
+        traitKey: definition.traitKey,
+        resourceKey: definition.resourceKey
+      }
+    });
+  } catch (error) {
+    workflow.stage = "secondary";
+    await saveWorkflow(actor, workflow);
+    throw error;
+  }
 }
 
 export async function applySecondaryGain(message) {
@@ -529,7 +539,7 @@ export async function applySecondaryGain(message) {
 
   state.secondaryApplied = true;
   state.secondaryGain = gain;
-  await message.update({ ["flags." + SYSTEM_ID + ".actionRoll"]: state });
+  await refreshActionRollMessage(message, state, actor);
 
   const workflow = workflowCopy(actor);
   workflow.stage = "done";
@@ -560,7 +570,7 @@ export async function resolveSecondaryFailure(message) {
   workflow.stage = "encounter";
   state.secondaryApplied = true;
 
-  await message.update({ ["flags." + SYSTEM_ID + ".actionRoll"]: state });
+  await refreshActionRollMessage(message, state, actor);
   await saveWorkflow(actor, workflow);
 
   const current = workflow.currentEncounter;
