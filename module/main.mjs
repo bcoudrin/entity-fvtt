@@ -6,11 +6,13 @@ import { EntityActor } from "./documents/actor.mjs";
 import { EntityItem } from "./documents/item.mjs";
 import { PiaSheet } from "./sheets/actor-sheet.mjs";
 import { EntityItemSheet } from "./sheets/item-sheet.mjs";
+import { ExpeditionPanel } from "./apps/expedition-panel.mjs";
 import { ensurePiaJournal } from "./journal.mjs";
 import { applyRollConsequence, rerollWithImprovement, rerollWithStructure, useShieldForRoll } from "./dice.mjs";
 import { clearPendingEffects, removePendingEffectsForItem } from "./improvements.mjs";
 import { createCoreRollTables } from "./roll-tables.mjs";
 import { seedCoreContent } from "./content-seed.mjs";
+import { applySecondaryGain, resolveSecondaryFailure } from "./workflow.mjs";
 
 function embeddedImprovementData(definition) {
   const { key, name, ...system } = definition;
@@ -124,6 +126,11 @@ function chatRoot(html) {
   return null;
 }
 
+function refreshExpeditionPanel(actor) {
+  const panel = foundry.applications.instances.get("entity-expedition-panel");
+  if (panel?.actor?.id === actor?.id) panel.render({ force: true });
+}
+
 Hooks.once("init", () => {
   console.log(SYSTEM_ID + " | Initialisation");
 
@@ -159,6 +166,10 @@ Hooks.on("createActor", async (actor, options, userId) => {
   await ensurePiaJournal(actor);
 });
 
+Hooks.on("updateActor", (actor) => {
+  if (actor.type === "pia") refreshExpeditionPanel(actor);
+});
+
 Hooks.on("createItem", async (item) => {
   await normalizeEmbeddedItem(item);
 });
@@ -168,11 +179,15 @@ Hooks.on("deleteItem", async (item) => {
   if (!actor || actor.documentName !== "Actor" || actor.type !== "pia") return;
   await removePendingEffectsForItem(actor, item.id);
   actor.sheet?.render({ force: true });
+  refreshExpeditionPanel(actor);
 });
 
 Hooks.on("updateItem", (item) => {
   const actor = item.parent;
-  if (actor?.documentName === "Actor" && actor.type === "pia") actor.sheet?.render({ force: true });
+  if (actor?.documentName === "Actor" && actor.type === "pia") {
+    actor.sheet?.render({ force: true });
+    refreshExpeditionPanel(actor);
+  }
 });
 
 Hooks.on("renderChatMessageHTML", (message, html) => {
@@ -188,6 +203,8 @@ Hooks.on("renderChatMessageHTML", (message, html) => {
       if (action === "reroll-structure") await rerollWithStructure(message, Number(button.dataset.dieIndex));
       if (action === "reroll-improvement") await rerollWithImprovement(message, Number(button.dataset.dieIndex), button.dataset.itemId);
       if (action === "shield") await useShieldForRoll(message, button.dataset.itemId);
+      if (action === "secondary-gain") await applySecondaryGain(message);
+      if (action === "secondary-challenge") await resolveSecondaryFailure(message);
     });
   });
 });
@@ -198,7 +215,18 @@ Hooks.once("ready", async () => {
     ensureJournal: ensurePiaJournal,
     clearPendingEffects,
     createCoreRollTables,
-    seedCoreContent
+    seedCoreContent,
+    openExpedition: (actor) => {
+      if (!actor || actor.type !== "pia") {
+        ui.notifications.warn("Sélectionnez un PIA.");
+        return null;
+      }
+      const existing = foundry.applications.instances.get("entity-expedition-panel");
+      if (existing) existing.close();
+      const panel = new ExpeditionPanel(actor);
+      panel.render({ force: true });
+      return panel;
+    }
   };
 
   if (game.user?.isGM) {
