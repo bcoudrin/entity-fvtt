@@ -1,0 +1,9 @@
+{
+  "name": "entity-fvtt",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "node testing/validate-data.mjs",
+    "check": "find module testing -name '*.mjs' -print0 | xargs -0 -n1 node --check"
+  }
+}

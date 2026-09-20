@@ -1,5 +1,6 @@
 export const SYSTEM_ID = "entity";
 export const SUIT_SLOTS = 20;
+export const CORE_DATA_VERSION = 1;
 
 export const TRAITS = {
   technology: { label: "Technologie", abilities: ["computing", "engineering", "robotics"] },
@@ -24,42 +25,3 @@ export const ROLL_MODES = {
   advantage: { label: "Avantage", modifier: 1 },
   disadvantage: { label: "Désavantage", modifier: -1 }
 };
-
-export const STARTING_IMPROVEMENTS = [
-  {
-    name: "Outil multiple intégré",
-    type: "improvement",
-    system: {
-      energyCost: 2,
-      effectType: "reroll",
-      effectKey: "any",
-      effectValue: 1,
-      starting: true,
-      description: "Permet de relancer un dé lors d’un jet d’Action."
-    }
-  },
-  {
-    name: "Bouclier énergétique adaptatif",
-    type: "improvement",
-    system: {
-      energyCost: 3,
-      effectType: "preventConstraint",
-      effectKey: "any",
-      effectValue: 1,
-      starting: true,
-      description: "Peut être utilisé lors d’un jet d’Action pour éviter de subir une Contrainte."
-    }
-  },
-  {
-    name: "Unité de conversion des ressources adaptative",
-    type: "improvement",
-    system: {
-      energyCost: 0,
-      effectType: "convertResource",
-      effectKey: "resources",
-      effectValue: 2,
-      starting: true,
-      description: "Lors d’une Rencontre de Lieu — Opportunité ou Trouvaille, permet de dépenser 2 Ressources pour gagner 1 Donnée ou 1 Énergie."
-    }
-  }
-];
