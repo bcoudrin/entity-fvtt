@@ -132,13 +132,79 @@
             </div>
           {{/if}}
           {{#if currentEncounter.isOpportunity}}
+            {{#if currentEncounter.hasRewards}}
+              <div class="entity-reward-panel">
+                <strong>Gain en cas de succès</strong>
+                <div class="entity-chip-row">
+                  {{#each currentEncounter.rewards as |reward|}}<span class="entity-chip">{{reward.label}}</span>{{/each}}
+                </div>
+                {{#unless currentEncounter.rewardApplied}}
+                  {{#if currentEncounter.rewardChoice}}
+                    <div class="entity-two-actions">
+                      {{#each currentEncounter.rewards as |reward|}}
+                        <button type="button" class="entity-primary" data-action="applyEncounterReward" data-reward-index="{{reward.index}}">
+                          <i class="fa-solid fa-box"></i> Choisir {{reward.label}}
+                        </button>
+                      {{/each}}
+                    </div>
+                  {{else}}
+                    <button type="button" class="entity-primary" data-action="applyEncounterReward">
+                      <i class="fa-solid fa-box"></i> Appliquer le gain
+                    </button>
+                  {{/if}}
+                {{else}}
+                  <p class="entity-chat-success"><i class="fa-solid fa-check"></i> Gain appliqué.</p>
+                {{/unless}}
+              </div>
+            {{/if}}
+          {{/if}}
+
+          {{#if currentEncounter.isFind}}
+            {{#if currentEncounter.hasRewards}}
+              <div class="entity-reward-panel">
+                <strong>Gain de la Trouvaille</strong>
+                <div class="entity-chip-row">
+                  {{#each currentEncounter.rewards as |reward|}}<span class="entity-chip">{{reward.label}}</span>{{/each}}
+                </div>
+                {{#unless currentEncounter.rewardApplied}}
+                  <button type="button" class="entity-primary" data-action="applyEncounterReward">
+                    <i class="fa-solid fa-box-open"></i> Appliquer le gain
+                  </button>
+                {{else}}
+                  <p class="entity-chat-success"><i class="fa-solid fa-check"></i> Gain appliqué.</p>
+                {{/unless}}
+              </div>
+            {{/if}}
+          {{/if}}
+
+          {{#if currentEncounter.converterAvailable}}
+            <div class="entity-converter-panel">
+              <strong><i class="fa-solid fa-recycle"></i> Unité de conversion adaptative</strong>
+              <p>Dépenser {{currentEncounter.converterCost}} Ressources pour gagner 1 Donnée ou 1 Énergie.</p>
+              <div class="entity-two-actions">
+                <button type="button" data-action="convertEncounter" data-resource="data" {{#unless currentEncounter.canConvertData}}disabled{{/unless}}>+1 Donnée</button>
+                <button type="button" data-action="convertEncounter" data-resource="energy" {{#unless currentEncounter.canConvertEnergy}}disabled{{/unless}}>+1 Énergie</button>
+              </div>
+            </div>
+          {{/if}}
+
+          {{#if currentEncounter.isOpportunity}}
             <div class="entity-two-actions">
-              <button type="button" class="entity-primary" data-action="encounterResolved"><i class="fa-solid fa-check"></i> Opportunité résolue</button>
-              <button type="button" data-action="encounterResolved"><i class="fa-solid fa-forward"></i> Passer</button>
+              {{#if currentEncounter.rewardApplied}}
+                <button type="button" class="entity-primary" data-action="encounterResolved"><i class="fa-solid fa-check"></i> Continuer</button>
+              {{else}}
+                <button type="button" data-action="encounterResolved"><i class="fa-solid fa-forward"></i> Passer sans gain</button>
+              {{/if}}
             </div>
           {{/if}}
           {{#if currentEncounter.isFind}}
-            <button type="button" class="entity-primary" data-action="encounterResolved"><i class="fa-solid fa-box-open"></i> Continuer</button>
+            {{#if currentEncounter.rewardApplied}}
+              <button type="button" class="entity-primary" data-action="encounterResolved"><i class="fa-solid fa-forward"></i> Continuer</button>
+            {{else}}
+              {{#unless currentEncounter.hasRewards}}
+                <button type="button" class="entity-primary" data-action="encounterResolved"><i class="fa-solid fa-forward"></i> Continuer</button>
+              {{/unless}}
+            {{/if}}
           {{/if}}
           {{#if currentEncounter.isAspect}}
             <button type="button" class="entity-primary" data-action="addAspect"><i class="fa-solid fa-diamond"></i> Ajouter l’Aspect à la Mission</button>
