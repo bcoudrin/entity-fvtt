@@ -6,7 +6,11 @@
 
   <div class="entity-chat-target">
     <strong>Seuil ≤ {{state.target}}</strong>
-    <span>Trait {{state.traitValue}} + Capacité {{state.abilityValue}}{{#if state.passiveBonus}} + Structure {{state.passiveBonus}}{{/if}}{{#if state.improvementBonus}} + Amélioration {{state.improvementBonus}}{{/if}}</span>
+    {{#if state.customAction}}
+      <span>{{state.targetBreakdown}}</span>
+    {{else}}
+      <span>Trait {{state.traitValue}} + Capacité {{state.abilityValue}}{{#if state.passiveBonus}} + Structure {{state.passiveBonus}}{{/if}}{{#if state.improvementBonus}} + Amélioration {{state.improvementBonus}}{{/if}}</span>
+    {{/if}}
   </div>
 
   <div class="entity-dice-row">
@@ -14,18 +18,20 @@
       <div class="entity-chat-die {{#if die.discarded}}discarded{{/if}}">
         <span>{{die.value}}</span>
         <div class="entity-die-tools">
-          {{#if ../state.structureRerollAvailable}}
-            {{#unless ../state.structureRerollUsed}}
-              <button type="button" data-entity-chat-action="reroll-structure" data-die-index="{{die.index}}" title="Relance gratuite de Structure">
-                <i class="fa-solid fa-rotate"></i>
+          {{#unless ../rerollsLocked}}
+            {{#if ../state.structureRerollAvailable}}
+              {{#unless ../state.structureRerollUsed}}
+                <button type="button" data-entity-chat-action="reroll-structure" data-die-index="{{die.index}}" title="Relance gratuite de Structure">
+                  <i class="fa-solid fa-rotate"></i>
+                </button>
+              {{/unless}}
+            {{/if}}
+            {{#if ../rerollItem}}
+              <button type="button" data-entity-chat-action="reroll-improvement" data-die-index="{{die.index}}" data-item-id="{{../rerollItem.id}}" title="{{../rerollItem.name}} — {{../rerollItem.cost}}E">
+                <i class="fa-solid fa-screwdriver-wrench"></i>
               </button>
-            {{/unless}}
-          {{/if}}
-          {{#if ../rerollItem}}
-            <button type="button" data-entity-chat-action="reroll-improvement" data-die-index="{{die.index}}" data-item-id="{{../rerollItem.id}}" title="{{../rerollItem.name}} — {{../rerollItem.cost}}E">
-              <i class="fa-solid fa-screwdriver-wrench"></i>
-            </button>
-          {{/if}}
+            {{/if}}
+          {{/unless}}
         </div>
       </div>
     {{/each}}
@@ -58,4 +64,24 @@
       </div>
     {{/if}}
   {{/unless}}
+
+  {{#if state.workflow.secondary}}
+    {{#unless state.secondaryApplied}}
+      <div class="entity-chat-actions entity-secondary-result-actions">
+        {{#if (eq state.result "full")}}
+          <button type="button" data-entity-chat-action="secondary-gain"><i class="fa-solid fa-box"></i> Appliquer le gain</button>
+        {{/if}}
+        {{#if (eq state.result "partial")}}
+          <button type="button" data-entity-chat-action="secondary-gain"><i class="fa-solid fa-box"></i> Appliquer le demi-gain</button>
+        {{/if}}
+        {{#if (eq state.result "failure")}}
+          <button type="button" data-entity-chat-action="secondary-challenge"><i class="fa-solid fa-triangle-exclamation"></i> Résoudre le Défi</button>
+        {{/if}}
+      </div>
+    {{else}}
+      {{#if state.secondaryGain}}
+        <p class="entity-chat-success"><i class="fa-solid fa-check"></i> Gain appliqué : +{{state.secondaryGain}}.</p>
+      {{/if}}
+    {{/unless}}
+  {{/if}}
 </div>
