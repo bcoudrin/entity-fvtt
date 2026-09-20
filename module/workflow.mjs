@@ -7,6 +7,7 @@ import {
   clampDataSpend,
   locationEncounterPlan,
   missionNumberFromKey,
+  parseEncounterRewards,
   resolveRangedEntry,
   secondaryGain,
   travelEncounterType
@@ -78,6 +79,7 @@ async function rollDetailedEncounter(type, meta = {}) {
   const roll = await new Roll("1d100").evaluate();
   const value = roll.total;
   const entry = resolveRangedEntry(table.entries, value);
+  const rewardSpec = parseEncounterRewards(entry?.text || "");
 
   return {
     type,
@@ -87,7 +89,10 @@ async function rollDetailedEncounter(type, meta = {}) {
     keywords: entry?.keywords || [],
     threat: meta.threat || 1,
     disadvantage: Boolean(meta.disadvantage),
-    context: meta.context || "location"
+    context: meta.context || "location",
+    rewardMode: rewardSpec.mode,
+    rewards: rewardSpec.rewards,
+    rewardApplied: false
   };
 }
 
@@ -638,5 +643,106 @@ export async function selfRepairAsSecondary(actor, constraintIndex) {
   workflow.stage = "done";
   await saveWorkflow(actor, workflow);
   await appendJournalEntry(actor, "Autoréparation", "<p>Contrainte éliminée : <strong>" + removed + "</strong>. Coût : 5 Ressources.</p>");
+  return true;
+}
+
+
+function rewardLabel(reward) {
+  if (reward.resourceKey === "data") return reward.amount + " Donnée(s)";
+  if (reward.resourceKey === "energy") return reward.amount + " Énergie";
+  return reward.amount + " Ressource(s)";
+}
+
+async function addResource(actor, resourceKey, amount) {
+  const current = Number(actor.system[resourceKey]?.value || 0);
+  const max = Number(actor.system[resourceKey]?.max || 10);
+  const next = Math.min(max, current + Number(amount || 0));
+  await actor.update({ ["system." + resourceKey + ".value"]: next });
+  return next - current;
+}
+
+export async function applyEncounterRewards(actor, choiceIndex = null) {
+  const workflow = workflowCopy(actor);
+  const encounter = workflow.currentEncounter;
+  if (!encounter || !["opportunity", "find"].includes(encounter.type)) return false;
+  if (encounter.rewardApplied) {
+    ui.notifications.info("Le gain de cette Rencontre a déjà été appliqué.");
+    return false;
+  }
+
+  const rewards = Array.from(encounter.rewards || []);
+  if (!rewards.length) {
+    ui.notifications.info("Aucun gain structuré n’a été détecté pour cette Rencontre.");
+    return false;
+  }
+
+  let selected = rewards;
+  if (encounter.rewardMode === "choice") {
+    const index = Number(choiceIndex);
+    if (!Number.isInteger(index) || index < 0 || index >= rewards.length) return false;
+    selected = [rewards[index]];
+  }
+
+  const applied = [];
+  for (const reward of selected) {
+    const gained = await addResource(actor, reward.resourceKey, reward.amount);
+    applied.push({ ...reward, gained });
+  }
+
+  encounter.rewardApplied = true;
+  encounter.appliedRewards = applied;
+  workflow.currentEncounter = encounter;
+  await saveWorkflow(actor, workflow);
+
+  const summary = applied.map((reward) => rewardLabel({ ...reward, amount: reward.gained })).join(" + ");
+  await appendJournalEntry(
+    actor,
+    encounter.label + " — gain",
+    "<p>Gain appliqué : <strong>" + summary + "</strong>.</p>"
+  );
+  return true;
+}
+
+export async function convertEncounterResource(actor, targetKey) {
+  const workflow = workflowCopy(actor);
+  const encounter = workflow.currentEncounter;
+  if (!encounter || encounter.context !== "location" || !["opportunity", "find"].includes(encounter.type)) {
+    ui.notifications.warn("Cette conversion n’est disponible que lors d’une Opportunité ou Trouvaille de Lieu.");
+    return false;
+  }
+
+  if (!["data", "energy"].includes(targetKey)) return false;
+
+  const converter = actor.items.find((item) =>
+    item.type === "improvement" && item.system.effectType === "convertResource"
+  );
+  if (!converter) {
+    ui.notifications.warn("L’Unité de conversion des ressources adaptative n’est pas installée.");
+    return false;
+  }
+
+  const cost = Number(converter.system.effectValue || 2);
+  if (Number(actor.system.resources?.value || 0) < cost) {
+    ui.notifications.warn("Ressources insuffisantes pour la conversion.");
+    return false;
+  }
+
+  const current = Number(actor.system[targetKey]?.value || 0);
+  const max = Number(actor.system[targetKey]?.max || 10);
+  if (current >= max) {
+    ui.notifications.warn(targetKey === "data" ? "La capacité de Données est déjà pleine." : "La capacité d’Énergie est déjà pleine.");
+    return false;
+  }
+
+  await actor.update({
+    "system.resources.value": Number(actor.system.resources.value) - cost,
+    ["system." + targetKey + ".value"]: Math.min(max, current + 1)
+  });
+
+  await appendJournalEntry(
+    actor,
+    "Conversion de Ressources",
+    "<p>" + cost + " Ressources converties en 1 " + (targetKey === "data" ? "Donnée" : "Énergie") + ".</p>"
+  );
   return true;
 }
