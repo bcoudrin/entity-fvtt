@@ -111,7 +111,7 @@
           {{#if currentEncounter.disadvantage}}
             <p class="entity-warning-text"><i class="fa-solid fa-angles-up"></i> Désavantage (D)</p>
           {{/if}}
-          {{#if (gt currentEncounter.threat 1)}}
+          {{#if currentEncounter.multiThreat}}
             <p><strong>Valeur de Menace {{currentEncounter.threat}}</strong> — effectuez {{currentEncounter.threat}} jets d’Action avant de statuer sur le Défi.</p>
           {{/if}}
 
@@ -143,6 +143,13 @@
           {{#if currentEncounter.isAspect}}
             <button type="button" class="entity-primary" data-action="addAspect"><i class="fa-solid fa-diamond"></i> Ajouter l’Aspect à la Mission</button>
           {{/if}}
+        </section>
+      {{/if}}
+
+      {{#if (eq workflow.stage "secondaryRoll")}}
+        <section class="entity-panel entity-step-card entity-waiting-panel">
+          <h3><i class="fa-solid fa-hourglass-half"></i> Activité Secondaire en cours</h3>
+          <p>Résolvez le jet d’Action dans le Chat, puis utilisez le bouton correspondant au résultat pour appliquer le gain ou générer le Défi.</p>
         </section>
       {{/if}}
 
