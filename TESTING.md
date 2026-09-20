@@ -162,3 +162,165 @@ Le pré-remplissage par Expédition viendra avec le workflow automatisé.
 - la VM et le Désavantage des Rencontres ne sont pas encore pilotés par un workflow ;
 - l’Unité de conversion adaptative sera automatisée avec les Rencontres ;
 - pas de règles avancées ni d’Extras.
+
+
+## 10. Workflow Mission / Expédition
+
+### Démarrage d’une Mission
+
+1. Ouvrir un PIA puis cliquer sur **Mission / Expédition**.
+2. Choisir une Mission et la démarrer.
+3. Vérifier que la Mission active et son nombre d’Aspects requis sont affichés.
+4. Vérifier le début de Mission :
+   - Énergie à sa capacité maximale actuelle ;
+   - Ressources à 0 ;
+   - Données à 0 ;
+   - Contraintes supprimées ;
+   - Défaillances et Structures conservées.
+5. Vérifier qu’une entrée correspondante est ajoutée au Journal de bord.
+
+### Démarrage d’une Expédition
+
+1. Démarrer une Expédition.
+2. Vérifier l’incrément du numéro d’Expédition.
+3. Avec une Énergie strictement positive, vérifier l’accès direct à l’Identification du Lieu.
+4. Refaire le test avec Énergie à 0.
+
+Attendu avec Énergie à 0 :
+- le panneau exige explicitement **Ajouter la Contrainte** ;
+- aucun ajout silencieux ;
+- l’Identification du Lieu reste bloquée tant que la Contrainte n’a pas été confirmée.
+
+### Identification et Voyage
+
+1. Cliquer **Identifier le Lieu**.
+2. Vérifier un résultat d100 et le texte du Lieu.
+3. À l’étape Voyage, saisir 0 puis lancer.
+4. Refaire avec plusieurs Données disponibles et en dépenser une quantité choisie.
+
+Attendu :
+- les Données sont dépensées au clic ;
+- chaque point ajoute +1 au résultat du d10 ;
+- 1–4 → Défi ;
+- 5–7 → aucune Rencontre ;
+- 8–9 → Opportunité ;
+- 10+ → Trouvaille.
+
+Pour une Rencontre de Voyage, vérifier qu’un Défi échoué permet quand même de poursuivre vers la Rencontre de Lieu.
+
+### Rencontre de Lieu
+
+Tester plusieurs résultats, si nécessaire en dépensant des Données :
+
+- 1–2 → Défi VM 3 ;
+- 3–4 → Défi VM 2 ;
+- 5 → Défi avec Désavantage ;
+- 6 → Défi + Opportunité avec Désavantage ;
+- 7–8 → Défi + Opportunité ;
+- 9 → Défi + Opportunité + Trouvaille ;
+- 10+ → Défi + Opportunité + Trouvaille + Aspect.
+
+Vérifier que le panneau présente les éléments dans l’ordre **Défi → Opportunité → Trouvaille → Aspect**.
+
+Pour un Défi :
+1. vérifier les boutons de Capacités correspondant aux mots-clés ;
+2. vérifier qu’une Capacité non proposée n’est pas utilisée par le workflow ;
+3. pour VM 2 ou VM 3, effectuer le nombre indiqué de jets avant de statuer ;
+4. cliquer **Défi échoué** sur un Défi de Lieu.
+
+Attendu : en cas d’échec du Défi de Lieu, les Opportunités, Trouvailles et Aspects restants sont abandonnés et le panneau passe à l’Activité Secondaire.
+
+Pour un Aspect, cliquer **Ajouter l’Aspect à la Mission** et vérifier l’incrément du compteur.
+
+## 11. Activités Secondaires guidées
+
+### Collecte de Données
+
+1. Choisir **Collecte de Données**.
+2. Vérifier que le seuil est Analyse + 4.
+3. Résoudre le jet dans le Chat.
+4. Sur réussite totale, cliquer **Appliquer le gain**.
+5. Sur réussite partielle, cliquer **Appliquer le demi-gain**.
+6. Sur échec, cliquer **Résoudre le Défi**.
+
+Attendu :
+- réussite totale → gain égal à Analyse ;
+- réussite partielle → gain égal à la moitié d’Analyse, arrondie à l’inférieur ;
+- échec → génération d’un Défi ;
+- la ressource ne dépasse pas sa capacité maximale ;
+- les boutons habituels de Contrainte / Défaillance du jet restent explicites.
+
+### Recharge d’Énergie
+
+Même procédure, avec :
+- seuil Technologie + 4 ;
+- gain basé sur Technologie.
+
+### Collecte de Ressources
+
+Même procédure, avec :
+- seuil Adaptabilité + 4 ;
+- gain basé sur Adaptabilité.
+
+### Amélioration
+
+1. Disposer d’au moins 10 Ressources.
+2. Choisir une Amélioration non installée.
+3. Cliquer **Installer**.
+
+Attendu :
+- coût de 10 Ressources ;
+- l’Amélioration occupe un emplacement de Combinaison ;
+- impossible si la Combinaison est pleine ;
+- impossible d’installer un doublon ;
+- les éventuels effets d’installation continuent de s’appliquer.
+
+### Autoréparation
+
+1. Disposer d’au moins une Contrainte et 5 Ressources.
+2. Cliquer sur la Contrainte à réparer.
+
+Attendu :
+- coût de 5 Ressources ;
+- retrait de la Contrainte choisie ;
+- la Défaillance reste non réparable.
+
+## 12. Accomplissement d’une Mission
+
+1. Accumuler tous les Aspects requis.
+2. Cliquer **Accomplir la Mission**.
+
+Attendu :
+- la Structure associée est ajoutée au PIA ;
+- une Structure non répétable n’est pas dupliquée ;
+- les Structures 19–21 augmentent leur rang jusqu’à 5 ;
+- les Contraintes sont supprimées ;
+- la progression de Mission active revient à zéro ;
+- la Découverte suivante est révélée dans le Chat et le Journal ;
+- les Défaillances restent présentes ;
+- la Structure reste disponible pour la Mission suivante.
+
+Pour les Missions 19–21, vérifier qu’elles peuvent être accomplies au maximum cinq fois.
+
+## 13. Journal de bord automatisé
+
+Effectuer une Expédition complète et vérifier que le Journal reçoit au minimum :
+
+- démarrage de Mission ;
+- démarrage d’Expédition ;
+- Lieu identifié ;
+- Voyage ;
+- Rencontre de Lieu ;
+- Aspect éventuel ;
+- Activité Secondaire ;
+- accomplissement de Mission et Découverte éventuelle.
+
+Le texte doit rester librement éditable après génération.
+
+## Limites connues de la Phase 2A
+
+- les récompenses textuelles des Opportunités et Trouvailles ne sont pas encore appliquées automatiquement ;
+- l’Unité de conversion adaptative des Ressources n’est pas encore exposée dans le panneau de Rencontre ;
+- le système indique la VM mais ne compte pas encore automatiquement les jets réussis/échoués d’un Défi multi-jet ;
+- l’assistant de création reste reporté ;
+- règles avancées et Extras toujours exclus.
