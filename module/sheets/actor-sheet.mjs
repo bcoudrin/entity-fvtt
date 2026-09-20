@@ -131,11 +131,12 @@ export class PiaSheet extends HandlebarsApplicationMixin(ActorSheetV2) {
 
     const nameField = this.element.querySelector('input[name="name"]');
     if (nameField) {
-      nameField.addEventListener("input", () => {
-        clearTimeout(this._entityNameTimer);
-        this._entityNameTimer = setTimeout(() => this.actor.update({ name: nameField.value }), 200);
+      nameField.addEventListener("keydown", (event) => {
+        if (event.key === "Enter") {
+          event.preventDefault();
+          nameField.blur();
+        }
       });
-      nameField.addEventListener("blur", () => this.actor.update({ name: nameField.value }));
     }
   }
 
@@ -156,9 +157,22 @@ export class PiaSheet extends HandlebarsApplicationMixin(ActorSheetV2) {
 
   static async #rollAbility(event, target) {
     const abilityKey = target.dataset.ability;
-    const mode = await chooseRollMode(ABILITIES[abilityKey]?.label || abilityKey, getPendingEffects(this.actor));
+    let mode;
+    try {
+      mode = await chooseRollMode(ABILITIES[abilityKey]?.label || abilityKey, getPendingEffects(this.actor));
+    } catch (error) {
+      console.error("entity | Impossible d’ouvrir le dialogue de jet", error);
+      ui.notifications.error("Impossible d’ouvrir le dialogue de jet. Consultez la console.");
+      return;
+    }
     if (!mode) return;
-    await this.actor.rollAction(abilityKey, { mode });
+
+    try {
+      await this.actor.rollAction(abilityKey, { mode });
+    } catch (error) {
+      console.error("entity | Échec du jet d’Action", error);
+      ui.notifications.error("Le jet d’Action a échoué. Consultez la console.");
+    }
   }
 
   static async #activateImprovement(event, target) {

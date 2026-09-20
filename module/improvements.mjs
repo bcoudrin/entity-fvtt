@@ -35,6 +35,12 @@ export async function activateImprovement(actor, item) {
     return false;
   }
 
+  const pending = foundry.utils.deepClone(actor.getFlag(SYSTEM_ID, "pendingEffects") || []);
+  if (pending.some((effect) => effect.itemId === item.id)) {
+    ui.notifications.info(item.name + " est déjà armé pour un prochain jet compatible.");
+    return true;
+  }
+
   if ((actor.system.energy?.value ?? 0) < cost) {
     ui.notifications.warn("Énergie insuffisante pour activer cette Amélioration.");
     return false;
@@ -44,7 +50,6 @@ export async function activateImprovement(actor, item) {
     await actor.update({ "system.energy.value": actor.system.energy.value - cost });
   }
 
-  const pending = foundry.utils.deepClone(actor.getFlag(SYSTEM_ID, "pendingEffects") || []);
   pending.push({
     itemId: item.id,
     name: item.name,
@@ -56,7 +61,11 @@ export async function activateImprovement(actor, item) {
   await actor.setFlag(SYSTEM_ID, "pendingEffects", pending);
 
   const ability = ABILITIES[item.system.effectKey]?.label;
-  ui.notifications.info(item.name + " activé" + (ability ? " pour " + ability : "") + ".");
+  const effect = effectType === "abilityBonus"
+    ? "+" + Number(item.system.effectValue || 0)
+    : "Avantage";
+  ui.notifications.info(item.name + " armé" + (ability ? " pour " + ability : "") + " (" + effect + ").");
+  actor.sheet?.render({ force: true });
   return true;
 }
 
@@ -74,14 +83,27 @@ export async function consumePendingEffects(actor, abilityKey) {
     else remaining.push(effect);
   }
 
-  if (used.length) await actor.setFlag(SYSTEM_ID, "pendingEffects", remaining);
+  if (used.length) {
+    if (remaining.length) await actor.setFlag(SYSTEM_ID, "pendingEffects", remaining);
+    else await actor.unsetFlag(SYSTEM_ID, "pendingEffects");
+  }
   return used;
 }
 
 export async function removePendingEffectsForItem(actor, itemId) {
   const pending = getPendingEffects(actor);
+  const removed = pending.filter((effect) => effect.itemId === itemId);
   const remaining = pending.filter((effect) => effect.itemId !== itemId);
-  if (remaining.length === pending.length) return;
+  if (!removed.length) return;
+
+  const refund = removed.reduce((sum, effect) => sum + Number(effect.cost || 0), 0);
+  if (refund > 0) {
+    const max = Number(actor.system.energy?.max || 10);
+    await actor.update({
+      "system.energy.value": Math.min(max, Number(actor.system.energy?.value || 0) + refund)
+    });
+  }
+
   if (remaining.length) await actor.setFlag(SYSTEM_ID, "pendingEffects", remaining);
   else await actor.unsetFlag(SYSTEM_ID, "pendingEffects");
 }

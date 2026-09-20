@@ -92,8 +92,8 @@
                 </div>
                 <div class="entity-slot-actions">
                   {{#if slot.activatable}}
-                    <button type="button" data-action="activateImprovement" data-item-id="{{slot.itemId}}" title="Activer">
-                      <i class="fa-solid fa-bolt"></i>
+                    <button type="button" class="entity-slot-activate" data-action="activateImprovement" data-item-id="{{slot.itemId}}" title="Armer pour le prochain jet compatible">
+                      <i class="fa-solid fa-bolt"></i><span>{{#if slot.pending}}Armé{{else}}Armer{{/if}}</span>
                     </button>
                   {{/if}}
                   <button type="button" data-action="openItem" data-item-id="{{slot.itemId}}" title="Détails">

@@ -1,41 +1,34 @@
 export async function chooseRollMode(abilityLabel, pendingEffects = []) {
   const { DialogV2 } = foundry.applications.api;
   const pendingAdvantage = pendingEffects.some((effect) => effect.type === "advantage");
-
-  const content = document.createElement("div");
-  content.className = "entity-roll-dialog";
-  const intro = document.createElement("p");
-  intro.textContent = "Choisissez les conditions de ce jet de " + abilityLabel + ".";
-  content.append(intro);
-
-  if (pendingAdvantage) {
-    const note = document.createElement("p");
-    note.className = "entity-dialog-note";
-    note.textContent = "Une Amélioration donnant Avantage est déjà armée pour ce jet. Un Désavantage choisi ici l’annulera.";
-    content.append(note);
-  }
+  const note = pendingAdvantage
+    ? "<p class=\"entity-dialog-note\">Une Amélioration donnant Avantage est déjà armée pour ce jet. Un Désavantage choisi ici l’annulera.</p>"
+    : "";
 
   return DialogV2.wait({
     window: { title: "Jet d’Action — " + abilityLabel },
-    content,
+    content: "<div class=\"entity-roll-dialog\"><p>Choisissez les conditions de ce jet de <strong>" + abilityLabel + "</strong>.</p>" + note + "</div>",
     modal: true,
     rejectClose: false,
     buttons: [
       {
         action: "advantage",
         label: "Avantage",
-        icon: "fa-solid fa-angles-down"
+        icon: "fa-solid fa-angles-down",
+        callback: () => "advantage"
       },
       {
         action: "normal",
         label: "Normal",
         icon: "fa-solid fa-dice-d10",
-        default: true
+        default: true,
+        callback: () => "normal"
       },
       {
         action: "disadvantage",
         label: "Désavantage",
-        icon: "fa-solid fa-angles-up"
+        icon: "fa-solid fa-angles-up",
+        callback: () => "disadvantage"
       }
     ]
   });

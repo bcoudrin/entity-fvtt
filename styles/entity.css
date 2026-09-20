@@ -161,3 +161,16 @@
   .entity-traits-grid, .entity-header { grid-template-columns:1fr; }
   .entity-suit-grid { grid-template-columns:repeat(4,minmax(0,1fr)); }
 }
+
+.entity-slot-actions .entity-slot-activate {
+  width:auto;
+  padding:0 6px;
+  display:inline-flex;
+  align-items:center;
+  gap:4px;
+}
+.entity-slot-actions .entity-slot-activate span {
+  font-size:9px;
+  text-transform:uppercase;
+  letter-spacing:.04em;
+}
