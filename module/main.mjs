@@ -12,7 +12,7 @@ import { applyRollConsequence, rerollWithImprovement, rerollWithStructure, useSh
 import { clearPendingEffects, removePendingEffectsForItem } from "./improvements.mjs";
 import { createCoreRollTables } from "./roll-tables.mjs";
 import { seedCoreContent } from "./content-seed.mjs";
-import { applySecondaryGain, resolveSecondaryFailure } from "./workflow.mjs";
+import { applySecondaryGain, recordEncounterRoll, resolveSecondaryFailure } from "./workflow.mjs";
 
 function embeddedImprovementData(definition) {
   const { key, name, ...system } = definition;
@@ -203,6 +203,7 @@ Hooks.on("renderChatMessageHTML", (message, html) => {
       if (action === "reroll-structure") await rerollWithStructure(message, Number(button.dataset.dieIndex));
       if (action === "reroll-improvement") await rerollWithImprovement(message, Number(button.dataset.dieIndex), button.dataset.itemId);
       if (action === "shield") await useShieldForRoll(message, button.dataset.itemId);
+      if (action === "record-encounter-roll") await recordEncounterRoll(message);
       if (action === "secondary-gain") await applySecondaryGain(message);
       if (action === "secondary-challenge") await resolveSecondaryFailure(message);
     });
