@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import { CORE_DISCOVERIES, CORE_IMPROVEMENTS, CORE_MISSIONS, CORE_STRUCTURES } from "../module/data/core-items.mjs";
 import { CORE_TABLES } from "../module/data/tables.mjs";
-import { clampDataSpend, locationEncounterPlan, secondaryGain, travelEncounterType } from "../module/workflow-rules.mjs";
+import { clampDataSpend, locationEncounterPlan, parseEncounterRewards, secondaryGain, travelEncounterType } from "../module/workflow-rules.mjs";
 
 function coveredValues(entries) {
   const values = [];
@@ -61,5 +61,32 @@ assert.deepEqual(locationEncounterPlan(10).map((entry) => entry.type), ["challen
 assert.equal(secondaryGain("full", 5), 5);
 assert.equal(secondaryGain("partial", 5), 2);
 assert.equal(secondaryGain("failure", 5), 0);
+
+assert.deepEqual(
+  parseEncounterRewards("Gagnez 2 Données et 3 Ressources en cas de succès."),
+  {
+    mode: "all",
+    rewards: [
+      { resourceKey: "data", amount: 2 },
+      { resourceKey: "resources", amount: 3 }
+    ]
+  },
+  "Les gains multiples avec et sont tous appliqués"
+);
+assert.deepEqual(
+  parseEncounterRewards("Gagnez 2 Données ou 3 Ressources en cas de succès."),
+  {
+    mode: "choice",
+    rewards: [
+      { resourceKey: "data", amount: 2 },
+      { resourceKey: "resources", amount: 3 }
+    ]
+  },
+  "Les gains séparés par ou demandent un choix"
+);
+assert.deepEqual(
+  parseEncounterRewards("Gagnez 1 Énergie."),
+  { mode: "all", rewards: [{ resourceKey: "energy", amount: 1 }] }
+);
 
 console.log("Validation Entité OK");
