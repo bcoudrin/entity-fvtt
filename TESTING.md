@@ -225,10 +225,15 @@ Vérifier que le panneau présente les éléments dans l’ordre **Défi → Opp
 Pour un Défi :
 1. vérifier les boutons de Capacités correspondant aux mots-clés ;
 2. vérifier qu’une Capacité non proposée n’est pas utilisée par le workflow ;
-3. pour VM 2 ou VM 3, effectuer le nombre indiqué de jets avant de statuer ;
-4. cliquer **Défi échoué** sur un Défi de Lieu.
+3. pour chaque jet, utiliser **Enregistrer pour le Défi** dans le Chat ;
+4. vérifier que le compteur de VM progresse et que les boutons de mots-clés restent disponibles tant que tous les jets requis n’ont pas été enregistrés ;
+5. sur VM 2 ou VM 3, inclure un Échec parmi les jets enregistrés.
 
-Attendu : en cas d’échec du Défi de Lieu, les Opportunités, Trouvailles et Aspects restants sont abandonnés et le panneau passe à l’Activité Secondaire.
+Attendu :
+- tous les jets imposés par la VM doivent être enregistrés, même après un Échec ;
+- une réussite partielle ne compte pas comme un Échec du Défi ;
+- dès que la VM est satisfaite, le panneau détermine automatiquement « réussi » ou « échoué » et propose un bouton de validation ;
+- en cas d’échec du Défi de Lieu, les Opportunités, Trouvailles et Aspects restants sont abandonnés et le panneau passe à l’Activité Secondaire.
 
 Pour un Aspect, cliquer **Ajouter l’Aspect à la Mission** et vérifier l’incrément du compteur.
 
@@ -354,6 +359,5 @@ Sur une Opportunité ou une Trouvaille de **Lieu** :
 
 ## Limites connues de la Phase 2A
 
-- le système indique la VM mais ne compte pas encore automatiquement les jets réussis/échoués d’un Défi multi-jet ;
 - l’assistant de création reste reporté ;
 - règles avancées et Extras toujours exclus.
