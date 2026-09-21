@@ -848,3 +848,33 @@ Relire [AUDIT_BASE_RULES.md](AUDIT_BASE_RULES.md) lors de toute modification des
    - l’opération est refusée avec une notification ;
    - aucune entrée vide n’est créée.
 10. Vérifier qu’ouvrir l’assistant, tirer les Oracles ou écrire une note ne modifie jamais le résultat du jet, l’Énergie, les Ressources, les Données, les Aspects ou la progression de Rencontre.
+
+
+## Jalon v0.12.0 — Clôture des Règles Avancées
+
+Ce jalon n’ajoute volontairement pas de nouvelle mécanique : il vérifie qu’aucune section p.32–63 n’a été oubliée.
+
+1. Relire [AUDIT_ADVANCED_RULES.md](AUDIT_ADVANCED_RULES.md).
+2. Vérifier que les outils suivants sont accessibles et fonctionnels :
+   - Demander à l’Oracle ;
+   - Exploration avancée ;
+   - Activités Secondaires avancées ;
+   - Rencontres personnalisées ;
+   - Interpréter le jet / Action + Thème ;
+   - Journal de bord et pages de Mission.
+3. Vérifier la présence fonctionnelle de toutes les familles de tables avancées :
+   - Formes de Vie Extraterrestre ;
+   - Caractéristiques de Terrain ;
+   - Caractéristiques de Structure ;
+   - Anomalies ;
+   - Informations ;
+   - Ciel ;
+   - Distance ;
+   - Incidents ;
+   - Descripteurs ;
+   - Structures ;
+   - Actions ;
+   - Thèmes ;
+   - Objets ;
+   - Matériaux.
+4. Confirmer qu’aucune fonctionnalité des **Extras p.65+** n’a été ajoutée implicitement à ce jalon.
