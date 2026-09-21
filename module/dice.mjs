@@ -134,10 +134,9 @@ async function createActionRoll(actor, state, formula) {
   recalculate(state);
 
   const content = await renderCard(state, actor);
-  const message = await ChatMessage.create({
+  const message = await roll.toMessage({
     speaker: ChatMessage.getSpeaker({ actor }),
     content,
-    rolls: [roll],
     flags: { [SYSTEM_ID]: { actionRoll: state } }
   });
 
