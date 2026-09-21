@@ -1,5 +1,6 @@
 import { SYSTEM_ID } from "./constants.mjs";
 import { CORE_DISCOVERIES } from "./data/core-items.mjs";
+import { isExtraMissionKey } from "./data/extras-items.mjs";
 
 function missionNumberFromKey(key) {
   const match = String(key || "").match(/(\d+)$/);
@@ -8,7 +9,11 @@ function missionNumberFromKey(key) {
 
 function missionPageName(missionKey, missionName, occurrence = 1) {
   const number = missionNumberFromKey(missionKey);
-  const prefix = number === null ? "Mission" : "Mission " + String(number).padStart(2, "0");
+  const prefix = number === null
+    ? "Mission"
+    : isExtraMissionKey(missionKey)
+      ? "Mission Extra " + String(number).padStart(2, "0")
+      : "Mission " + String(number).padStart(2, "0");
   const repeat = Number(occurrence || 1) > 1 ? " — Passage " + Number(occurrence) : "";
   return prefix + " — " + missionName + repeat;
 }
