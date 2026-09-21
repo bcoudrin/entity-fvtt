@@ -160,6 +160,7 @@ export class CreationWizard extends HandlebarsApplicationMixin(ApplicationV2) {
     context.step = step;
     context.stepNumber = this.stepIndex + 1;
     context.stepCount = STEPS.length;
+    context.progressPercent = Math.round(((this.stepIndex + 1) / STEPS.length) * 100);
     context.isFirst = this.stepIndex === 0;
     context.isLast = this.stepIndex === STEPS.length - 1;
     context.isIdentity = step.key === "identity";
