@@ -3,6 +3,7 @@ import { CORE_TABLES } from "./data/tables.mjs";
 import { appendJournalEntry, closeMissionJournalPage, ensureDiscoveryState, startMissionJournalPage, syncDiscoveriesPage } from "./journal.mjs";
 import { refreshActionRollMessage, rollThresholdAction } from "./dice.mjs";
 import { isActorCreationReady } from "./creation-rules.mjs";
+import { clearPendingEffects } from "./improvements.mjs";
 import {
   clampDataSpend,
   locationEncounterPlan,
@@ -237,6 +238,10 @@ export async function startMission(actor, missionKey) {
     ui.notifications.warn("Cette Mission a déjà atteint son nombre maximal d’accomplissements.");
     return false;
   }
+
+  // A pre-roll effect paid in a previous Mission must never become a free effect
+  // after the new Mission refills Energy.
+  await clearPendingEffects(actor, { refund: false });
 
   await actor.update({
     "system.mission.activeKey": missionKey,
@@ -506,6 +511,11 @@ export async function recordEncounterRoll(message) {
 
   const actor = await fromUuid(state.actorUuid);
   if (!actor) return false;
+
+  if (["partial", "failure"].includes(state.result) && !state.consequenceApplied) {
+    ui.notifications.warn("Appliquez d’abord la conséquence du jet avant de l’enregistrer pour le Défi.");
+    return false;
+  }
 
   const workflow = workflowCopy(actor);
   const encounter = workflow.currentEncounter;
