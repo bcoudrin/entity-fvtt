@@ -3,6 +3,8 @@ import { rollAction } from "../dice.mjs";
 import { chooseImprovementToDiscard } from "../dialogs.mjs";
 import { activateImprovement } from "../improvements.mjs";
 import { openPiaJournal } from "../journal.mjs";
+import { isDestroyedByDamage } from "../destruction-rules.mjs";
+import { markPiaDestroyed } from "../destruction.mjs";
 
 function structureTotal(actor, effectType) {
   return actor.items
@@ -38,10 +40,18 @@ export class EntityActor extends Actor {
   }
 
   rollAction(abilityKey, options = {}) {
+    if (this.system.destroyed) {
+      ui.notifications.warn("Ce PIA est détruit et ne peut plus effectuer de jet d’Action.");
+      return false;
+    }
     return rollAction(this, abilityKey, options);
   }
 
   activateImprovement(itemId) {
+    if (this.system.destroyed) {
+      ui.notifications.warn("Les Améliorations de ce PIA sont perdues à sa destruction.");
+      return false;
+    }
     return activateImprovement(this, this.items.get(itemId));
   }
 
@@ -70,6 +80,7 @@ export class EntityActor extends Actor {
   }
 
   async addConstraint(label = "Contrainte") {
+    if (this.system.destroyed) return false;
     if (!await this.#makeRoomForDamage("une Contrainte")) return false;
 
     const constraints = Array.from(this.system.constraints || []);
@@ -80,6 +91,7 @@ export class EntityActor extends Actor {
   }
 
   async addFailure(label = "Défaillance") {
+    if (this.system.destroyed) return false;
     if (!await this.#makeRoomForDamage("une Défaillance")) return false;
 
     const failures = Array.from(this.system.failures || []);
@@ -102,12 +114,7 @@ export class EntityActor extends Actor {
   }
 
   async #checkDestruction() {
-    const damage = Array.from(this.system.constraints || []).length + Array.from(this.system.failures || []).length;
-    if (damage < SUIT_SLOTS) return;
-
-    await ChatMessage.create({
-      speaker: ChatMessage.getSpeaker({ actor: this }),
-      content: "<div class=\"entity-chat entity-destroyed\"><strong>PIA DÉTRUIT</strong><p>Les 20 emplacements de la Combinaison sont occupés par des Contraintes et/ou Défaillances. Les Améliorations et la progression de Mission sont perdues ; les Structures persistent.</p></div>"
-    });
+    if (!isDestroyedByDamage(this.system.constraints, this.system.failures, SUIT_SLOTS)) return;
+    await markPiaDestroyed(this);
   }
 }
