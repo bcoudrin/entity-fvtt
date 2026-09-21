@@ -4,6 +4,8 @@ import { CORE_TABLES } from "../module/data/tables.mjs";
 import { clampDataSpend, locationEncounterPlan, opportunityOutcome, parseEncounterRewards, resolveChallengeOutcome, secondaryGain, travelEncounterType } from "../module/workflow-rules.mjs";
 import { isExactDistribution, validateCreationState } from "../module/creation-rules.mjs";
 import { isDestroyedByDamage, successorResetUpdate } from "../module/destruction-rules.mjs";
+import { installEffectPlan } from "../module/improvement-rules.mjs";
+import { askOracleOutcome } from "../module/oracle-rules.mjs";
 
 function coveredValues(entries) {
   const values = [];
@@ -40,6 +42,37 @@ for (const mission of CORE_MISSIONS) {
 
 assert.equal(CORE_DISCOVERIES.length, 10, "10 Découvertes attendues");
 
+const extractionTools = CORE_IMPROVEMENTS.find((entry) => entry.key === "advanced-extraction-tools");
+const dataAlgorithms = CORE_IMPROVEMENTS.find((entry) => entry.key === "data-exploration-algorithms");
+assert.equal(extractionTools.energyCost, 2, "Les Outils d’extraction portent bien le coût imprimé 2E");
+assert.equal(dataAlgorithms.energyCost, 2, "Les Algorithmes d’exploration de Données portent bien le coût imprimé 2E");
+
+assert.deepEqual(
+  installEffectPlan(extractionTools, {
+    energy: { value: 5 },
+    resources: { value: 4, max: 10 },
+    data: { value: 0, max: 10 }
+  }),
+  {
+    resourceKey: "resources",
+    energyCost: 2,
+    gain: 1,
+    enoughEnergy: true,
+    nextEnergy: 3,
+    nextValue: 5
+  },
+  "L’effet d’installation des Outils coûte 2E et accorde +1 Ressource"
+);
+assert.equal(
+  installEffectPlan(dataAlgorithms, {
+    energy: { value: 1 },
+    resources: { value: 10, max: 10 },
+    data: { value: 4, max: 10 }
+  }).enoughEnergy,
+  false,
+  "L’effet d’installation 2E est impossible avec seulement 1 Énergie"
+);
+
 assert.equal(CORE_TABLES.length, 6, "6 RollTables de base attendues");
 for (const table of CORE_TABLES) {
   if (table.formula === "1d100") {
@@ -69,6 +102,16 @@ assert.equal(resolveChallengeOutcome([{ result: "failure" }, { result: "full" },
 assert.equal(opportunityOutcome("full"), "success", "Une Réussite totale réussit l’Opportunité");
 assert.equal(opportunityOutcome("partial"), "success", "Une Réussite partielle réussit l’Opportunité avec sa complication");
 assert.equal(opportunityOutcome("failure"), "failed", "Un Échec fait échouer l’Opportunité");
+
+assert.equal(askOracleOutcome(1).label, "Non, et aussi…");
+assert.equal(askOracleOutcome(2).label, "Non, mais…");
+assert.equal(askOracleOutcome(3).label, "Non");
+assert.equal(askOracleOutcome(5).label, "Non");
+assert.equal(askOracleOutcome(6).label, "Oui");
+assert.equal(askOracleOutcome(8).label, "Oui");
+assert.equal(askOracleOutcome(9).label, "Oui, mais…");
+assert.equal(askOracleOutcome(10).label, "Oui, et aussi…");
+assert.equal(askOracleOutcome(12).label, "Oui, et aussi…", "La borne 10+ reste ouverte");
 
 assert.deepEqual(
   parseEncounterRewards("Gagnez 2 Données et 3 Ressources en cas de succès."),
