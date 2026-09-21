@@ -2,6 +2,7 @@ import { ABILITIES, SUIT_SLOTS, TRAITS } from "../constants.mjs";
 import { chooseRollMode } from "../dialogs.mjs";
 import { clearPendingEffects, getPendingEffects } from "../improvements.mjs";
 import { ExpeditionPanel } from "../apps/expedition-panel.mjs";
+import { getDiscoveryStatus, revealNextDiscovery } from "../journal.mjs";
 
 const { ActorSheetV2 } = foundry.applications.sheets;
 const { HandlebarsApplicationMixin } = foundry.applications.api;
@@ -67,6 +68,7 @@ export class PiaSheet extends HandlebarsApplicationMixin(ActorSheetV2) {
       createImprovement: PiaSheet.#createImprovement,
       createStructure: PiaSheet.#createStructure,
       openJournal: PiaSheet.#openJournal,
+      revealDiscovery: PiaSheet.#revealDiscovery,
       openExpedition: PiaSheet.#openExpedition
     }
   };
@@ -106,6 +108,9 @@ export class PiaSheet extends HandlebarsApplicationMixin(ActorSheetV2) {
     context.structures = actor.items.filter((item) => item.type === "structure");
     context.missions = actor.items.filter((item) => item.type === "mission");
     context.pendingEffects = getPendingEffects(actor);
+    context.discoveries = getDiscoveryStatus(actor);
+    context.discoveries.hasPending = context.discoveries.pending > 0;
+    context.discoveries.complete = context.discoveries.revealed >= context.discoveries.total;
 
     const pendingIds = new Set(context.pendingEffects.map((effect) => effect.itemId));
     const slots = context.improvements.map((item) => improvementSlot(item, pendingIds));
@@ -229,6 +234,11 @@ export class PiaSheet extends HandlebarsApplicationMixin(ActorSheetV2) {
 
   static async #openJournal() {
     await this.actor.openJournal();
+  }
+
+  static async #revealDiscovery() {
+    await revealNextDiscovery(this.actor);
+    this.render({ force: true });
   }
 
   static #openExpedition() {
