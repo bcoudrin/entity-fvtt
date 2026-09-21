@@ -813,3 +813,66 @@
   text-transform: uppercase;
   letter-spacing: .07em;
 }
+
+
+/* Destruction & succession */
+.entity-destruction-banner {
+  display: grid;
+  grid-template-columns: 58px 1fr auto;
+  gap: 14px;
+  align-items: center;
+  padding: 14px 18px;
+  color: white;
+  background:
+    repeating-linear-gradient(-45deg, rgba(255,255,255,.035) 0 8px, transparent 8px 16px),
+    #4e1016;
+  border-top: 1px solid #74202a;
+  border-bottom: 5px solid var(--entity-black);
+}
+
+.entity-destruction-banner h2,
+.entity-destruction-banner p {
+  margin: 2px 0;
+}
+
+.entity-destruction-banner .entity-kicker {
+  color: #ffc9cd;
+}
+
+.entity-destruction-icon {
+  display: grid;
+  place-items: center;
+  width: 50px;
+  height: 50px;
+  font-size: 24px;
+  color: white;
+  background: var(--entity-red);
+  border: 2px solid rgba(255,255,255,.6);
+}
+
+.entity-destruction-banner .entity-primary {
+  min-width: 180px;
+  min-height: 40px;
+  color: white;
+  background: var(--entity-red);
+  border-color: #ef7580;
+}
+
+.entity-destroyed {
+  border-left: 5px solid var(--entity-red);
+  background: #fff0f1;
+}
+
+.entity-destroyed h3 {
+  color: #72111b;
+}
+
+@media (max-width: 720px) {
+  .entity-destruction-banner {
+    grid-template-columns: 44px 1fr;
+  }
+
+  .entity-destruction-banner > button {
+    grid-column: 1 / -1;
+  }
+}
