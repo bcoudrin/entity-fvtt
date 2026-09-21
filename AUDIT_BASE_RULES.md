@@ -53,7 +53,7 @@ Statuts :
 | Retrait volontaire à tout moment | Conforme | L’Amélioration peut être supprimée et doit être réinstallée ensuite. |
 | Coût d’Énergie des effets | Conforme pour bonus, Avantage, relance, Bouclier et conversion | Les activations sont explicites et déduisent l’Énergie. |
 | Réutilisation d’une Amélioration | Conforme | Une Amélioration n’est pas consommée ; elle peut être réactivée sur des actions ultérieures si l’Énergie le permet. Le livre ne précise pas explicitement que plusieurs activations du même module doivent se cumuler sur **un même** jet ; le système n’empile donc pas plusieurs armements pré-jet identiques. |
-| Outils d’extraction / Algorithmes de Données : +1 à l’installation | **Partiel / à arbitrer** | Le bonus d’installation est automatisé. Les deux entrées portent cependant un coût « 2E », alors que le texte dit que le +1 survient « lors de l’installation ». Le livre ne précise pas clairement si ces 2E doivent être payées automatiquement lors de l’installation, si l’effet est optionnel, ou si le coût n’a pas vocation à s’appliquer à ce déclenchement unique. Actuellement le +1 est appliqué sans dépense d’Énergie. |
+| Outils d’extraction / Algorithmes de Données : +1 à l’installation | **Conforme — interprétation figée** | Le coût imprimé **2E** est payé une fois au moment de l’installation, lorsque l’effet « +1 Ressource / +1 Donnée lors de l’installation » se déclenche. Sans 2 Énergies disponibles, l’installation via l’Activité Secondaire est refusée. Si le module est retiré puis réinstallé plus tard, l’effet et son coût se déclenchent de nouveau. |
 | Énergie au début d’une Mission | Conforme | Remplie à la capacité maximale actuelle (10 + Structures). |
 | Manque de puissance à 0 Énergie | Conforme | Contrainte explicite au lancement d’une Expédition. |
 | Ressources / Données à 0 au début d’une Mission | Conforme | Réinitialisées. |
@@ -93,7 +93,7 @@ Statuts :
 | Recharge d’Énergie | Conforme | Seuil Technologie + 4 ; gain complet / moitié ; échec → Défi. |
 | Collecte de Ressources | Conforme | Seuil Adaptabilité + 4 ; gain complet / moitié ; échec → Défi. |
 | Conséquence spéciale de ces trois jets | Conforme | Pas de Contrainte/Défaillance générique sur le jet d’Activité Secondaire ; l’échec déclenche le Défi prévu par cette règle spécifique. |
-| Installation d’Amélioration | Conforme hors ambiguïté 2E ci-dessus | 10 Ressources, pas de jet, pas de doublon, emplacement libre requis. |
+| Installation d’Amélioration | Conforme | 10 Ressources, pas de jet, pas de doublon, emplacement libre requis ; les deux effets d’installation à 2E appliquent aussi leur coût énergétique au déclenchement. |
 | Autoréparation | Conforme | 5 Ressources, retire une Contrainte. |
 
 ## Tables, Missions et Découvertes
@@ -109,7 +109,11 @@ Statuts :
 | Lieux d100 | Conforme | Couverture 1–100 validée par tests. |
 | 10 Découvertes dans l’ordre | Conforme | Une Mission accomplie débloque l’entrée suivante ; révélation volontaire et persistante. |
 
-## Points restant à décider avant de déclarer les règles de base figées
+## État de clôture des règles de base
 
-1. **Coût 2E des deux Améliorations à effet d’installation** : déterminer précisément comment appliquer le coût imprimé à un effet qui ne se déclenche qu’au moment de l’installation.
-2. **Distribution du contenu** : le dépôt est temporairement public uniquement pour le développement et l’installation dans l’instance Foundry du projet. Il n’est pas destiné à être diffusé dans cet état et doit repasser en privé à la fin du développement ; les ouvertures publiques futures resteront ponctuelles pour les mises à jour.
+Les arbitrages mécaniques nécessaires au système sont désormais figés pour les pages imprimées 6 à 30 :
+- workflow d’Expédition : **Exploration → Activité Secondaire** ;
+- Opportunité : possibilité de la laisser de côté, mais une tentative exige un jet réussi pour obtenir le gain ;
+- Améliorations à effet d’installation : le coût imprimé **2E** est payé au moment où le bonus d’installation se déclenche.
+
+Le dépôt est temporairement public uniquement pour le développement et l’installation dans l’instance Foundry du projet. Il n’est pas destiné à être diffusé dans cet état et doit repasser en privé à la fin du développement ; les ouvertures publiques futures resteront ponctuelles pour les mises à jour.
