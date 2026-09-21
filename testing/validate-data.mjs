@@ -2,6 +2,7 @@ import assert from "node:assert/strict";
 import { CORE_DISCOVERIES, CORE_IMPROVEMENTS, CORE_MISSIONS, CORE_STRUCTURES } from "../module/data/core-items.mjs";
 import { CORE_TABLES } from "../module/data/tables.mjs";
 import { clampDataSpend, locationEncounterPlan, parseEncounterRewards, resolveChallengeOutcome, secondaryGain, travelEncounterType } from "../module/workflow-rules.mjs";
+import { isExactDistribution, validateCreationState } from "../module/creation-rules.mjs";
 
 function coveredValues(entries) {
   const values = [];
@@ -91,5 +92,21 @@ assert.deepEqual(
   parseEncounterRewards("Gagnez 1 Énergie."),
   { mode: "all", rewards: [{ resourceKey: "energy", amount: 1 }] }
 );
+
+assert.ok(isExactDistribution([5, 3, 4], [3, 4, 5]), "La répartition des Traits est indépendante de l’ordre");
+assert.equal(isExactDistribution([5, 5, 3], [3, 4, 5]), false, "Les valeurs de Traits ne peuvent pas être dupliquées");
+
+const validCreation = {
+  traits: {
+    technology: { value: 5, abilities: { computing: 3, engineering: 2, robotics: 1 } },
+    analysis: { value: 4, abilities: { biology: 1, chemistry: 3, physics: 2 } },
+    adaptability: { value: 3, abilities: { communication: 2, navigation: 1, survival: 3 } }
+  }
+};
+assert.equal(validateCreationState(validCreation).valid, true, "Une création 3/4/5 et 1/2/3 par Trait est valide");
+
+const invalidCreation = structuredClone(validCreation);
+invalidCreation.traits.analysis.abilities.physics = 3;
+assert.equal(validateCreationState(invalidCreation).valid, false, "Un doublon de Capacité invalide la création");
 
 console.log("Validation Entité OK");
