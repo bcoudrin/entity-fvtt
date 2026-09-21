@@ -4,6 +4,24 @@ import { ABILITY_VALUES, isActorCreationValid, TRAIT_VALUES, validateCreationSta
 
 const { ApplicationV2, HandlebarsApplicationMixin } = foundry.applications.api;
 
+const TRAIT_HELP = {
+  technology: "Compétences techniques : informatique, ingénierie, robotique et systèmes complexes.",
+  analysis: "Connaissances scientifiques, traitement de l’information, analyse et anticipation.",
+  adaptability: "Capacité à s’adapter, improviser, naviguer et survivre dans des environnements inconnus."
+};
+
+const ABILITY_HELP = {
+  computing: "Logiciels, code, réseaux numériques et recherche de données.",
+  engineering: "Systèmes de vaisseaux et d’habitats, diagnostic, réparation et machines.",
+  robotics: "IA, systèmes de contrôle, robots, drones et véhicules autonomes.",
+  biology: "Sciences de la vie, écologie extraterrestre et exobiologie.",
+  chemistry: "Réactions chimiques, matériaux, éléments et extraction de ressources.",
+  physics: "Forces fondamentales, énergie, radiations, gravité et anomalies.",
+  communication: "Communication efficace et éthique, systèmes étrangers et informations sensibles.",
+  navigation: "Perception spatiale, orientation, exploration et environnements en apesanteur.",
+  survival: "Intégrité de la Combinaison, survie, défense, urgence et gestion des ressources."
+};
+
 const STEPS = [
   { key: "identity", label: "Identité" },
   { key: "traits", label: "Traits" },
@@ -50,11 +68,13 @@ function traitView(state, traitKey) {
   return {
     key: traitKey,
     label: trait.label,
+    description: TRAIT_HELP[traitKey],
     value: traitState.value,
     options: selectOptions(TRAIT_VALUES, traitState.value),
     abilities: trait.abilities.map((abilityKey) => ({
       key: abilityKey,
       label: ABILITIES[abilityKey].label,
+      description: ABILITY_HELP[abilityKey],
       value: traitState.abilities[abilityKey],
       options: selectOptions(ABILITY_VALUES, traitState.abilities[abilityKey])
     }))
