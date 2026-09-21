@@ -7,6 +7,8 @@ import { isDestroyedByDamage, successorResetUpdate } from "../module/destruction
 import { installEffectPlan } from "../module/improvement-rules.mjs";
 import { askOracleOutcome } from "../module/oracle-rules.mjs";
 import { ADVANCED_EXPLORATION_TABLES, ALIEN_LIFE_COLUMNS } from "../module/data/advanced-exploration-tables.mjs";
+import { ADVANCED_NARRATIVE_TABLES } from "../module/data/advanced-narrative-tables.mjs";
+import { suggestedSecondaryOracles } from "../module/advanced-secondary.mjs";
 
 function coveredValues(entries) {
   const values = [];
@@ -90,6 +92,34 @@ for (const [column, entries] of Object.entries(ALIEN_LIFE_COLUMNS)) {
   validateCoverage({ name: "Formes de Vie — " + column, entries }, 1, 100);
   assert.equal(entries.length, 50, "50 plages attendues pour la colonne " + column);
 }
+
+for (const table of Object.values(ADVANCED_NARRATIVE_TABLES)) {
+  validateCoverage(table, 1, 100);
+}
+assert.equal(ADVANCED_NARRATIVE_TABLES.anomalies.entries.length, 50, "50 plages d’Anomalies attendues");
+assert.equal(ADVANCED_NARRATIVE_TABLES.information.entries.length, 50, "50 plages d’Informations attendues");
+assert.equal(ADVANCED_NARRATIVE_TABLES.incidents.entries.length, 50, "50 plages d’Incidents attendues");
+assert.equal(ADVANCED_NARRATIVE_TABLES.actions.entries.length, 50, "50 plages d’Actions attendues");
+assert.equal(ADVANCED_NARRATIVE_TABLES.themes.entries.length, 100, "100 Thèmes attendus");
+assert.equal(ADVANCED_NARRATIVE_TABLES.objects.entries.length, 100, "100 Objets attendus");
+assert.equal(ADVANCED_NARRATIVE_TABLES.materials.entries.length, 100, "100 Matériaux attendus");
+
+assert.deepEqual(
+  suggestedSecondaryOracles("data", "full"),
+  ["information", "themes", "actions", "objects", "anomalies", "alienLife"],
+  "La Réussite totale de Collecte de Données propose les tables avancées attendues"
+);
+assert.deepEqual(
+  suggestedSecondaryOracles("resources", "partial"),
+  ["incidents", "contextFeature", "objects", "anomalies", "alienLife", "actions"],
+  "La Réussite partielle de Collecte de Ressources propose Incident + complication et développements facultatifs"
+);
+assert.deepEqual(
+  suggestedSecondaryOracles("energy", "full"),
+  ["materials", "objects", "alienLife", "descriptors", "actions"],
+  "La Réussite totale de Recharge d’Énergie propose ses supports et enrichissements"
+);
+assert.deepEqual(suggestedSecondaryOracles("energy", "failure"), [], "L’échec ne reçoit pas d’Oracle de résultat : il déclenche un Défi");
 for (const table of CORE_TABLES) {
   if (table.formula === "1d100") {
     assert.equal(table.entries.length, 50, table.name + " doit avoir 50 entrées d100");
