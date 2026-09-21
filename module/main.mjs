@@ -7,6 +7,8 @@ import { EntityItem } from "./documents/item.mjs";
 import { PiaSheet } from "./sheets/actor-sheet.mjs";
 import { EntityItemSheet } from "./sheets/item-sheet.mjs";
 import { ExpeditionPanel } from "./apps/expedition-panel.mjs";
+import { openCreationWizard } from "./apps/creation-wizard.mjs";
+import { isActorCreationReady } from "./creation-rules.mjs";
 import { ensurePiaJournal, revealNextDiscovery } from "./journal.mjs";
 import { applyRollConsequence, rerollWithImprovement, rerollWithStructure, useShieldForRoll } from "./dice.mjs";
 import { clearPendingEffects, removePendingEffectsForItem } from "./improvements.mjs";
@@ -164,6 +166,7 @@ Hooks.on("createActor", async (actor, options, userId) => {
   if (actor.type !== "pia" || game.user.id !== userId) return;
   await ensureStartingImprovements(actor);
   await ensurePiaJournal(actor);
+  openCreationWizard(actor);
 });
 
 Hooks.on("updateActor", (actor) => {
@@ -222,9 +225,15 @@ Hooks.once("ready", async () => {
     clearPendingEffects,
     createCoreRollTables,
     seedCoreContent,
+    openCreation: (actor) => openCreationWizard(actor, { force: true }),
     openExpedition: (actor) => {
       if (!actor || actor.type !== "pia") {
         ui.notifications.warn("Sélectionnez un PIA.");
+        return null;
+      }
+      if (!isActorCreationReady(actor)) {
+        ui.notifications.warn("Terminez d’abord la création du PIA.");
+        openCreationWizard(actor);
         return null;
       }
       const existing = foundry.applications.instances.get("entity-expedition-panel");
