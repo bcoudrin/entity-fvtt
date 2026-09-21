@@ -760,3 +760,49 @@ Relire [AUDIT_BASE_RULES.md](AUDIT_BASE_RULES.md) lors de toute modification des
     - l’état avancé de l’Activité Secondaire précédente est remis à zéro ;
     - les anciennes entrées restent dans le Journal.
 13. Vérifier qu’aucun Oracle avancé ne modifie le montant du gain, l’Énergie hors gain normal, les Ressources, les Données, les Contraintes, les Défaillances ou les Aspects.
+
+
+## Régression v0.10.0 — Rencontres personnalisées
+
+1. Obtenir un **Défi** de Voyage ou de Lieu avant d’effectuer le moindre jet d’Action.
+   - le panneau affiche **Règles Avancées — Rencontre personnalisée** ;
+   - cliquer **Personnaliser** ouvre le générateur.
+2. Cliquer **Générer les éléments obligatoires** pour un Défi.
+   - une Anomalie d100 est générée ;
+   - trois d10 de mots-clés sont générés ;
+   - 1–9 correspondent aux neuf Capacités dans l’ordre prévu par le livre ;
+   - un résultat 10 affiche un choix manuel de Capacité.
+3. Tester des doublons de mots-clés.
+   - après application, un même mot-clé ne doit apparaître qu’une fois ;
+   - le Défi possède donc naturellement entre 1 et 3 choix de Capacité.
+4. Ajouter plusieurs enrichissements facultatifs : Incident, Terrain, Structure, Objet, Thème, Descripteur, Action, Forme de Vie.
+   - chaque tirage s’ajoute au brouillon ;
+   - un résultat facultatif peut être retiré individuellement ;
+   - relancer l’Anomalie ou les mots-clés remplace uniquement ces éléments obligatoires.
+5. Appliquer le Défi personnalisé.
+   - l’entrée courante est marquée **Rencontre personnalisée** ;
+   - la VM originale est inchangée ;
+   - le Désavantage (D) original est inchangé ;
+   - le contexte Voyage/Lieu est inchangé ;
+   - seuls les mots-clés générés sont proposés pour les jets d’Action ;
+   - la résolution VM et les conséquences fonctionnent comme pour un Défi de base.
+6. Obtenir une **Trouvaille** et la personnaliser.
+   - un seul d10 de Trouvaille est requis ;
+   - vérifier les bornes 1, 7, 8, 9 et 10 sur plusieurs essais ;
+   - appliquer la Rencontre puis vérifier que le bouton de gain utilise exactement les Ressources/Données/Énergie générées.
+7. Obtenir une **Opportunité** et la personnaliser.
+   - le générateur crée Anomalie + 3 mots-clés + **2 jets de Trouvaille** ;
+   - les deux gains sont cumulés par type de ressource ;
+   - la Rencontre reste facultative ;
+   - en cas de réussite totale ou partielle, le gain cumulé devient disponible ;
+   - en cas d’échec, aucun gain n’est obtenu.
+8. Pour un résultat 10 sur le tableau des mots-clés :
+   - l’application reste bloquée tant qu’aucune Capacité n’a été choisie ;
+   - après choix, l’application devient possible si tous les autres éléments obligatoires sont présents.
+9. Fermer le générateur avant application puis le rouvrir.
+   - le brouillon doit être conservé tant que la même Rencontre reste active.
+10. Commencer à résoudre une Rencontre puis tenter de la personnaliser.
+    - après un jet de Défi enregistré, une Opportunité résolue ou une Trouvaille encaissée, le remplacement est refusé.
+11. Vérifier le Journal.
+    - l’application d’une Rencontre personnalisée ajoute une entrée avec les Oracles retenus, les mots-clés, le gain potentiel et VM/D le cas échéant.
+12. Vérifier qu’une Rencontre personnalisée n’altère pas la composition globale de la Rencontre de Lieu : Défi → Opportunité → Trouvaille → Aspect reste inchangé.
