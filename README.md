@@ -6,7 +6,7 @@ Système Foundry VTT v14 pour **Entité — Jeu de rôle solo NASA Punk**.
 
 Le système couvre les règles de base jusqu’à la page 30 et propose maintenant un **workflow guidé Mission → Expédition** :
 
-- Actor PIA unique ;
+- Actor PIA unique avec assistant de création guidé ;
 - trois Traits et neuf Capacités ;
 - jets d’Action 2d10 / 3d10 avec Avantage et Désavantage ;
 - réussite totale, réussite partielle et échec ;
@@ -80,9 +80,19 @@ Le panneau automatise :
 
 Les conséquences d’un jet restent volontairement **explicites** dans le Chat : aucune Contrainte ou Défaillance n’est ajoutée silencieusement.
 
+## Assistant de création
+
+La création d’un nouveau PIA ouvre un assistant guidé qui impose la répartition réglementaire :
+- une fois chacune les valeurs 3, 4 et 5 entre Technologie, Analyse et Adaptabilité ;
+- une fois chacune les valeurs 1, 2 et 3 entre les trois Capacités de chaque Trait ;
+- récapitulatif avant validation ;
+- état initial à 10 Énergies, 0 Ressource, 0 Donnée et trois Améliorations de départ.
+
+La fiche reste directement éditable après création. Relancer l’assistant sur un PIA déjà configuré ne réinitialise pas sa campagne.
+
 ## Limites actuelles
 
-- pas encore d’assistant de création ;
+
 - les gains d’Opportunités et de Trouvailles sont détectés et proposés par boutons explicites ; les rares gains alternatifs (« ou ») restent un choix du joueur ;
 - l’Unité de conversion adaptative des Ressources est disponible explicitement lors des Opportunités et Trouvailles de Lieu ;
 - la Valeur de Menace est suivie jet par jet : chaque résultat est enregistré explicitement depuis le Chat, puis le panneau détermine si le Défi est réussi ou échoué avant validation ;
