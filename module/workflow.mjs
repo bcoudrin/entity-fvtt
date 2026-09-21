@@ -804,11 +804,51 @@ export async function installImprovementAsSecondary(actor, itemId) {
     return false;
   }
 
-  await actor.update({ "system.resources.value": Number(actor.system.resources.value) - 10 });
-  await actor.createEmbeddedDocuments("Item", [cloneEmbeddedItem(source)]);
+  const installEffect = ["installResource", "installData"].includes(source.system.effectType);
+  const installEnergyCost = installEffect ? Number(source.system.energyCost || 0) : 0;
+  const energy = Number(actor.system.energy?.value || 0);
+  if (installEffect && energy < installEnergyCost) {
+    ui.notifications.warn(
+      source.name + " nécessite également " + installEnergyCost +
+      " Énergies pour déclencher son effet lors de l’installation."
+    );
+    return false;
+  }
+
+  const update = {
+    "system.resources.value": Number(actor.system.resources.value) - 10
+  };
+  let installGainText = "";
+
+  const embedded = cloneEmbeddedItem(source);
+  if (installEffect) {
+    const gainKey = source.system.effectType === "installResource" ? "resources" : "data";
+    const gain = Number(source.system.effectValue || 0);
+    const current = Number(actor.system[gainKey]?.value || 0);
+    const max = Number(actor.system[gainKey]?.max || 10);
+
+    update["system.energy.value"] = energy - installEnergyCost;
+    update["system." + gainKey + ".value"] = Math.min(max, current + gain);
+
+    embedded.flags ??= {};
+    embedded.flags[SYSTEM_ID] ??= {};
+    embedded.flags[SYSTEM_ID].installApplied = true;
+
+    installGainText =
+      " L’effet d’installation consomme <strong>" + installEnergyCost +
+      " Énergies</strong> et accorde <strong>+" + gain + "</strong> " +
+      (gainKey === "resources" ? "Ressource" : "Donnée") + ".";
+  }
+
+  await actor.update(update);
+  await actor.createEmbeddedDocuments("Item", [embedded]);
   workflow.stage = "done";
   await saveWorkflow(actor, workflow);
-  await appendJournalEntry(actor, "Amélioration installée", "<p><strong>" + source.name + "</strong> a été installée pour 10 Ressources.</p>");
+  await appendJournalEntry(
+    actor,
+    "Amélioration installée",
+    "<p><strong>" + source.name + "</strong> a été installée pour 10 Ressources." + installGainText + "</p>"
+  );
   return true;
 }
 
