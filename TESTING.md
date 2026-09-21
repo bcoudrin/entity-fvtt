@@ -27,7 +27,7 @@ Attendu : 23 Améliorations, 21 Structures, 21 Missions et 6 RollTables.
 4. Vérifier Énergie 10/10, Ressources 0/10, Données 0/10.
 5. Vérifier que la Combinaison affiche 20 emplacements, dont 3 occupés.
 
-Le contrôle de la répartition 3/4/5 et 1/2/3 sera ajouté avec l’assistant de création.
+La répartition 3/4/5 et 1/2/3 est désormais contrôlée par l’assistant de création ; voir la régression v0.3.0.
 
 ## 3. Jets d’Action
 
@@ -361,7 +361,6 @@ Sur une Opportunité ou une Trouvaille de **Lieu** :
 
 ## Limites connues de la Phase 2A
 
-- l’assistant de création reste reporté ;
 - règles avancées et Extras toujours exclus.
 
 
@@ -473,3 +472,44 @@ Ces contrôles sont prioritaires après les corrections issues du premier passag
    - une Découverte déjà débloquée avant mise à jour doit être considérée comme déjà révélée ;
    - aucun texte déjà lu ne doit être remasqué ;
    - la page **Découvertes** est créée automatiquement sans modifier les anciennes pages de Mission.
+
+
+## Régression v0.3.0 — Assistant de création du PIA
+
+1. Créer un nouvel Actor de type `pia`.
+   - l’assistant **Création du PIA** s’ouvre automatiquement ;
+   - la fiche peut exister derrière l’assistant mais **Mission / Expédition** est désactivé tant que la création n’est pas valide.
+2. Étape **Identité** :
+   - saisir une désignation ;
+   - passer à l’étape suivante.
+3. Étape **Traits** :
+   - tenter 5 / 5 / 3 ;
+   - **Suivant** doit refuser et expliquer qu’il faut utiliser exactement 3, 4 et 5 ;
+   - choisir ensuite une permutation valide, par exemple Technologie 5 / Analyse 4 / Adaptabilité 3.
+4. Étapes **Technologie**, **Analyse** et **Adaptabilité** :
+   - tenter un doublon, par exemple 3 / 3 / 1 ;
+   - l’étape doit refuser ;
+   - attribuer ensuite exactement 1, 2 et 3 aux trois Capacités de chaque Trait.
+5. Étape **Validation** :
+   - vérifier le récapitulatif complet ;
+   - vérifier l’annonce de l’état initial : 10 Énergies, 0 Ressource, 0 Donnée et les trois Améliorations de départ ;
+   - cliquer **Initialiser le PIA**.
+6. Après validation :
+   - le nom choisi apparaît sur la fiche ;
+   - les trois Traits correspondent à la permutation choisie ;
+   - chaque groupe de Capacités contient exactement 1, 2 et 3 ;
+   - Énergie = 10, Ressources = 0, Données = 0 ;
+   - aucune Contrainte ni Défaillance ;
+   - les trois Améliorations de départ sont présentes ;
+   - **Mission / Expédition** est maintenant disponible.
+7. Créer un autre PIA, fermer l’assistant avant validation puis tenter **Mission / Expédition**.
+   - la Mission ne doit pas pouvoir démarrer ;
+   - le système doit proposer de terminer la création.
+8. Sur un PIA déjà configuré et ayant progressé en campagne :
+   - cliquer **Création** ;
+   - modifier uniquement une répartition valide ;
+   - valider ;
+   - vérifier que Ressources, Données, Contraintes/Défaillances, Structures, progression de Découvertes et Journal ne sont pas remis à zéro.
+9. Migration d’un PIA créé avant v0.3.0 mais déjà configuré manuellement avec une répartition valide :
+   - il est considéré comme prêt ;
+   - aucune création forcée ne bloque sa campagne.
