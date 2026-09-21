@@ -136,9 +136,11 @@ async function createActionRoll(actor, state, formula) {
   recalculate(state);
 
   const content = await renderCard(state, actor);
+  const diceSound = CONFIG.sounds?.dice || "sounds/dice.wav";
   const message = await roll.toMessage({
     speaker: ChatMessage.getSpeaker({ actor }),
     content,
+    sound: diceSound,
     flags: { [SYSTEM_ID]: { actionRoll: state } }
   });
 
