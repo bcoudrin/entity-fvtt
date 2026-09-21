@@ -1,7 +1,7 @@
 import { ABILITIES, SYSTEM_ID, TRAITS } from "./constants.mjs";
 import { CORE_DISCOVERIES } from "./data/core-items.mjs";
 import { CORE_TABLES } from "./data/tables.mjs";
-import { appendJournalEntry } from "./journal.mjs";
+import { appendJournalEntry, closeMissionJournalPage, startMissionJournalPage } from "./journal.mjs";
 import { refreshActionRollMessage, rollThresholdAction } from "./dice.mjs";
 import {
   clampDataSpend,
@@ -234,10 +234,16 @@ export async function startMission(actor, missionKey) {
   });
 
   await saveWorkflow(actor, foundry.utils.deepClone(DEFAULT_WORKFLOW));
+  await startMissionJournalPage(actor, {
+    missionKey,
+    missionName: mission.name,
+    occurrence: completed + 1,
+    aspectsRequired: Number(mission.system.aspectsRequired || 0)
+  });
   await appendJournalEntry(
     actor,
-    "Mission — " + mission.name,
-    "<p>Mission commencée. Objectif : " + Number(mission.system.aspectsRequired || 0) + " Aspect(s).</p>"
+    "Mission commencée",
+    "<p>Objectif : " + Number(mission.system.aspectsRequired || 0) + " Aspect(s).</p>"
   );
   await postWorkflowMessage(
     actor,
@@ -294,7 +300,8 @@ export async function completeMission(actor) {
     body += "<hr><h4>Découverte " + discovery.index + " — " + discovery.name + "</h4><p>" + discovery.text + "</p>";
   }
   await postWorkflowMessage(actor, "Mission accomplie — " + mission.name, body);
-  await appendJournalEntry(actor, "Mission accomplie — " + mission.name, body);
+  await appendJournalEntry(actor, "Mission accomplie", body);
+  await closeMissionJournalPage(actor);
   return true;
 }
 
