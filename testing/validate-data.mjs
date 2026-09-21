@@ -17,6 +17,11 @@ import {
   customKeywordsReady,
   resolvedCustomKeywords
 } from "../module/custom-encounter-rules.mjs";
+import {
+  ACTION_INTERPRETATION_GUIDES,
+  actionInterpretationGuide,
+  resultInterpretationGuide
+} from "../module/data/action-interpretation.mjs";
 
 function coveredValues(entries) {
   const values = [];
@@ -280,3 +285,33 @@ assert.equal(Object.hasOwn(successorReset, "system.discoveriesUnlocked"), false,
 assert.equal(Object.hasOwn(successorReset, "system.destroyed"), false, "Le PIA reste marqué détruit jusqu’à validation du successeur");
 
 console.log("Validation Entité OK");
+
+
+assert.equal(Object.keys(ACTION_INTERPRETATION_GUIDES).length, 9, "9 guides de Capacités attendus");
+for (const abilityKey of [
+  "robotics", "computing", "engineering",
+  "physics", "biology", "chemistry",
+  "survival", "communication", "navigation"
+]) {
+  assert.ok(actionInterpretationGuide(abilityKey)?.summary, "Guide narratif manquant pour " + abilityKey);
+}
+assert.equal(
+  resultInterpretationGuide("partial")?.label,
+  "Réussite partielle",
+  "La réussite partielle générique est décrite comme une Contrainte réparable"
+);
+assert.match(
+  resultInterpretationGuide("failure")?.summary || "",
+  /permanent/i,
+  "L’échec générique doit rappeler le caractère permanent de la Défaillance"
+);
+assert.match(
+  resultInterpretationGuide("partial", { secondary: true })?.summary || "",
+  /pas de Contrainte générique/i,
+  "Une Activité Secondaire partielle ne doit pas suggérer une Contrainte générique"
+);
+assert.match(
+  resultInterpretationGuide("failure", { secondary: true })?.summary || "",
+  /Défi/i,
+  "L’échec d’Activité Secondaire doit renvoyer au Défi"
+);
