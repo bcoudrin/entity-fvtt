@@ -2,7 +2,7 @@
   "id": "entity",
   "title": "Entité",
   "description": "Système Foundry VTT v14 pour Entité — Jeu de rôle solo NASA Punk.",
-  "version": "0.2.3",
+  "version": "0.2.4",
   "type": "system",
   "compatibility": {
     "minimum": "14",
@@ -16,7 +16,7 @@
   ],
   "url": "https://github.com/bcoudrin/entity-fvtt",
   "manifest": "https://raw.githubusercontent.com/bcoudrin/entity-fvtt/main/system.json",
-  "download": "https://github.com/bcoudrin/entity-fvtt/releases/download/v0.2.3/entity.zip",
+  "download": "https://github.com/bcoudrin/entity-fvtt/releases/download/v0.2.4/entity.zip",
   "esmodules": [
     "module/main.mjs"
   ],
