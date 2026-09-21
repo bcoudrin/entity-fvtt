@@ -182,6 +182,10 @@ export function getWorkflow(actor) {
   return workflowCopy(actor);
 }
 
+export async function resetWorkflowState(actor) {
+  return saveWorkflow(actor, foundry.utils.deepClone(DEFAULT_WORKFLOW));
+}
+
 export function getMissionCatalog(actor) {
   const counts = completionCounts(actor);
   return missionCatalog().map((item) => {
@@ -203,6 +207,10 @@ export function getMissionCatalog(actor) {
 
 export async function startMission(actor, missionKey) {
   if (!actor || actor.type !== "pia") return false;
+  if (actor.system.destroyed) {
+    ui.notifications.warn("Ce PIA est détruit. Créez son successeur avant de poursuivre.");
+    return false;
+  }
   if (!isActorCreationReady(actor)) {
     ui.notifications.warn("Terminez d’abord la création du PIA.");
     return false;
@@ -330,6 +338,10 @@ export async function completeMission(actor) {
 }
 
 export async function startExpedition(actor) {
+  if (actor.system.destroyed) {
+    ui.notifications.warn("Ce PIA est détruit. Créez son successeur avant de poursuivre.");
+    return false;
+  }
   if (!actor.system.mission?.activeKey) {
     ui.notifications.warn("Choisissez d’abord une Mission.");
     return false;
