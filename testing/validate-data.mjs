@@ -6,6 +6,7 @@ import { isExactDistribution, validateCreationState } from "../module/creation-r
 import { isDestroyedByDamage, successorResetUpdate } from "../module/destruction-rules.mjs";
 import { installEffectPlan } from "../module/improvement-rules.mjs";
 import { askOracleOutcome } from "../module/oracle-rules.mjs";
+import { ADVANCED_EXPLORATION_TABLES, ALIEN_LIFE_COLUMNS } from "../module/data/advanced-exploration-tables.mjs";
 
 function coveredValues(entries) {
   const values = [];
@@ -74,6 +75,21 @@ assert.equal(
 );
 
 assert.equal(CORE_TABLES.length, 6, "6 RollTables de base attendues");
+
+for (const table of Object.values(ADVANCED_EXPLORATION_TABLES)) {
+  validateCoverage(table, 1, 100);
+}
+assert.equal(ADVANCED_EXPLORATION_TABLES.terrainFeatures.entries.length, 100, "100 Caractéristiques de Terrain attendues");
+assert.equal(ADVANCED_EXPLORATION_TABLES.structureFeatures.entries.length, 100, "100 Caractéristiques de Structure attendues");
+assert.equal(ADVANCED_EXPLORATION_TABLES.structures.entries.length, 50, "50 plages de Structures d100 attendues");
+assert.equal(ADVANCED_EXPLORATION_TABLES.descriptors.entries.length, 50, "50 plages de Descripteurs d100 attendues");
+assert.equal(ADVANCED_EXPLORATION_TABLES.sky.entries.length, 50, "50 plages de résultats du Ciel attendues");
+assert.equal(ADVANCED_EXPLORATION_TABLES.distance.entries.length, 50, "50 plages de résultats À distance attendues");
+
+for (const [column, entries] of Object.entries(ALIEN_LIFE_COLUMNS)) {
+  validateCoverage({ name: "Formes de Vie — " + column, entries }, 1, 100);
+  assert.equal(entries.length, 50, "50 plages attendues pour la colonne " + column);
+}
 for (const table of CORE_TABLES) {
   if (table.formula === "1d100") {
     assert.equal(table.entries.length, 50, table.name + " doit avoir 50 entrées d100");
