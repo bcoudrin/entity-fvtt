@@ -263,6 +263,10 @@ export class ExpeditionPanel extends HandlebarsApplicationMixin(ApplicationV2) {
     await rollEncounterAbility(this.actor, target.dataset.ability);
   }
 
+  static #customEncounter() {
+    openCustomEncounterPanel(this.actor);
+  }
+
   static async #encounterSuccess() {
     if (await advanceEncounter(this.actor, "success")) this.render({ force: true });
   }
