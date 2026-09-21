@@ -16,7 +16,7 @@ Statuts :
 | Choix d’une Mission et nombre d’Aspects | Conforme | Catalogue de 21 Missions, objectif 4/3/2 Aspects selon la Mission, répétition limitée à 5 pour 19–21. |
 | Boucle d’Expéditions | Conforme | Une Mission reste active jusqu’au nombre d’Aspects requis. |
 | Exploration : Lieu → Voyage → Rencontre de Lieu | Conforme | d100 Lieu, d10 Voyage, d10 Rencontre de Lieu. |
-| Ordre Exploration / Activité Secondaire | **Partiel / à arbitrer** | La p.7 indique que leur enchaînement est laissé à la discrétion du joueur, tandis que la p.8 présente l’Activité Secondaire « à la fin de l’Exploration ». Le système suit actuellement cette seconde présentation et impose Exploration puis Activité Secondaire. |
+| Ordre Exploration / Activité Secondaire | **Conforme — choix de conception figé** | Le livre présente deux formulations légèrement différentes. Pour le système Foundry, le workflow reste volontairement strict : **Exploration → Activité Secondaire**. |
 | Une seule Activité Secondaire par Expédition | Conforme | Le workflow se termine après l’activité choisie. |
 
 ## Création, Traits et jets d’Action
@@ -111,6 +111,5 @@ Statuts :
 
 ## Points restant à décider avant de déclarer les règles de base figées
 
-1. **Ordre de l’Activité Secondaire** : conserver le workflow strict Exploration → Activité Secondaire, ou permettre de faire l’Activité Secondaire avant l’Exploration comme l’autorise la formulation de la p.7.
-2. **Coût 2E des deux Améliorations à effet d’installation** : déterminer précisément comment appliquer le coût imprimé à un effet qui ne se déclenche qu’au moment de l’installation.
-3. **Distribution du contenu** : le dépôt est public et contient actuellement des textes substantiels des tables et Découvertes du livre, alors que l’édition française est indiquée « tous droits réservés ». Pour une diffusion publique, il faudra soit obtenir l’autorisation adéquate, soit séparer/retirer ce contenu protégé. Cet audit n’ajoute aucun nouveau corpus de table.
+1. **Coût 2E des deux Améliorations à effet d’installation** : déterminer précisément comment appliquer le coût imprimé à un effet qui ne se déclenche qu’au moment de l’installation.
+2. **Distribution du contenu** : le dépôt est temporairement public uniquement pour le développement et l’installation dans l’instance Foundry du projet. Il n’est pas destiné à être diffusé dans cet état et doit repasser en privé à la fin du développement ; les ouvertures publiques futures resteront ponctuelles pour les mises à jour.
