@@ -1,5 +1,6 @@
 import { ABILITIES, SYSTEM_ID } from "../constants.mjs";
 import { locationEncounterPlan } from "../workflow-rules.mjs";
+import { openAdvancedExplorationPanel } from "./advanced-exploration-panel.mjs";
 import {
   addAspectAndAdvance,
   advanceEncounter,
@@ -141,6 +142,7 @@ export class ExpeditionPanel extends HandlebarsApplicationMixin(ApplicationV2) {
       startExpedition: ExpeditionPanel.#startExpedition,
       markPowerConstraint: ExpeditionPanel.#markPowerConstraint,
       rollLocation: ExpeditionPanel.#rollLocation,
+      advancedExploration: ExpeditionPanel.#advancedExploration,
       rollTravel: ExpeditionPanel.#rollTravel,
       rollLocationEncounter: ExpeditionPanel.#rollLocationEncounter,
       rollEncounterAbility: ExpeditionPanel.#rollEncounterAbility,
@@ -233,6 +235,10 @@ export class ExpeditionPanel extends HandlebarsApplicationMixin(ApplicationV2) {
 
   static async #rollLocation() {
     if (await rollLocation(this.actor)) this.render({ force: true });
+  }
+
+  static #advancedExploration() {
+    openAdvancedExplorationPanel(this.actor);
   }
 
   static async #rollTravel() {
