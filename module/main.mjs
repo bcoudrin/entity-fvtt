@@ -47,20 +47,35 @@ async function ensureStartingImprovements(actor) {
 
 async function applyInstallEffect(item) {
   const actor = item.parent;
-  if (!actor || actor.documentName !== "Actor" || actor.type !== "pia" || item.type !== "improvement") return;
-  if (item.getFlag(SYSTEM_ID, "installApplied")) return;
+  if (!actor || actor.documentName !== "Actor" || actor.type !== "pia" || item.type !== "improvement") return true;
+  if (item.getFlag(SYSTEM_ID, "installApplied")) return true;
 
   const type = item.system.effectType;
-  if (!["installResource", "installData"].includes(type)) return;
+  if (!["installResource", "installData"].includes(type)) return true;
+
+  const energyCost = Number(item.system.energyCost || 0);
+  const energy = Number(actor.system.energy?.value || 0);
+  if (energy < energyCost) {
+    ui.notifications.warn(item.name + " nécessite " + energyCost + " Énergies lors de son installation pour déclencher son effet.");
+    await item.delete();
+    return false;
+  }
 
   const resourceKey = type === "installResource" ? "resources" : "data";
   const current = Number(actor.system[resourceKey]?.value || 0);
   const max = Number(actor.system[resourceKey]?.max || 10);
   const gain = Number(item.system.effectValue || 0);
 
-  await actor.update({ ["system." + resourceKey + ".value"]: Math.min(max, current + gain) });
+  await actor.update({
+    "system.energy.value": energy - energyCost,
+    ["system." + resourceKey + ".value"]: Math.min(max, current + gain)
+  });
   await item.setFlag(SYSTEM_ID, "installApplied", true);
-  ui.notifications.info(item.name + " : +" + gain + (resourceKey === "resources" ? " Ressource" : " Donnée") + ".");
+  ui.notifications.info(
+    item.name + " : -" + energyCost + " Énergies, +" + gain +
+    (resourceKey === "resources" ? " Ressource" : " Donnée") + "."
+  );
+  return true;
 }
 
 async function normalizeEmbeddedItem(item) {
@@ -89,7 +104,8 @@ async function normalizeEmbeddedItem(item) {
       return;
     }
 
-    await applyInstallEffect(item);
+    const installApplied = await applyInstallEffect(item);
+    if (!installApplied) return;
   }
 
   if (item.type === "structure") {
