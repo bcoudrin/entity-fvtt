@@ -474,3 +474,82 @@
 .entity-location-plan .entity-chip {
   background: #efe0be;
 }
+
+
+/* Discoveries */
+.entity-discoveries-panel {
+  border-left: 4px solid var(--entity-cyan);
+}
+
+.entity-discovery-progress {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+  margin-bottom: 10px;
+}
+
+.entity-discovery-progress > div {
+  padding: 9px;
+  text-align: center;
+  background: #eef3f4;
+  border: 1px solid #cbd5d8;
+}
+
+.entity-discovery-progress span {
+  display: block;
+  margin-bottom: 3px;
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+}
+
+.entity-discovery-progress strong {
+  font-size: 18px;
+}
+
+.entity-discovery-ready {
+  display: grid;
+  grid-template-columns: 34px 1fr auto;
+  gap: 10px;
+  align-items: center;
+  padding: 10px;
+  background: #fff8e9;
+  border: 1px solid #dcc58d;
+  border-left: 4px solid var(--entity-red);
+}
+
+.entity-discovery-ready > i {
+  font-size: 22px;
+  color: var(--entity-red);
+}
+
+.entity-discovery-ready p {
+  margin: 2px 0 0;
+  font-size: 11px;
+}
+
+.entity-discovery-card {
+  border-left-color: var(--entity-cyan);
+  background: #eef7f8;
+}
+
+.entity-discovery-unlock {
+  padding: 8px;
+  background: #fff8e9;
+  border-left: 4px solid var(--entity-red);
+}
+
+.entity-discovery-unlock h4 {
+  margin: 3px 0 5px;
+}
+
+@media (max-width: 620px) {
+  .entity-discovery-progress {
+    grid-template-columns: 1fr;
+  }
+
+  .entity-discovery-ready {
+    grid-template-columns: 1fr;
+  }
+}
