@@ -878,3 +878,39 @@ Ce jalon n’ajoute volontairement pas de nouvelle mécanique : il vérifie qu�
    - Objets ;
    - Matériaux.
 4. Confirmer qu’aucune fonctionnalité des **Extras p.65+** n’a été ajoutée implicitement à ce jalon.
+
+
+## Régression v0.13.0 — Extras : Missions et Structures additionnelles
+
+1. Ouvrir **Mission & Expédition** sans Mission active.
+   - le sélecteur distingue **Missions de base** et **Extras — Missions additionnelles** ;
+   - 18 Missions Extra sont disponibles ;
+   - Extras 01–09 demandent 4 Aspects ;
+   - Extras 10–18 demandent 3 Aspects.
+2. Commencer **Extra 01 — Recycleur**.
+   - la Mission fonctionne exactement comme une Mission de base ;
+   - le Journal crée une page nommée **Mission Extra 01 — Recycleur** ;
+   - l’Énergie est remise au maximum et Ressources/Données/Contraintes sont réinitialisées selon les règles de Mission.
+3. Accomplir Extra 01.
+   - **Usine de Recyclage de Robots** est ajoutée aux Structures du PIA ;
+   - la Mission devient indisponible ensuite ;
+   - +1 Robotique est visible dans le seuil d’un jet de Robotique ;
+   - une Découverte est débloquée si les dix ne l’étaient pas encore.
+4. Vérifier les Extras 02–09.
+   - chaque Mission construit la Structure portant exactement le nom prévu ;
+   - chacune des neuf Capacités reçoit une Structure additionnelle +1.
+5. Tester **Extra 10 — Kit de réparation de robots**.
+   - la récompense est **Atelier Portatif de Réparation de Robots et de Drones** ;
+   - un jet de Robotique dispose d’une relance gratuite de Structure.
+6. Acquérir aussi la Structure de base de Robotique donnant une relance.
+   - le même jet de Robotique affiche **2 relances de Structure** disponibles ;
+   - utiliser la première laisse 1 relance ;
+   - utiliser la seconde laisse 0 relance ;
+   - une troisième tentative est impossible.
+7. Répéter le principe sur au moins une autre Capacité disposant de deux Structures de relance.
+8. Vérifier qu’une nouvelle relance n’est jamais reportée d’un jet d’Action au suivant : chaque nouveau jet recalcule les Structures actuellement possédées.
+9. Recharger le monde après mise à jour depuis v0.12.0.
+   - les dossiers **Entité — Extras — Missions** et **Entité — Extras — Structures** sont créés automatiquement ;
+   - les 18 + 18 Items sont présents sans dupliquer le contenu de base ;
+   - un second rechargement ne crée pas de doublons.
+10. Vérifier qu’aucune Amélioration additionnelle, table Carcasses/Épaves ou table Sons/Lumières n’est encore ajoutée par cette version.
