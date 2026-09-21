@@ -644,4 +644,44 @@ Les règles de base présentent une petite tension éditoriale : la p.15 décrit
 
 ### Audit
 
-Relire [AUDIT_BASE_RULES.md](AUDIT_BASE_RULES.md) lors de toute modification des règles de base. Les deux points marqués **Partiel / à arbitrer** ne doivent pas être automatisés davantage sans décision explicite.
+Relire [AUDIT_BASE_RULES.md](AUDIT_BASE_RULES.md) lors de toute modification des règles de base. Les arbitrages mécaniques de base sont désormais figés.
+
+
+## Régression v0.7.0 — Effets d’installation 2E et premier Oracle avancé
+
+### Outils d’extraction avancés / Algorithmes d’exploration de Données
+
+1. Préparer une Activité Secondaire **Améliorations** avec au moins 10 Ressources et au moins 2 Énergies.
+2. Installer **Outils d’extraction avancés (2E)** avec exactement 10 Ressources.
+   - l’installation réussit ;
+   - les 10 Ressources sont payées puis le bonus d’installation rend 1 Ressource : stock final = **1 Ressource** ;
+   - 2 Énergies sont dépensées ;
+   - le Journal indique le coût d’installation et l’effet déclenché.
+3. Refaire avec **Algorithmes d’exploration de Données (2E)**.
+   - 10 Ressources sont payées ;
+   - 2 Énergies sont dépensées ;
+   - +1 Donnée est obtenue, sans dépasser la capacité maximale.
+4. Tenter l’une de ces installations avec 10 Ressources mais seulement 0 ou 1 Énergie.
+   - l’installation est refusée ;
+   - aucune Ressource n’est dépensée ;
+   - aucune Amélioration n’est ajoutée.
+5. Défausser puis réinstaller le même module plus tard.
+   - l’effet d’installation et son coût 2E se déclenchent à nouveau.
+6. Vérifier qu’une installation directe par manipulation MJ d’un de ces Items applique aussi le coût 2E et le bonus une seule fois.
+
+### Demander à l’Oracle
+
+1. Depuis la fiche PIA, cliquer **Oracle**.
+2. Tenter **Consulter l’Oracle** sans question.
+   - le système refuse et demande une question oui/non.
+3. Poser une question puis lancer plusieurs fois.
+   - 1 → **Non, et aussi…**
+   - 2 → **Non, mais…**
+   - 3–5 → **Non**
+   - 6–8 → **Oui**
+   - 9 → **Oui, mais…**
+   - 10 → **Oui, et aussi…**
+4. Vérifier que chaque résultat apparaît dans le Chat avec le d10.
+5. Pendant une Mission, vérifier que la question et la réponse sont ajoutées à la page de cette Mission.
+6. Hors Mission, vérifier que l’entrée va dans la page générale du Journal.
+7. Cliquer plusieurs fois avec la même question pour confirmer qu’une relance reste libre et ne modifie aucun état mécanique du PIA.
