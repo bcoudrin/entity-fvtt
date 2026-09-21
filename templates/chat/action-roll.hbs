@@ -122,6 +122,16 @@
       {{#if state.secondaryGain}}
         <p class="entity-chat-success"><i class="fa-solid fa-check"></i> Gain appliqué : +{{state.secondaryGain}}.</p>
       {{/if}}
+      {{#if (eq state.result "full")}}
+        <div class="entity-chat-actions">
+          <button type="button" data-entity-chat-action="secondary-oracles"><i class="fa-solid fa-wand-magic-sparkles"></i> Enrichir le résultat avec les Oracles</button>
+        </div>
+      {{/if}}
+      {{#if (eq state.result "partial")}}
+        <div class="entity-chat-actions">
+          <button type="button" data-entity-chat-action="secondary-oracles"><i class="fa-solid fa-wand-magic-sparkles"></i> Enrichir le résultat avec les Oracles</button>
+        </div>
+      {{/if}}
     {{/unless}}
   {{/if}}
 </div>
