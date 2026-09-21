@@ -17,6 +17,7 @@ import { openOraclePanel } from "./apps/oracle-panel.mjs";
 import { openAdvancedExplorationPanel } from "./apps/advanced-exploration-panel.mjs";
 import { openAdvancedSecondaryPanel } from "./apps/advanced-secondary-panel.mjs";
 import { openCustomEncounterPanel } from "./apps/custom-encounter-panel.mjs";
+import { openActionInterpretationPanel } from "./apps/action-interpretation-panel.mjs";
 import { createCoreRollTables } from "./roll-tables.mjs";
 import { seedCoreContent } from "./content-seed.mjs";
 import { applySecondaryGain, recordEncounterRoll, recordOpportunityRoll, resolveSecondaryFailure } from "./workflow.mjs";
@@ -228,6 +229,7 @@ Hooks.on("renderChatMessageHTML", (message, html) => {
       if (action === "record-opportunity-roll") await recordOpportunityRoll(message);
       if (action === "secondary-gain") await applySecondaryGain(message);
       if (action === "secondary-challenge") await resolveSecondaryFailure(message);
+      if (action === "interpret-action") openActionInterpretationPanel(message);
       if (action === "secondary-oracles") {
         const state = message.getFlag(SYSTEM_ID, "actionRoll");
         const actor = state?.actorUuid ? await fromUuid(state.actorUuid) : null;
@@ -262,6 +264,7 @@ Hooks.once("ready", async () => {
     openAdvancedExploration: (actor) => openAdvancedExplorationPanel(actor),
     openAdvancedSecondary: (actor, options = {}) => openAdvancedSecondaryPanel(actor, options),
     openCustomEncounter: (actor) => openCustomEncounterPanel(actor),
+    openActionInterpretation: (message) => openActionInterpretationPanel(message),
     openCreation: (actor) => {
       if (actor?.system?.destroyed && !actor.getFlag(SYSTEM_ID, "successorPending")) return prepareSuccessor(actor);
       return openCreationWizard(actor, { force: true });
