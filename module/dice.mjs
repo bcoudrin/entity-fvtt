@@ -103,11 +103,24 @@ function actionDescriptor(state) {
 async function renderCard(state, actor) {
   const rerollsLocked = Boolean(state.consequenceApplied || state.secondaryApplied || state.encounterRecorded);
   const isSecondary = Boolean(state.workflow?.secondary);
+  const isOpportunity = Boolean(state.workflow?.opportunity);
+  const opportunityNeedsConsequence =
+    isOpportunity &&
+    ["partial", "failure"].includes(state.result) &&
+    !state.consequenceApplied;
+  const opportunityCanRecord =
+    isOpportunity &&
+    !state.encounterRecorded &&
+    (state.result === "full" || state.consequenceApplied);
+
   return renderTemplate("systems/entity/templates/chat/action-roll.hbs", {
     state,
     actor,
     ability: actionDescriptor(state),
     isSecondary,
+    isOpportunity,
+    opportunityNeedsConsequence,
+    opportunityCanRecord,
     shields: !isSecondary && state.result === "partial" && !state.consequenceApplied ? shieldItems(actor) : [],
     rerollItem: rerollsLocked ? null : rerollImprovement(actor),
     rerollsLocked
