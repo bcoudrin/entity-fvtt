@@ -20,11 +20,9 @@
         <div class="entity-die-tools">
           {{#unless ../rerollsLocked}}
             {{#if ../state.structureRerollAvailable}}
-              {{#unless ../state.structureRerollUsed}}
-                <button type="button" data-entity-chat-action="reroll-structure" data-die-index="{{die.index}}" title="Relance gratuite de Structure">
-                  <i class="fa-solid fa-rotate"></i>
-                </button>
-              {{/unless}}
+              <button type="button" data-entity-chat-action="reroll-structure" data-die-index="{{die.index}}" title="Relance gratuite de Structure — {{../state.structureRerollRemaining}} restante(s)">
+                <i class="fa-solid fa-rotate"></i>
+              </button>
             {{/if}}
             {{#if ../rerollItem}}
               <button type="button" data-entity-chat-action="reroll-improvement" data-die-index="{{die.index}}" data-item-id="{{../rerollItem.id}}" title="{{../rerollItem.name}} — {{../rerollItem.cost}}E">
@@ -36,6 +34,10 @@
       </div>
     {{/each}}
   </div>
+
+  {{#if state.structureRerollAvailable}}
+    <p class="entity-chat-note"><i class="fa-solid fa-building"></i> Relance(s) de Structure restante(s) : {{state.structureRerollRemaining}} / {{state.structureRerollMax}}.</p>
+  {{/if}}
 
   {{#if rerollItem}}
     <p class="entity-chat-note"><i class="fa-solid fa-screwdriver-wrench"></i> {{rerollItem.name}} disponible : cliquez sur l’outil du dé à relancer ({{rerollItem.cost}}E).</p>
