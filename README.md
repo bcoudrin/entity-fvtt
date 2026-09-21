@@ -11,6 +11,7 @@ Le système couvre les règles de base jusqu’à la page 30 et propose maintena
 - jets d’Action 2d10 / 3d10 avec Avantage et Désavantage ;
 - réussite totale, réussite partielle et échec ;
 - boutons de Chat pour appliquer explicitement Contraintes, Défaillances et effets d’Activités Secondaires ;
+- résolution suivie des Opportunités : leur gain n’est disponible qu’après un jet d’Action réussi ;
 - combinaison spatiale à 20 emplacements ;
 - 23 Améliorations de base, dont les 3 Améliorations de départ ;
 - 21 Structures et leurs effets structurés ;
@@ -107,7 +108,7 @@ Le Journal consigne la destruction dans la page de la Mission interrompue, puis 
 ## Limites actuelles
 
 
-- les gains d’Opportunités et de Trouvailles sont détectés et proposés par boutons explicites ; les rares gains alternatifs (« ou ») restent un choix du joueur ;
+- les gains d’Opportunités et de Trouvailles sont détectés et proposés par boutons explicites ; les rares gains alternatifs (« ou ») restent un choix du joueur ; pour une Opportunité, le gain reste verrouillé jusqu’à validation d’une Réussite totale ou partielle ;
 - l’Unité de conversion adaptative des Ressources est disponible explicitement lors des Opportunités et Trouvailles de Lieu ;
 - la Valeur de Menace est suivie jet par jet : chaque résultat est enregistré explicitement depuis le Chat, puis le panneau détermine si le Défi est réussi ou échoué avant validation ;
 - règles avancées exclues ;
