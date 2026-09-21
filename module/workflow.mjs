@@ -303,7 +303,7 @@ export async function completeMission(actor) {
   if (discoveryUnlocked) {
     journalBody +=
       "<hr><p><strong>Découverte " + discoveryUnlocked + " débloquée.</strong> " +
-      "Son contenu peut être révélé depuis la fiche du PIA ou la page Découvertes du Journal.</p>";
+      "Son contenu peut être révélé depuis la fiche du PIA ou le bouton proposé dans le Chat.</p>";
 
     chatBody +=
       "<hr><div class=\"entity-discovery-unlock\">" +
