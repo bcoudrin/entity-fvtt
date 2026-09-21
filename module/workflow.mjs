@@ -1,7 +1,6 @@
 import { ABILITIES, SYSTEM_ID, TRAITS } from "./constants.mjs";
-import { CORE_DISCOVERIES } from "./data/core-items.mjs";
 import { CORE_TABLES } from "./data/tables.mjs";
-import { appendJournalEntry, closeMissionJournalPage, startMissionJournalPage } from "./journal.mjs";
+import { appendJournalEntry, closeMissionJournalPage, ensureDiscoveryState, startMissionJournalPage, syncDiscoveriesPage } from "./journal.mjs";
 import { refreshActionRollMessage, rollThresholdAction } from "./dice.mjs";
 import {
   clampDataSpend,
@@ -254,6 +253,8 @@ export async function startMission(actor, missionKey) {
 }
 
 export async function completeMission(actor) {
+  await ensureDiscoveryState(actor);
+
   const missionState = actor.system.mission;
   if (!missionState?.activeKey) return false;
   if (Number(missionState.aspectsCurrent || 0) < Number(missionState.aspectsRequired || 0)) {
@@ -280,13 +281,12 @@ export async function completeMission(actor) {
   counts[missionState.activeKey] = Number(counts[missionState.activeKey] || 0) + 1;
   await actor.setFlag(SYSTEM_ID, "missionCompletions", counts);
 
-  const nextDiscovery = Math.min(10, Number(actor.system.discoveriesUnlocked || 0) + 1);
-  const discovery = nextDiscovery > Number(actor.system.discoveriesUnlocked || 0)
-    ? CORE_DISCOVERIES.find((entry) => entry.index === nextDiscovery)
-    : null;
+  const discoveriesBefore = Number(actor.system.discoveriesUnlocked || 0);
+  const discoveriesAfter = Math.min(10, discoveriesBefore + 1);
+  const discoveryUnlocked = discoveriesAfter > discoveriesBefore ? discoveriesAfter : null;
 
   await actor.update({
-    "system.discoveriesUnlocked": nextDiscovery,
+    "system.discoveriesUnlocked": discoveriesAfter,
     "system.constraints": [],
     "system.mission.activeKey": "",
     "system.mission.name": "",
@@ -294,13 +294,32 @@ export async function completeMission(actor) {
     "system.mission.aspectsCurrent": 0
   });
   await saveWorkflow(actor, foundry.utils.deepClone(DEFAULT_WORKFLOW));
+  await syncDiscoveriesPage(actor);
 
-  let body = "<p>Mission accomplie. Structure construite : <strong>" + mission.system.structureName + "</strong>.</p>";
-  if (discovery) {
-    body += "<hr><h4>Découverte " + discovery.index + " — " + discovery.name + "</h4><p>" + discovery.text + "</p>";
+  const baseBody = "<p>Mission accomplie. Structure construite : <strong>" + mission.system.structureName + "</strong>.</p>";
+  let journalBody = baseBody;
+  let chatBody = baseBody;
+
+  if (discoveryUnlocked) {
+    journalBody +=
+      "<hr><p><strong>Découverte " + discoveryUnlocked + " débloquée.</strong> " +
+      "Son contenu peut être révélé depuis la fiche du PIA ou la page Découvertes du Journal.</p>";
+
+    chatBody +=
+      "<hr><div class=\"entity-discovery-unlock\">" +
+      "<span class=\"entity-kicker\">NOUVELLE DÉCOUVERTE DÉBLOQUÉE</span>" +
+      "<h4>Découverte " + discoveryUnlocked + "</h4>" +
+      "<p>Le contenu reste masqué jusqu’à ce que vous choisissiez de le révéler.</p>" +
+      "<button type=\"button\" data-entity-chat-action=\"reveal-discovery\" data-actor-uuid=\"" + actor.uuid + "\">" +
+      "<i class=\"fa-solid fa-eye\"></i> Révéler la Découverte" +
+      "</button></div>";
+  } else {
+    journalBody += "<p>Les 10 Découvertes ont déjà été débloquées.</p>";
+    chatBody += "<p>Les 10 Découvertes ont déjà été débloquées.</p>";
   }
-  await postWorkflowMessage(actor, "Mission accomplie — " + mission.name, body);
-  await appendJournalEntry(actor, "Mission accomplie", body);
+
+  await postWorkflowMessage(actor, "Mission accomplie — " + mission.name, chatBody);
+  await appendJournalEntry(actor, "Mission accomplie", journalBody);
   await closeMissionJournalPage(actor);
   return true;
 }
