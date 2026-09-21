@@ -9,11 +9,33 @@
         <span>Nom / Désignation</span>
         <input name="name" type="text" value="{{actor.name}}" />
       </label>
-      <button type="button" data-action="openCreation"><i class="fa-solid fa-user-gear"></i> Création</button>
-      <button type="button" data-action="openExpedition" {{#if creation.needsCreation}}disabled title="Terminez d’abord la création du PIA"{{/if}}><i class="fa-solid fa-rocket"></i> Mission / Expédition</button>
+      <button type="button" data-action="openCreation"><i class="fa-solid fa-user-gear"></i> {{#if isDestroyed}}Successeur{{else}}Création{{/if}}</button>
+      {{#if isDestroyed}}
+        <button type="button" data-action="openExpedition" disabled title="Ce PIA est détruit"><i class="fa-solid fa-rocket"></i> Mission / Expédition</button>
+      {{else}}
+        <button type="button" data-action="openExpedition" {{#if creation.needsCreation}}disabled title="Terminez d’abord la création du PIA"{{/if}}><i class="fa-solid fa-rocket"></i> Mission / Expédition</button>
+      {{/if}}
       <button type="button" data-action="openJournal"><i class="fa-solid fa-book"></i> Journal de bord</button>
     </div>
   </header>
+
+  {{#if isDestroyed}}
+    <section class="entity-destruction-banner">
+      <div class="entity-destruction-icon"><i class="fa-solid fa-burst"></i></div>
+      <div>
+        <span class="entity-kicker">UNITÉ HORS SERVICE</span>
+        <h2>PIA détruit</h2>
+        {{#if successorPending}}
+          <p>Le personnage précédent a été effacé. Le successeur doit encore être configuré ; les Structures et l’historique de campagne sont conservés.</p>
+        {{else}}
+          <p>Les 20 emplacements sont occupés par des Contraintes et/ou Défaillances. Les Améliorations, les Aspects et la progression de la Mission en cours sont perdus.</p>
+        {{/if}}
+      </div>
+      <button type="button" class="entity-primary" data-action="openCreation">
+        <i class="fa-solid fa-user-gear"></i> {{#if successorPending}}Reprendre la création{{else}}Créer le nouveau PIA{{/if}}
+      </button>
+    </section>
+  {{/if}}
 
   <section class="entity-resource-strip">
     <label><span>Énergie</span><input type="number" name="system.energy.value" value="{{system.energy.value}}" /><b>/ {{system.energy.max}}</b></label>
@@ -34,7 +56,7 @@
         <section class="entity-panel entity-creation-required">
           <div>
             <span class="entity-kicker">INITIALISATION REQUISE</span>
-            <h2>Configurer le PIA</h2>
+            <h2>{{#if successorPending}}Configurer le successeur{{else}}Configurer le PIA{{/if}}</h2>
             <p>Répartissez 3, 4 et 5 entre les Traits, puis 1, 2 et 3 entre les Capacités de chaque Trait avant de commencer une Mission.</p>
           </div>
           <button type="button" class="entity-primary" data-action="openCreation"><i class="fa-solid fa-user-gear"></i> Lancer l’assistant</button>
