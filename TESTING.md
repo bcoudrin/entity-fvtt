@@ -685,3 +685,37 @@ Relire [AUDIT_BASE_RULES.md](AUDIT_BASE_RULES.md) lors de toute modification des
 5. Pendant une Mission, vérifier que la question et la réponse sont ajoutées à la page de cette Mission.
 6. Hors Mission, vérifier que l’entrée va dans la page générale du Journal.
 7. Cliquer plusieurs fois avec la même question pour confirmer qu’une relance reste libre et ne modifie aucun état mécanique du PIA.
+
+
+## Régression v0.8.0 — Exploration avancée
+
+1. Démarrer une Expédition et identifier son Lieu.
+   - sous le résultat du Lieu, un encart **Règles Avancées — Exploration** apparaît ;
+   - cliquer **Enrichir l’Exploration** ouvre un panneau séparé ;
+   - avant identification du Lieu, le scanner de Structure doit rester indisponible.
+2. Cliquer **Scanner le Lieu** plusieurs fois au cours de tests séparés.
+   - d10 1–5 → le Lieu est en terrain ouvert ;
+   - d10 6–10 → le Lieu se trouve dans une Structure et un d100 détermine automatiquement son rôle.
+3. Après un résultat terrain ouvert :
+   - **Caractéristique** utilise la table des Caractéristiques de Terrain ;
+   - le résultat apparaît dans le panneau, le Chat et la page Journal de la Mission.
+4. Après un résultat Structure :
+   - **Caractéristique** utilise la table des Caractéristiques de Structure ;
+   - le rôle de la Structure tiré lors du scan reste visible ;
+   - le résultat de caractéristique est également journalisé.
+5. Tester **Descripteur**, **Ciel** et **À distance**.
+   - chaque bouton peut être relancé sans limite ;
+   - seul le dernier résultat reste affiché dans le panneau ;
+   - chaque tirage effectué reste enregistré dans le Journal.
+6. Tester **Forme de vie**.
+   - quatre d100 distincts sont utilisés ;
+   - le résultat comporte Forme, Trait, Caractéristique et Comportement ;
+   - les quatre résultats apparaissent ensemble dans le Chat et le Journal.
+7. Fermer puis rouvrir le panneau pendant la même Expédition.
+   - le scan de Structure et les derniers résultats doivent être conservés.
+8. Recharger le monde pendant la même Expédition.
+   - les résultats persistants doivent revenir.
+9. Commencer une nouvelle Expédition.
+   - le contexte d’Exploration avancée précédent doit être remis à zéro ;
+   - les anciennes entrées restent néanmoins dans le Journal de la Mission.
+10. Vérifier qu’aucun tirage d’Oracle avancé ne modifie Énergie, Ressources, Données, Contraintes, Défaillances, Aspects ou résolution de Rencontre.
