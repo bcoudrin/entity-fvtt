@@ -15,11 +15,22 @@
         <h3>Choisir une Mission</h3>
         <p>Une Mission se poursuit par Expéditions successives jusqu’à réunir les Aspects requis.</p>
         <select name="missionKey">
-          {{#each missions as |mission|}}
-            {{#if mission.available}}
-              <option value="{{mission.key}}">{{mission.name}} — {{mission.aspectsRequired}} Aspect(s){{#if mission.repeatable}} ({{mission.completed}}/{{mission.max}}){{/if}}</option>
-            {{/if}}
-          {{/each}}
+          <optgroup label="Missions de base">
+            {{#each baseMissions as |mission|}}
+              {{#if mission.available}}
+                <option value="{{mission.key}}">{{mission.displayName}} — {{mission.aspectsRequired}} Aspect(s){{#if mission.repeatable}} ({{mission.completed}}/{{mission.max}}){{/if}}</option>
+              {{/if}}
+            {{/each}}
+          </optgroup>
+          {{#if hasExtraMissions}}
+            <optgroup label="Extras — Missions additionnelles">
+              {{#each extraMissions as |mission|}}
+                {{#if mission.available}}
+                  <option value="{{mission.key}}">{{mission.displayName}} — {{mission.aspectsRequired}} Aspect(s)</option>
+                {{/if}}
+              {{/each}}
+            </optgroup>
+          {{/if}}
         </select>
         <button type="button" data-action="startMission"><i class="fa-solid fa-flag-checkered"></i> Commencer la Mission</button>
       </section>
