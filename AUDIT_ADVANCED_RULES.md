@@ -107,4 +107,4 @@ Les tests automatiques vérifient la couverture **1–100 sans trou** des tables
 
 À l’issue de cet audit, les **Règles Avancées p.32–63 sont couvertes** par le système. Il ne reste pas de sous-système mécanique ou de table avancée du livre à ajouter avant les Extras.
 
-La prochaine frontière fonctionnelle est donc explicite : **Extras p.65+**. Ils sont actuellement volontairement exclus du système et devront être intégrés séparément si le périmètre du projet est étendu.
+La frontière fonctionnelle suivante est **Extras p.65+**, qui reste hors du périmètre de cet audit. Son intégration est suivie séparément dans [EXTRAS_STATUS.md](EXTRAS_STATUS.md).
