@@ -2,6 +2,7 @@ import { ABILITIES, SYSTEM_ID, TRAITS } from "./constants.mjs";
 import { CORE_TABLES } from "./data/tables.mjs";
 import { appendJournalEntry, closeMissionJournalPage, ensureDiscoveryState, startMissionJournalPage, syncDiscoveriesPage } from "./journal.mjs";
 import { refreshActionRollMessage, rollThresholdAction } from "./dice.mjs";
+import { isActorCreationReady } from "./creation-rules.mjs";
 import {
   clampDataSpend,
   locationEncounterPlan,
@@ -202,6 +203,10 @@ export function getMissionCatalog(actor) {
 
 export async function startMission(actor, missionKey) {
   if (!actor || actor.type !== "pia") return false;
+  if (!isActorCreationReady(actor)) {
+    ui.notifications.warn("Terminez d’abord la création du PIA.");
+    return false;
+  }
   if (actor.system.mission?.activeKey) {
     ui.notifications.warn("Une Mission est déjà en cours.");
     return false;
