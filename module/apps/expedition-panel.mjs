@@ -79,6 +79,9 @@ function currentEncounterView(workflow, actor) {
   const challengeRolls = Array.from(encounter.rolls || []);
   const threat = Math.max(1, Number(encounter.threat || 1));
   const challengeOutcomeReady = encounter.type === "challenge" && challengeRolls.length >= threat && Boolean(encounter.challengeOutcome);
+  const opportunityResolved = encounter.type === "opportunity" && Boolean(encounter.opportunityResolved);
+  const opportunitySucceeded = opportunityResolved && encounter.opportunityOutcome === "success";
+  const opportunityFailed = opportunityResolved && encounter.opportunityOutcome === "failed";
 
   return {
     ...encounter,
@@ -101,7 +104,18 @@ function currentEncounterView(workflow, actor) {
     challengeOutcomeReady,
     challengeSucceeded: encounter.challengeOutcome === "success",
     challengeFailed: encounter.challengeOutcome === "failed",
-    canRollEncounterAction: encounter.type !== "challenge" || !challengeOutcomeReady,
+    opportunityResolved,
+    opportunitySucceeded,
+    opportunityFailed,
+    opportunityRoll: encounter.opportunityRoll || null,
+    canRollEncounterAction:
+      encounter.type === "challenge"
+        ? !challengeOutcomeReady
+        : encounter.type === "opportunity"
+          ? !opportunityResolved
+          : true,
+    canApplyReward:
+      encounter.type !== "opportunity" || opportunitySucceeded,
     converterAvailable,
     converterCost,
     canConvertData: converterAvailable && Number(actor.system.data?.value || 0) < Number(actor.system.data?.max || 10),
