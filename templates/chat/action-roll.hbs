@@ -61,6 +61,7 @@
     {{/unless}}
   {{/if}}
 
+  {{#unless isSecondary}}
   {{#unless state.consequenceApplied}}
     {{#if (eq state.result "partial")}}
       <div class="entity-chat-actions">
@@ -75,6 +76,7 @@
         <button type="button" data-entity-chat-action="failure"><i class="fa-solid fa-burst"></i> Ajouter une Défaillance</button>
       </div>
     {{/if}}
+  {{/unless}}
   {{/unless}}
 
   {{#if state.workflow.secondary}}
