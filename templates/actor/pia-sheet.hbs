@@ -9,7 +9,8 @@
         <span>Nom / Désignation</span>
         <input name="name" type="text" value="{{actor.name}}" />
       </label>
-      <button type="button" data-action="openExpedition"><i class="fa-solid fa-rocket"></i> Mission / Expédition</button>
+      <button type="button" data-action="openCreation"><i class="fa-solid fa-user-gear"></i> Création</button>
+      <button type="button" data-action="openExpedition" {{#if creation.needsCreation}}disabled title="Terminez d’abord la création du PIA"{{/if}}><i class="fa-solid fa-rocket"></i> Mission / Expédition</button>
       <button type="button" data-action="openJournal"><i class="fa-solid fa-book"></i> Journal de bord</button>
     </div>
   </header>
@@ -29,6 +30,16 @@
 
   <section class="entity-body">
     <section class="tab {{tabs.systems.cssClass}}" data-group="primary" data-tab="systems">
+      {{#if creation.needsCreation}}
+        <section class="entity-panel entity-creation-required">
+          <div>
+            <span class="entity-kicker">INITIALISATION REQUISE</span>
+            <h2>Configurer le PIA</h2>
+            <p>Répartissez 3, 4 et 5 entre les Traits, puis 1, 2 et 3 entre les Capacités de chaque Trait avant de commencer une Mission.</p>
+          </div>
+          <button type="button" class="entity-primary" data-action="openCreation"><i class="fa-solid fa-user-gear"></i> Lancer l’assistant</button>
+        </section>
+      {{/if}}
       <div class="entity-traits-grid">
         {{#each traits as |trait|}}
           <section class="entity-panel entity-trait">
