@@ -303,7 +303,7 @@ Attendu :
 - les Structures 19–21 augmentent leur rang jusqu’à 5 ;
 - les Contraintes sont supprimées ;
 - la progression de Mission active revient à zéro ;
-- la Découverte suivante est révélée dans le Chat et le Journal ;
+- la Découverte suivante est débloquée sans révéler automatiquement son contenu ;
 - les Défaillances restent présentes ;
 - la Structure reste disponible pour la Mission suivante.
 
@@ -615,3 +615,33 @@ Les règles de base présentent une petite tension éditoriale : la p.15 décrit
 8. Recharger le monde après avoir validé le jet mais avant d’appliquer le gain.
    - l’état **Opportunité réussie** persiste ;
    - le gain reste disponible une seule fois.
+
+
+## Régression v0.6.0 — Consolidation des règles de base
+
+### Conséquences avant validation d’un Défi
+
+1. Obtenir un Défi et effectuer un jet donnant une **Réussite partielle**.
+   - le Chat propose d’abord **Ajouter une Contrainte** ou le Bouclier énergétique ;
+   - **Enregistrer pour le Défi** ne doit pas être disponible avant résolution de cette conséquence.
+2. Ajouter la Contrainte.
+   - **Enregistrer pour le Défi** devient disponible ;
+   - enregistrer le jet et vérifier la progression de VM.
+3. Refaire avec le Bouclier.
+   - après utilisation du Bouclier, le jet devient enregistrable sans Contrainte.
+4. Obtenir un **Échec**.
+   - **Enregistrer pour le Défi** reste bloqué tant que la Défaillance n’est pas ajoutée.
+5. Tester sur un Défi VM 2 ou VM 3 en mélangeant réussite totale, partielle et échec.
+   - chaque jet impose sa propre conséquence avant enregistrement ;
+   - tous les jets de VM restent requis.
+
+### Effets d’Amélioration armés entre Missions
+
+1. Pendant une Mission, armer une Amélioration pré-jet (+1 Capacité ou Avantage) sans effectuer le jet.
+2. Accomplir la Mission ou quitter son workflow, puis commencer une nouvelle Mission.
+3. Vérifier que l’effet armé précédent n’est plus présent.
+4. Vérifier que l’Énergie de la nouvelle Mission est bien remplie normalement et qu’aucun effet payé dans l’ancienne Mission ne devient un bonus gratuit.
+
+### Audit
+
+Relire [AUDIT_BASE_RULES.md](AUDIT_BASE_RULES.md) lors de toute modification des règles de base. Les deux points marqués **Partiel / à arbitrer** ne doivent pas être automatisés davantage sans décision explicite.
