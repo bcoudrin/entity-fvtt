@@ -146,11 +146,53 @@
     </section>
 
     <section class="tab {{tabs.journal.cssClass}}" data-group="primary" data-tab="journal">
+      <section class="entity-panel entity-discoveries-panel">
+        <header class="entity-panel-title">
+          <div>
+            <h2>Découvertes</h2>
+            <p>{{discoveries.revealed}} révélée(s) / {{discoveries.unlocked}} débloquée(s) / {{discoveries.total}}</p>
+          </div>
+          <button type="button" data-action="openJournal"><i class="fa-solid fa-book-open"></i> Ouvrir le Journal</button>
+        </header>
+
+        <div class="entity-discovery-progress">
+          <div>
+            <span>Révélées</span>
+            <strong>{{discoveries.revealed}} / {{discoveries.total}}</strong>
+          </div>
+          <div>
+            <span>Débloquées</span>
+            <strong>{{discoveries.unlocked}} / {{discoveries.total}}</strong>
+          </div>
+          <div>
+            <span>En attente</span>
+            <strong>{{discoveries.pending}}</strong>
+          </div>
+        </div>
+
+        {{#if discoveries.hasPending}}
+          <div class="entity-discovery-ready">
+            <i class="fa-solid fa-eye"></i>
+            <div>
+              <strong>Découverte {{discoveries.nextIndex}} disponible</strong>
+              <p>Son contenu est encore masqué.</p>
+            </div>
+            <button type="button" class="entity-primary" data-action="revealDiscovery">Révéler</button>
+          </div>
+        {{else}}
+          {{#if discoveries.complete}}
+            <p class="entity-chat-success"><i class="fa-solid fa-circle-check"></i> Les 10 Découvertes ont été révélées.</p>
+          {{else}}
+            <p class="entity-empty">Accomplissez une Mission pour débloquer la prochaine Découverte.</p>
+          {{/if}}
+        {{/if}}
+      </section>
+
       <section class="entity-panel entity-notes">
         <header class="entity-panel-title">
           <div>
             <h2>Notes rapides</h2>
-            <p>Le Journal Foundry lié au PIA accueillera ensuite les entrées automatiques du cycle de jeu.</p>
+            <p>Notes générales du PIA. Les Missions et Découvertes sont journalisées dans leurs pages dédiées.</p>
           </div>
           <button type="button" data-action="openJournal"><i class="fa-solid fa-book-open"></i> Ouvrir le Journal</button>
         </header>
