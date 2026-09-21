@@ -1,0 +1,119 @@
+<div class="entity-creation-shell">
+  <header class="entity-creation-header">
+    <span class="entity-kicker">INITIALISATION DU PIA</span>
+    <h2>{{step.label}}</h2>
+    <div class="entity-creation-progress">
+      <span>Étape {{stepNumber}} / {{stepCount}}</span>
+      <div><i style="width: calc(({{stepNumber}} / {{stepCount}}) * 100%)"></i></div>
+    </div>
+  </header>
+
+  <div class="entity-creation-body">
+    {{#if wasConfigured}}
+      <p class="entity-dialog-note"><i class="fa-solid fa-triangle-exclamation"></i> Ce PIA possède déjà une configuration valide. L’assistant modifiera uniquement son nom, ses Traits et ses Capacités ; il ne réinitialisera pas sa campagne.</p>
+    {{/if}}
+
+    {{#if errors.length}}
+      <div class="entity-creation-errors">
+        {{#each errors as |error|}}<p><i class="fa-solid fa-circle-exclamation"></i> {{error}}</p>{{/each}}
+      </div>
+    {{/if}}
+
+    {{#if isIdentity}}
+      <section class="entity-creation-step">
+        <h3>Désignation</h3>
+        <p>Donnez une désignation à votre astronaute synthétique PIA.</p>
+        <label class="entity-creation-name">
+          <span>Nom / Désignation</span>
+          <input type="text" data-creation-field="name" value="{{state.name}}" />
+        </label>
+        <div class="entity-dialog-note">
+          <strong>Création</strong>
+          <p>L’assistant appliquera ensuite exactement la répartition prévue par les règles : 3, 4 et 5 entre les Traits, puis 1, 2 et 3 entre les trois Capacités de chacun d’eux.</p>
+        </div>
+      </section>
+    {{/if}}
+
+    {{#if isTraits}}
+      <section class="entity-creation-step">
+        <h3>Répartir 3, 4 et 5 entre les Traits</h3>
+        <p>Chaque valeur doit être utilisée exactement une fois.</p>
+        <div class="entity-creation-trait-grid">
+          {{#each traits as |trait|}}
+            <label class="entity-creation-value-card">
+              <span>{{trait.label}}</span>
+              <select data-creation-field="traits.{{trait.key}}.value">
+                {{#each trait.options as |option|}}
+                  <option value="{{option.value}}" {{#if option.selected}}selected{{/if}}>{{option.label}}</option>
+                {{/each}}
+              </select>
+            </label>
+          {{/each}}
+        </div>
+      </section>
+    {{/if}}
+
+    {{#if isAbilityStep}}
+      <section class="entity-creation-step">
+        <span class="entity-kicker">TRAIT {{currentTrait.label}}</span>
+        <h3>Répartir 1, 2 et 3 entre les Capacités</h3>
+        <p>Chaque valeur doit être utilisée exactement une fois pour ce Trait.</p>
+        <div class="entity-creation-ability-list">
+          {{#each currentTrait.abilities as |ability|}}
+            <label>
+              <span>{{ability.label}}</span>
+              <select data-creation-field="traits.{{../currentTrait.key}}.abilities.{{ability.key}}">
+                {{#each ability.options as |option|}}
+                  <option value="{{option.value}}" {{#if option.selected}}selected{{/if}}>{{option.label}}</option>
+                {{/each}}
+              </select>
+            </label>
+          {{/each}}
+        </div>
+      </section>
+    {{/if}}
+
+    {{#if isReview}}
+      <section class="entity-creation-step">
+        <h3>Vérification du PIA</h3>
+        <p>Confirmez la configuration avant de l’appliquer.</p>
+
+        <div class="entity-creation-summary">
+          {{#each traits as |trait|}}
+            <section>
+              <header><strong>{{trait.label}}</strong><b>{{trait.value}}</b></header>
+              {{#each trait.abilities as |ability|}}
+                <p><span>{{ability.label}}</span><strong>{{ability.value}}</strong></p>
+              {{/each}}
+            </section>
+          {{/each}}
+        </div>
+
+        {{#unless wasConfigured}}
+          <div class="entity-creation-starting">
+            <h4>État initial</h4>
+            <p><strong>10 Énergies</strong> · <strong>0 Ressource</strong> · <strong>0 Donnée</strong></p>
+            <p>3 Améliorations :</p>
+            <div class="entity-chip-row">
+              {{#each startingImprovements as |name|}}<span class="entity-chip">{{name}}</span>{{/each}}
+            </div>
+          </div>
+        {{/unless}}
+      </section>
+    {{/if}}
+  </div>
+
+  <footer class="entity-creation-footer">
+    <button type="button" data-action="cancel"><i class="fa-solid fa-xmark"></i> Fermer</button>
+    <div>
+      {{#unless isFirst}}
+        <button type="button" data-action="previous"><i class="fa-solid fa-arrow-left"></i> Précédent</button>
+      {{/unless}}
+      {{#if isLast}}
+        <button type="button" class="entity-primary" data-action="finish"><i class="fa-solid fa-check"></i> Initialiser le PIA</button>
+      {{else}}
+        <button type="button" class="entity-primary" data-action="next">Suivant <i class="fa-solid fa-arrow-right"></i></button>
+      {{/if}}
+    </div>
+  </footer>
+</div>
