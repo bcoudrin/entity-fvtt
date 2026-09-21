@@ -1,0 +1,93 @@
+<div class="entity-advanced-secondary-shell">
+  <header class="entity-advanced-secondary-header">
+    <span class="entity-kicker">RÈGLES AVANCÉES — ACTIVITÉS SECONDAIRES</span>
+    <h2>{{#if definition}}{{definition.label}}{{else}}Enrichir une Activité Secondaire{{/if}}</h2>
+    <p>Les Oracles sont des outils d’inspiration : utilisez, relancez ou ignorez librement leurs résultats.</p>
+  </header>
+
+  <div class="entity-advanced-secondary-body">
+    <section class="entity-panel">
+      <span class="entity-kicker">ACTIVITÉ</span>
+      <div class="entity-secondary-oracle-kind-grid">
+        {{#each kinds as |kind|}}
+          <button type="button" data-action="selectKind" data-kind="{{kind.key}}" class="{{#if kind.selected}}entity-primary{{/if}}">
+            {{kind.label}}
+          </button>
+        {{/each}}
+      </div>
+    </section>
+
+    {{#if hasKind}}
+      <section class="entity-panel">
+        <span class="entity-kicker">PRÉPARER LE TERRAIN</span>
+        <h3>Où se déroule l’activité ?</h3>
+        <p>Vous pouvez utiliser le Lieu courant ou déplacer narrativement l’Activité Secondaire vers un nouveau Lieu. Dans les deux cas, un d10 détermine ensuite si elle se déroule dans une Structure (6+), puis une Caractéristique décrit l’environnement immédiat.</p>
+        <div class="entity-two-actions">
+          <button type="button" data-action="prepareCurrent"><i class="fa-solid fa-location-dot"></i> Lieu actuel</button>
+          <button type="button" data-action="prepareElsewhere"><i class="fa-solid fa-shuffle"></i> Nouveau Lieu</button>
+        </div>
+
+        {{#if state.setting}}
+          <div class="entity-advanced-oracle-result">
+            <strong>{{state.setting.location.text}}</strong>
+            <p>d10 {{state.setting.structureRoll}} — {{#if state.setting.insideStructure}}dans une Structure{{else}}terrain ouvert{{/if}}.</p>
+            {{#if state.setting.structure}}
+              <p><b>Structure — d100 {{state.setting.structure.roll}}</b> : {{state.setting.structure.text}}</p>
+            {{/if}}
+            {{#if state.setting.contextFeature}}
+              <p><b>{{state.setting.contextFeature.tableName}} — d100 {{state.setting.contextFeature.roll}}</b> : {{state.setting.contextFeature.text}}</p>
+            {{/if}}
+          </div>
+        {{/if}}
+      </section>
+
+      <section class="entity-panel">
+        <span class="entity-kicker">VISUALISATION DU RÉSULTAT</span>
+        <h3>{{outcomeLabel}}</h3>
+
+        {{#if isFailure}}
+          <p>L’échec n’utilise pas ces générateurs : conformément aux règles avancées, il déclenche le Défi prévu par les règles de base.</p>
+        {{else}}
+          {{#if hasSuggested}}
+            <p>Les tables ci-dessous correspondent aux suggestions du livre pour ce type de résultat. Elles restent entièrement facultatives.</p>
+            <div class="entity-secondary-oracle-grid">
+              {{#each suggested as |oracle|}}
+                {{#if (eq oracle.key "alienLife")}}
+                  <button type="button" data-action="alienLife">
+                    <i class="{{oracle.icon}}"></i><strong>{{oracle.label}}</strong>
+                  </button>
+                {{else}}
+                  <button type="button" data-action="rollOracle" data-table="{{oracle.key}}">
+                    <i class="{{oracle.icon}}"></i><strong>{{oracle.label}}</strong>
+                  </button>
+                {{/if}}
+              {{/each}}
+            </div>
+          {{else}}
+            <p>Effectuez d’abord le jet mécanique de l’Activité Secondaire. Après application du résultat, le Chat proposera de revenir ici avec les tables adaptées à la Réussite totale ou partielle.</p>
+          {{/if}}
+        {{/if}}
+
+        {{#if state.alienLife}}
+          <div class="entity-advanced-oracle-result">
+            <strong>Forme de Vie Extraterrestre</strong>
+            {{#each state.alienLife as |part|}}
+              <p><b>{{part.label}} — d100 {{part.roll}}</b> : {{part.text}}</p>
+            {{/each}}
+          </div>
+        {{/if}}
+
+        {{#each suggested as |oracle|}}
+          {{#if oracle.result}}
+            <div class="entity-advanced-oracle-result entity-advanced-oracle-secondary">
+              <strong>{{oracle.label}} — d100 {{oracle.result.roll}}</strong>
+              <p>{{oracle.result.text}}</p>
+            </div>
+          {{/if}}
+        {{/each}}
+      </section>
+    {{/if}}
+
+    <p class="entity-dialog-note">La préparation narrative et les tirages d’Oracle ne changent jamais le gain mécanique de l’Activité Secondaire.</p>
+  </div>
+</div>
