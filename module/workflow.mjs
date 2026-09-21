@@ -4,6 +4,7 @@ import { appendJournalEntry, closeMissionJournalPage, ensureDiscoveryState, star
 import { refreshActionRollMessage, rollThresholdAction } from "./dice.mjs";
 import { isActorCreationReady } from "./creation-rules.mjs";
 import { clearPendingEffects } from "./improvements.mjs";
+import { installEffectPlan } from "./improvement-rules.mjs";
 import {
   clampDataSpend,
   locationEncounterPlan,
@@ -804,12 +805,10 @@ export async function installImprovementAsSecondary(actor, itemId) {
     return false;
   }
 
-  const installEffect = ["installResource", "installData"].includes(source.system.effectType);
-  const installEnergyCost = installEffect ? Number(source.system.energyCost || 0) : 0;
-  const energy = Number(actor.system.energy?.value || 0);
-  if (installEffect && energy < installEnergyCost) {
+  const installPlan = installEffectPlan(source.system, actor.system);
+  if (installPlan && !installPlan.enoughEnergy) {
     ui.notifications.warn(
-      source.name + " nécessite également " + installEnergyCost +
+      source.name + " nécessite également " + installPlan.energyCost +
       " Énergies pour déclencher son effet lors de l’installation."
     );
     return false;
@@ -821,23 +820,18 @@ export async function installImprovementAsSecondary(actor, itemId) {
   let installGainText = "";
 
   const embedded = cloneEmbeddedItem(source);
-  if (installEffect) {
-    const gainKey = source.system.effectType === "installResource" ? "resources" : "data";
-    const gain = Number(source.system.effectValue || 0);
-    const current = Number(actor.system[gainKey]?.value || 0);
-    const max = Number(actor.system[gainKey]?.max || 10);
-
-    update["system.energy.value"] = energy - installEnergyCost;
-    update["system." + gainKey + ".value"] = Math.min(max, current + gain);
+  if (installPlan) {
+    update["system.energy.value"] = installPlan.nextEnergy;
+    update["system." + installPlan.resourceKey + ".value"] = installPlan.nextValue;
 
     embedded.flags ??= {};
     embedded.flags[SYSTEM_ID] ??= {};
     embedded.flags[SYSTEM_ID].installApplied = true;
 
     installGainText =
-      " L’effet d’installation consomme <strong>" + installEnergyCost +
-      " Énergies</strong> et accorde <strong>+" + gain + "</strong> " +
-      (gainKey === "resources" ? "Ressource" : "Donnée") + ".";
+      " L’effet d’installation consomme <strong>" + installPlan.energyCost +
+      " Énergies</strong> et accorde <strong>+" + installPlan.gain + "</strong> " +
+      (installPlan.resourceKey === "resources" ? "Ressource" : "Donnée") + ".";
   }
 
   await actor.update(update);
