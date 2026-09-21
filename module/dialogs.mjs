@@ -39,12 +39,16 @@ export async function chooseImprovementToDiscard(actor, consequenceLabel) {
   const improvements = actor.items.filter((item) => item.type === "improvement");
   if (!improvements.length) return null;
 
+  // DialogV2.input in Foundry v14 requires the content root itself to have no attributes.
+  // Keep the root bare and put styling attributes on a child wrapper instead.
   const content = document.createElement("div");
-  content.className = "entity-discard-dialog";
+
+  const wrapper = document.createElement("div");
+  wrapper.className = "entity-discard-dialog";
 
   const warning = document.createElement("p");
   warning.textContent = "La Combinaison est pleine. Pour subir " + consequenceLabel + ", choisissez une Amélioration à défausser.";
-  content.append(warning);
+  wrapper.append(warning);
 
   const label = document.createElement("label");
   label.textContent = "Amélioration à défausser";
@@ -59,7 +63,8 @@ export async function chooseImprovementToDiscard(actor, consequenceLabel) {
   }
 
   label.append(select);
-  content.append(label);
+  wrapper.append(label);
+  content.append(wrapper);
 
   const data = await DialogV2.input({
     window: { title: "Combinaison saturée" },
