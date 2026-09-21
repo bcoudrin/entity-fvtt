@@ -8,6 +8,7 @@ import {
   locationEncounterPlan,
   missionNumberFromKey,
   parseEncounterRewards,
+  opportunityOutcome,
   resolveChallengeOutcome,
   resolveRangedEntry,
   secondaryGain,
@@ -96,7 +97,10 @@ async function rollDetailedEncounter(type, meta = {}) {
     rewards: rewardSpec.rewards,
     rewardApplied: false,
     rolls: [],
-    challengeOutcome: null
+    challengeOutcome: null,
+    opportunityResolved: false,
+    opportunityOutcome: null,
+    opportunityRoll: null
   };
 }
 
@@ -491,7 +495,7 @@ export async function rollEncounterAbility(actor, abilityKey) {
     mode: encounter.disadvantage ? "disadvantage" : "normal",
     workflow: encounter.type === "challenge"
       ? { encounter: true, encounterId: encounter.id }
-      : null
+      : { opportunity: true, encounterId: encounter.id }
   });
   return true;
 }
@@ -541,6 +545,59 @@ export async function recordEncounterRoll(message) {
   return true;
 }
 
+export async function recordOpportunityRoll(message) {
+  const state = foundry.utils.deepClone(message.getFlag(SYSTEM_ID, "actionRoll"));
+  if (!state?.workflow?.opportunity || state.encounterRecorded) return false;
+
+  const actor = await fromUuid(state.actorUuid);
+  if (!actor || actor.system.destroyed) return false;
+
+  if (["partial", "failure"].includes(state.result) && !state.consequenceApplied) {
+    ui.notifications.warn("Appliquez d’abord la conséquence du jet avant de valider l’Opportunité.");
+    return false;
+  }
+
+  const workflow = workflowCopy(actor);
+  const encounter = workflow.currentEncounter;
+  if (!encounter || encounter.type !== "opportunity" || encounter.id !== state.workflow.encounterId) {
+    ui.notifications.warn("Ce jet ne correspond plus à l’Opportunité actuellement affichée.");
+    return false;
+  }
+  if (encounter.opportunityResolved) {
+    ui.notifications.info("Cette Opportunité a déjà été résolue.");
+    return false;
+  }
+
+  const outcome = opportunityOutcome(state.result);
+  if (!outcome) return false;
+
+  encounter.opportunityResolved = true;
+  encounter.opportunityOutcome = outcome;
+  encounter.opportunityRoll = {
+    abilityKey: state.abilityKey,
+    abilityLabel: ABILITIES[state.abilityKey]?.label || state.actionLabel || "Jet d’Action",
+    result: state.result,
+    resultLabel: state.resultLabel
+  };
+  workflow.currentEncounter = encounter;
+
+  state.encounterRecorded = true;
+  state.opportunityOutcome = outcome;
+
+  await refreshActionRollMessage(message, state, actor);
+  await saveWorkflow(actor, workflow);
+
+  await appendJournalEntry(
+    actor,
+    "Opportunité — " + (outcome === "success" ? "réussie" : "échouée"),
+    "<p><strong>" + encounter.opportunityRoll.abilityLabel + "</strong> : " + state.resultLabel + ".</p>" +
+      (outcome === "success"
+        ? "<p>Le gain de l’Opportunité peut maintenant être récupéré.</p>"
+        : "<p>Aucun gain n’est obtenu.</p>")
+  );
+  return true;
+}
+
 export async function advanceEncounter(actor, outcome = "resolved") {
   const workflow = workflowCopy(actor);
   const current = workflow.currentEncounter;
@@ -552,6 +609,14 @@ export async function advanceEncounter(actor, outcome = "resolved") {
       return false;
     }
     outcome = current.challengeOutcome;
+  }
+
+  if (current.type === "opportunity" && !current.opportunityResolved) {
+    await appendJournalEntry(
+      actor,
+      "Opportunité ignorée",
+      "<p>L’Opportunité a été laissée de côté sans effectuer de jet d’Action ni obtenir son gain.</p>"
+    );
   }
 
   if (current.type === "challenge" && outcome === "failed" && current.context === "location") {
@@ -779,6 +844,10 @@ export async function applyEncounterRewards(actor, choiceIndex = null) {
   const workflow = workflowCopy(actor);
   const encounter = workflow.currentEncounter;
   if (!encounter || !["opportunity", "find"].includes(encounter.type)) return false;
+  if (encounter.type === "opportunity" && (!encounter.opportunityResolved || encounter.opportunityOutcome !== "success")) {
+    ui.notifications.warn("Le gain d’une Opportunité n’est disponible qu’après un jet d’Action réussi.");
+    return false;
+  }
   if (encounter.rewardApplied) {
     ui.notifications.info("Le gain de cette Rencontre a déjà été appliqué.");
     return false;
