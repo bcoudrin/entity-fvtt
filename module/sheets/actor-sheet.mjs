@@ -1,4 +1,4 @@
-import { ABILITIES, SUIT_SLOTS, TRAITS } from "../constants.mjs";
+import { ABILITIES, SUIT_SLOTS, SYSTEM_ID, TRAITS } from "../constants.mjs";
 import { chooseRollMode } from "../dialogs.mjs";
 import { clearPendingEffects, getPendingEffects } from "../improvements.mjs";
 import { ExpeditionPanel } from "../apps/expedition-panel.mjs";
@@ -113,7 +113,7 @@ export class PiaSheet extends HandlebarsApplicationMixin(ActorSheetV2) {
     context.missions = actor.items.filter((item) => item.type === "mission");
     context.pendingEffects = getPendingEffects(actor);
     context.isDestroyed = Boolean(actor.system.destroyed);
-    context.successorPending = Boolean(actor.getFlag("entity", "successorPending"));
+    context.successorPending = Boolean(actor.getFlag(SYSTEM_ID, "successorPending"));
     context.creation = {
       completed: Boolean(actor.system.creationCompleted),
       valid: isActorCreationValid(actor),
@@ -254,7 +254,7 @@ export class PiaSheet extends HandlebarsApplicationMixin(ActorSheetV2) {
   }
 
   static async #openCreation() {
-    if (this.actor.system.destroyed && !this.actor.getFlag("entity", "successorPending")) {
+    if (this.actor.system.destroyed && !this.actor.getFlag(SYSTEM_ID, "successorPending")) {
       await prepareSuccessor(this.actor);
       return;
     }
