@@ -7,6 +7,7 @@ import { clearPendingEffects } from "./improvements.mjs";
 import { installEffectPlan } from "./improvement-rules.mjs";
 import { resetAdvancedExploration } from "./advanced-exploration.mjs";
 import { resetAdvancedSecondary, setAdvancedSecondaryOutcome } from "./advanced-secondary.mjs";
+import { isExtraMissionKey } from "./data/extras-items.mjs";
 import {
   clampDataSpend,
   locationEncounterPlan,
@@ -169,10 +170,14 @@ function completionCounts(actor) {
 function missionCatalog() {
   return game.items
     .filter((item) => item.type === "mission" && item.getFlag(SYSTEM_ID, "coreKey"))
-    .sort((a, b) =>
-      missionNumberFromKey(a.getFlag(SYSTEM_ID, "coreKey")) -
-      missionNumberFromKey(b.getFlag(SYSTEM_ID, "coreKey"))
-    );
+    .sort((a, b) => {
+      const aKey = a.getFlag(SYSTEM_ID, "coreKey");
+      const bKey = b.getFlag(SYSTEM_ID, "coreKey");
+      const aExtra = isExtraMissionKey(aKey) ? 1 : 0;
+      const bExtra = isExtraMissionKey(bKey) ? 1 : 0;
+      if (aExtra !== bExtra) return aExtra - bExtra;
+      return missionNumberFromKey(aKey) - missionNumberFromKey(bKey);
+    });
 }
 
 function cloneEmbeddedItem(source) {
@@ -200,15 +205,20 @@ export function getMissionCatalog(actor) {
     const key = item.getFlag(SYSTEM_ID, "coreKey");
     const completed = Number(counts[key] || 0);
     const max = item.system.repeatable ? Number(item.system.maxRepeats || 1) : 1;
+    const extra = isExtraMissionKey(key);
     return {
       id: item.id,
       key,
       name: item.name,
+      displayName: extra
+        ? "Extra " + String(missionNumberFromKey(key)).padStart(2, "0") + " — " + item.name
+        : item.name,
       aspectsRequired: Number(item.system.aspectsRequired || 0),
       completed,
       max,
       available: completed < max,
-      repeatable: Boolean(item.system.repeatable)
+      repeatable: Boolean(item.system.repeatable),
+      extra
     };
   });
 }
