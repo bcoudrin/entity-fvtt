@@ -2,6 +2,8 @@ import { ABILITIES, SUIT_SLOTS, TRAITS } from "../constants.mjs";
 import { chooseRollMode } from "../dialogs.mjs";
 import { clearPendingEffects, getPendingEffects } from "../improvements.mjs";
 import { ExpeditionPanel } from "../apps/expedition-panel.mjs";
+import { openCreationWizard } from "../apps/creation-wizard.mjs";
+import { isActorCreationReady, isActorCreationValid } from "../creation-rules.mjs";
 import { getDiscoveryStatus, revealNextDiscovery } from "../journal.mjs";
 
 const { ActorSheetV2 } = foundry.applications.sheets;
@@ -69,6 +71,7 @@ export class PiaSheet extends HandlebarsApplicationMixin(ActorSheetV2) {
       createStructure: PiaSheet.#createStructure,
       openJournal: PiaSheet.#openJournal,
       revealDiscovery: PiaSheet.#revealDiscovery,
+      openCreation: PiaSheet.#openCreation,
       openExpedition: PiaSheet.#openExpedition
     }
   };
@@ -108,6 +111,12 @@ export class PiaSheet extends HandlebarsApplicationMixin(ActorSheetV2) {
     context.structures = actor.items.filter((item) => item.type === "structure");
     context.missions = actor.items.filter((item) => item.type === "mission");
     context.pendingEffects = getPendingEffects(actor);
+    context.creation = {
+      completed: Boolean(actor.system.creationCompleted),
+      valid: isActorCreationValid(actor),
+      ready: isActorCreationReady(actor)
+    };
+    context.creation.needsCreation = !context.creation.ready;
     context.discoveries = getDiscoveryStatus(actor);
     context.discoveries.hasPending = context.discoveries.pending > 0;
     context.discoveries.complete = context.discoveries.revealed >= context.discoveries.total;
@@ -241,7 +250,16 @@ export class PiaSheet extends HandlebarsApplicationMixin(ActorSheetV2) {
     this.render({ force: true });
   }
 
+  static #openCreation() {
+    openCreationWizard(this.actor, { force: true });
+  }
+
   static #openExpedition() {
+    if (!isActorCreationReady(this.actor)) {
+      ui.notifications.warn("Terminez d’abord la création du PIA.");
+      openCreationWizard(this.actor);
+      return;
+    }
     const existing = foundry.applications.instances.get("entity-expedition-panel");
     if (existing) existing.close();
     new ExpeditionPanel(this.actor).render({ force: true });
