@@ -2,6 +2,8 @@ import { ABILITIES, SYSTEM_ID } from "../constants.mjs";
 import { locationEncounterPlan } from "../workflow-rules.mjs";
 import { openAdvancedExplorationPanel } from "./advanced-exploration-panel.mjs";
 import { openAdvancedSecondaryPanel } from "./advanced-secondary-panel.mjs";
+import { openCustomEncounterPanel } from "./custom-encounter-panel.mjs";
+import { canCustomizeEncounter } from "../custom-encounter.mjs";
 import {
   addAspectAndAdvance,
   advanceEncounter,
@@ -110,6 +112,9 @@ function currentEncounterView(workflow, actor) {
     opportunitySucceeded,
     opportunityFailed,
     opportunityRoll: encounter.opportunityRoll || null,
+    isCustom: Boolean(encounter.custom),
+    customDetails: encounter.customDetails || null,
+    canCustomize: canCustomizeEncounter(actor),
     canRollEncounterAction:
       encounter.type === "challenge"
         ? !challengeOutcomeReady
@@ -147,6 +152,7 @@ export class ExpeditionPanel extends HandlebarsApplicationMixin(ApplicationV2) {
       rollTravel: ExpeditionPanel.#rollTravel,
       rollLocationEncounter: ExpeditionPanel.#rollLocationEncounter,
       rollEncounterAbility: ExpeditionPanel.#rollEncounterAbility,
+      customEncounter: ExpeditionPanel.#customEncounter,
       encounterSuccess: ExpeditionPanel.#encounterSuccess,
       encounterFailure: ExpeditionPanel.#encounterFailure,
       encounterResolved: ExpeditionPanel.#encounterResolved,
