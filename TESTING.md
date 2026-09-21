@@ -401,3 +401,11 @@ Ces contrôles sont prioritaires après les corrections issues du premier passag
    - Réussite partielle → seulement le demi-gain ;
    - Échec → seulement **Résoudre le Défi** ;
    - aucune Contrainte/Défaillance générique et aucun Bouclier énergétique adaptatif ne doit être proposé sur ces trois jets.
+
+
+## Régression v0.2.3 — warning média Firefox
+
+1. Sous Firefox, ouvrir la console développeur.
+2. Effectuer plusieurs jets d’Action normaux, avec Avantage et avec Désavantage.
+3. Vérifier que le son de dés se joue normalement.
+4. Vérifier l’absence du warning `URI invalide. Le chargement de la ressource média a échoué. game` au moment de la création du jet.
