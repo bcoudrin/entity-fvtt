@@ -454,3 +454,23 @@
   padding-top: 8px;
   border-top: 1px solid #d3cdc3;
 }
+
+
+.entity-inline-field small {
+  flex: 0 0 auto;
+  font-size: 10px;
+  opacity: .72;
+}
+
+.entity-location-plan {
+  border-left: 4px solid var(--entity-amber);
+  background: #fff8e9;
+}
+
+.entity-location-plan .entity-chip-row {
+  margin-top: 7px;
+}
+
+.entity-location-plan .entity-chip {
+  background: #efe0be;
+}
