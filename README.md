@@ -105,9 +105,13 @@ La succession conserve le même Actor Foundry afin de garder la continuité de c
 
 Le Journal consigne la destruction dans la page de la Mission interrompue, puis la succession dans le journal général. Les Découvertes et l’historique restent consultables comme archives de campagne ; seuls les bonus de Structures sont transférés au nouveau personnage.
 
+## Audit des règles de base
+
+Un audit règle par règle des pages imprimées 6 à 30 est maintenu dans [AUDIT_BASE_RULES.md](AUDIT_BASE_RULES.md). Il distingue les règles conformes, les choix laissés volontairement au joueur et les formulations du livre qui nécessitent encore un arbitrage.
+
 ## Limites actuelles
 
-
+- deux points éditoriaux des règles de base restent à arbitrer : ordre possible de l’Activité Secondaire et coût 2E des deux Améliorations dont l’effet se produit à l’installation ;
 - les gains d’Opportunités et de Trouvailles sont détectés et proposés par boutons explicites ; les rares gains alternatifs (« ou ») restent un choix du joueur ; pour une Opportunité, le gain reste verrouillé jusqu’à validation d’une Réussite totale ou partielle ;
 - l’Unité de conversion adaptative des Ressources est disponible explicitement lors des Opportunités et Trouvailles de Lieu ;
 - la Valeur de Menace est suivie jet par jet : chaque résultat est enregistré explicitement depuis le Chat, puis le panneau détermine si le Défi est réussi ou échoué avant validation ;
