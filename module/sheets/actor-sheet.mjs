@@ -5,6 +5,7 @@ import { ExpeditionPanel } from "../apps/expedition-panel.mjs";
 import { openCreationWizard } from "../apps/creation-wizard.mjs";
 import { isActorCreationReady, isActorCreationValid } from "../creation-rules.mjs";
 import { getDiscoveryStatus, revealNextDiscovery } from "../journal.mjs";
+import { prepareSuccessor } from "../destruction.mjs";
 
 const { ActorSheetV2 } = foundry.applications.sheets;
 const { HandlebarsApplicationMixin } = foundry.applications.api;
@@ -111,6 +112,8 @@ export class PiaSheet extends HandlebarsApplicationMixin(ActorSheetV2) {
     context.structures = actor.items.filter((item) => item.type === "structure");
     context.missions = actor.items.filter((item) => item.type === "mission");
     context.pendingEffects = getPendingEffects(actor);
+    context.isDestroyed = Boolean(actor.system.destroyed);
+    context.successorPending = Boolean(actor.getFlag("entity", "successorPending"));
     context.creation = {
       completed: Boolean(actor.system.creationCompleted),
       valid: isActorCreationValid(actor),
@@ -250,11 +253,19 @@ export class PiaSheet extends HandlebarsApplicationMixin(ActorSheetV2) {
     this.render({ force: true });
   }
 
-  static #openCreation() {
+  static async #openCreation() {
+    if (this.actor.system.destroyed && !this.actor.getFlag("entity", "successorPending")) {
+      await prepareSuccessor(this.actor);
+      return;
+    }
     openCreationWizard(this.actor, { force: true });
   }
 
   static #openExpedition() {
+    if (this.actor.system.destroyed) {
+      ui.notifications.warn("Ce PIA est détruit. Créez son successeur avant de poursuivre.");
+      return;
+    }
     if (!isActorCreationReady(this.actor)) {
       ui.notifications.warn("Terminez d’abord la création du PIA.");
       openCreationWizard(this.actor);
