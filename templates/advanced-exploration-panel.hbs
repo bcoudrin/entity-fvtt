@@ -1,0 +1,97 @@
+<div class="entity-advanced-exploration-shell">
+  <header class="entity-advanced-exploration-header">
+    <span class="entity-kicker">RÈGLES AVANCÉES — TABLES D’ORACLE</span>
+    <h2>Exploration</h2>
+    {{#if hasLocation}}
+      <p><strong>Lieu actuel :</strong> {{location.text}}</p>
+    {{else}}
+      <p>Identifiez d’abord le Lieu dans le workflow d’Expédition.</p>
+    {{/if}}
+  </header>
+
+  <div class="entity-advanced-exploration-body">
+    <section class="entity-panel">
+      <span class="entity-kicker">1 — IDENTIFIER LE LIEU</span>
+      <h3>Structure ou terrain ouvert ?</h3>
+      <p>Le contrôle avancé utilise 1d10. Sur 6+, la destination se trouve dans une Structure ; son rôle initial est alors déterminé par la table des Structures.</p>
+      <button type="button" class="entity-primary" data-action="scanStructure" {{#unless hasLocation}}disabled{{/unless}}>
+        <i class="fa-solid fa-satellite-dish"></i> Scanner le Lieu
+      </button>
+
+      {{#if hasStructureCheck}}
+        <div class="entity-advanced-oracle-result">
+          <strong>d10 {{state.structureCheck.roll}}</strong>
+          {{#if insideStructure}}
+            <p>Le Lieu se trouve dans une <strong>Structure</strong>.</p>
+            {{#if structure}}
+              <p><strong>d100 {{structure.roll}}</strong> — {{structure.text}}</p>
+            {{/if}}
+          {{else}}
+            <p>Le Lieu se trouve en <strong>terrain ouvert</strong>.</p>
+          {{/if}}
+        </div>
+      {{/if}}
+    </section>
+
+    <section class="entity-panel">
+      <span class="entity-kicker">DESCRIPTION IMMÉDIATE</span>
+      <h3>{{#if insideStructure}}Caractéristique de Structure{{else}}Caractéristique de Terrain{{/if}}</h3>
+      <p>Une fois le contexte déterminé, tirez une caractéristique physique et, si vous le souhaitez, un Descripteur.</p>
+      <div class="entity-two-actions">
+        <button type="button" data-action="rollContextFeature" {{#unless hasStructureCheck}}disabled{{/unless}}>
+          <i class="fa-solid fa-dice-d20"></i> Caractéristique
+        </button>
+        <button type="button" data-action="rollTable" data-table="descriptors">
+          <i class="fa-solid fa-wand-magic-sparkles"></i> Descripteur
+        </button>
+      </div>
+
+      {{#if contextFeature}}
+        <div class="entity-advanced-oracle-result">
+          <strong>{{contextFeature.label}} — d100 {{contextFeature.roll}}</strong>
+          <p>{{contextFeature.text}}</p>
+        </div>
+      {{/if}}
+      {{#if descriptor}}
+        <div class="entity-advanced-oracle-result entity-advanced-oracle-secondary">
+          <strong>Descripteur — d100 {{descriptor.roll}}</strong>
+          <p>{{descriptor.text}}</p>
+        </div>
+      {{/if}}
+    </section>
+
+    <section class="entity-panel">
+      <span class="entity-kicker">SCANNERS ET HORIZON</span>
+      <h3>Enrichir l’environnement</h3>
+      <p>Ces Oracles sont facultatifs. Vous pouvez les relancer autant de fois que nécessaire ou ignorer un résultat qui ne nourrit pas votre récit.</p>
+      <div class="entity-advanced-oracle-grid">
+        <button type="button" data-action="rollTable" data-table="sky">
+          <i class="fa-solid fa-star"></i><strong>Ciel</strong><small>Ce que vous voyez dans le ciel</small>
+        </button>
+        <button type="button" data-action="rollTable" data-table="distance">
+          <i class="fa-solid fa-binoculars"></i><strong>À distance</strong><small>Ce que vous pouvez voir au loin</small>
+        </button>
+        <button type="button" data-action="alienLife">
+          <i class="fa-solid fa-dna"></i><strong>Forme de vie</strong><small>Forme + Trait + Caractéristique + Comportement</small>
+        </button>
+      </div>
+
+      {{#if sky}}
+        <div class="entity-advanced-oracle-result"><strong>Ciel — d100 {{sky.roll}}</strong><p>{{sky.text}}</p></div>
+      {{/if}}
+      {{#if distance}}
+        <div class="entity-advanced-oracle-result"><strong>À distance — d100 {{distance.roll}}</strong><p>{{distance.text}}</p></div>
+      {{/if}}
+      {{#if alienLife}}
+        <div class="entity-advanced-oracle-result">
+          <strong>Forme de Vie Extraterrestre</strong>
+          {{#each alienLife as |part|}}
+            <p><b>{{part.label}} — d100 {{part.roll}}</b> : {{part.text}}</p>
+          {{/each}}
+        </div>
+      {{/if}}
+    </section>
+
+    <p class="entity-dialog-note">Ces résultats n’altèrent aucun état mécanique du PIA. Ils servent à visualiser et enrichir l’Exploration, conformément au rôle des tables d’Oracle.</p>
+  </div>
+</div>
