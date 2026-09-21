@@ -15,9 +15,9 @@ Le système couvre les règles de base jusqu’à la page 30 et propose maintena
 - 23 Améliorations de base, dont les 3 Améliorations de départ ;
 - 21 Structures et leurs effets structurés ;
 - 21 Missions ;
-- 10 Découvertes, conservées dans l’ordre de progression ;
+- 10 Découvertes, débloquées dans l’ordre à chaque Mission accomplie, puis révélées explicitement ;
 - six RollTables natives : Voyage, Lieu, Défis, Opportunités, Trouvailles et Lieux ;
-- journal de bord Foundry lié au PIA et alimenté par le workflow.
+- journal de bord Foundry lié au PIA, avec une page par Mission et une page persistante **Découvertes**.
 
 Le contenu de base est importé automatiquement une fois par monde au premier lancement par un MJ. Il peut être resynchronisé avec :
 
