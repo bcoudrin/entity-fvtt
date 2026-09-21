@@ -560,3 +560,20 @@ Ces contrôles sont prioritaires après les corrections issues du premier passag
 8. Commencer une nouvelle Mission.
    - Énergie remplie à la capacité maximale courante, y compris les bonus de Structures ;
    - aucune ancienne Contrainte, Défaillance ou progression de Mission ne réapparaît.
+
+
+## Régression v0.4.1 — Défausse d’Amélioration sur Combinaison pleine
+
+1. Remplir les 20 emplacements de la Combinaison avec un mélange de dommages et d’au moins une Amélioration.
+2. Ajouter une Contrainte puis, dans un second test, une Défaillance.
+3. Vérifier que le dialogue **Combinaison saturée** s’ouvre sans erreur JavaScript.
+4. Vérifier qu’il liste toutes les Améliorations encore installées.
+5. Annuler le dialogue.
+   - aucune Amélioration ne doit être supprimée ;
+   - aucun dommage supplémentaire ne doit être ajouté.
+6. Refaire l’opération et sélectionner une Amélioration.
+   - l’Amélioration choisie est supprimée ;
+   - la Contrainte ou Défaillance demandée est ajoutée immédiatement après ;
+   - le compteur de la Combinaison reste à 20.
+7. Répéter jusqu’à ce que les 20 emplacements soient uniquement des Contraintes/Défaillances.
+   - la destruction du PIA doit alors se déclencher normalement.
