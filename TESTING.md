@@ -719,3 +719,44 @@ Relire [AUDIT_BASE_RULES.md](AUDIT_BASE_RULES.md) lors de toute modification des
    - le contexte d’Exploration avancée précédent doit être remis à zéro ;
    - les anciennes entrées restent néanmoins dans le Journal de la Mission.
 10. Vérifier qu’aucun tirage d’Oracle avancé ne modifie Énergie, Ressources, Données, Contraintes, Défaillances, Aspects ou résolution de Rencontre.
+
+
+## Régression v0.9.0 — Activités Secondaires avancées
+
+1. Arriver à l’étape **Activité Secondaire** d’une Expédition.
+   - un encart facultatif **Règles Avancées — préparer le terrain** apparaît ;
+   - les trois boutons Données / Énergie / Ressources ouvrent le panneau avancé sans lancer le jet mécanique.
+2. Pour chacune des trois activités, tester **Lieu actuel**.
+   - le Lieu identifié pendant l’Exploration est réutilisé ;
+   - un d10 détermine Structure sur 6+ ;
+   - la Caractéristique de Terrain ou de Structure appropriée est tirée automatiquement ;
+   - le résultat apparaît dans le Chat et le Journal.
+3. Tester **Nouveau Lieu**.
+   - un nouveau Lieu d100 est tiré uniquement pour la visualisation de l’Activité Secondaire ;
+   - le Lieu mécanique de l’Exploration n’est pas remplacé ;
+   - Structure et Caractéristique sont ensuite déterminées de la même manière.
+4. **Collecte de Données — Réussite totale** :
+   - appliquer le gain mécanique ;
+   - le Chat propose **Enrichir le résultat avec les Oracles** ;
+   - le panneau propose Informations, Thèmes, Actions, Objets, Anomalies et Forme de Vie ;
+   - chaque tirage est librement relançable et journalisé.
+5. **Collecte de Données — Réussite partielle** :
+   - le demi-gain reste inchangé ;
+   - le panneau propose Incident, Caractéristique du lieu, Objets, Anomalies, Forme de Vie et Actions.
+6. **Collecte de Ressources — Réussite totale** :
+   - le panneau propose Matériaux, Objets et Actions.
+7. **Collecte de Ressources — Réussite partielle** :
+   - le panneau propose Incident + Caractéristique du lieu, avec Objets/Anomalies/Forme de Vie/Actions disponibles comme développements.
+8. **Recharge d’Énergie — Réussite totale** :
+   - le panneau propose Matériaux, Objets, Forme de Vie, Descripteurs et Actions.
+9. **Recharge d’Énergie — Réussite partielle** :
+   - le panneau propose Incident + Caractéristique du lieu, avec Objets/Anomalies/Forme de Vie/Actions disponibles.
+10. Obtenir un **Échec** sur chacune des trois activités.
+    - le système continue à proposer uniquement **Résoudre le Défi** comme conséquence mécanique ;
+    - le panneau avancé, s’il est ouvert, indique que l’échec est traité par le Défi et ne propose pas de générateur de résultat.
+11. Fermer/recharger Foundry pendant l’Activité Secondaire.
+    - le terrain préparé, le type d’activité, le dernier résultat mécanique et les derniers Oracles restent persistants pour l’Expédition en cours.
+12. Démarrer une nouvelle Expédition.
+    - l’état avancé de l’Activité Secondaire précédente est remis à zéro ;
+    - les anciennes entrées restent dans le Journal.
+13. Vérifier qu’aucun Oracle avancé ne modifie le montant du gain, l’Énergie hors gain normal, les Ressources, les Données, les Contraintes, les Défaillances ou les Aspects.
