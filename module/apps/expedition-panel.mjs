@@ -183,6 +183,9 @@ export class ExpeditionPanel extends HandlebarsApplicationMixin(ApplicationV2) {
     context.currentEncounter = currentEncounterView(workflow, actor);
     context.locationEncounterSummary = locationEncounterSummary(workflow);
     context.missions = missions;
+    context.baseMissions = missions.filter((mission) => !mission.extra);
+    context.extraMissions = missions.filter((mission) => mission.extra);
+    context.hasExtraMissions = context.extraMissions.some((mission) => mission.available);
     context.hasMission = Boolean(activeKey);
     context.missionReady =
       Boolean(activeKey) &&
