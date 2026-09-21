@@ -90,6 +90,20 @@ La création d’un nouveau PIA ouvre un assistant guidé qui impose la réparti
 
 La fiche reste directement éditable après création. Relancer l’assistant sur un PIA déjà configuré ne réinitialise pas sa campagne.
 
+## Destruction et succession
+
+Lorsque les 20 emplacements de la Combinaison sont occupés par des Contraintes et/ou Défaillances, le PIA passe immédiatement à l’état **détruit**. Les actions de jeu sont alors bloquées et le Chat ainsi que la fiche proposent explicitement **Créer le nouveau PIA**.
+
+La succession conserve le même Actor Foundry afin de garder la continuité de campagne, mais réinitialise le personnage :
+- toutes les Améliorations sont supprimées ;
+- les Contraintes et Défaillances sont effacées avec l’ancien personnage ;
+- les Aspects et la progression de la Mission en cours sont perdus ;
+- Traits et Capacités doivent être recréés via l’assistant ;
+- les trois Améliorations de départ reviennent après création du successeur ;
+- les Structures restent en place.
+
+Le Journal consigne la destruction dans la page de la Mission interrompue, puis la succession dans le journal général. Les Découvertes et l’historique restent consultables comme archives de campagne ; seuls les bonus de Structures sont transférés au nouveau personnage.
+
 ## Limites actuelles
 
 
