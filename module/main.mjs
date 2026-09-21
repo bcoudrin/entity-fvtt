@@ -14,6 +14,7 @@ import { applyRollConsequence, rerollWithImprovement, rerollWithStructure, useSh
 import { clearPendingEffects, removePendingEffectsForItem } from "./improvements.mjs";
 import { installEffectPlan } from "./improvement-rules.mjs";
 import { openOraclePanel } from "./apps/oracle-panel.mjs";
+import { openAdvancedExplorationPanel } from "./apps/advanced-exploration-panel.mjs";
 import { createCoreRollTables } from "./roll-tables.mjs";
 import { seedCoreContent } from "./content-seed.mjs";
 import { applySecondaryGain, recordEncounterRoll, recordOpportunityRoll, resolveSecondaryFailure } from "./workflow.mjs";
@@ -246,6 +247,7 @@ Hooks.once("ready", async () => {
     createCoreRollTables,
     seedCoreContent,
     openOracle: (actor) => openOraclePanel(actor),
+    openAdvancedExploration: (actor) => openAdvancedExplorationPanel(actor),
     openCreation: (actor) => {
       if (actor?.system?.destroyed && !actor.getFlag(SYSTEM_ID, "successorPending")) return prepareSuccessor(actor);
       return openCreationWizard(actor, { force: true });
