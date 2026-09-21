@@ -5,6 +5,7 @@ import { refreshActionRollMessage, rollThresholdAction } from "./dice.mjs";
 import { isActorCreationReady } from "./creation-rules.mjs";
 import { clearPendingEffects } from "./improvements.mjs";
 import { installEffectPlan } from "./improvement-rules.mjs";
+import { resetAdvancedExploration } from "./advanced-exploration.mjs";
 import {
   clampDataSpend,
   locationEncounterPlan,
@@ -359,6 +360,7 @@ export async function startExpedition(actor) {
 
   const number = Number(actor.system.expeditionNumber || 0) + 1;
   await actor.update({ "system.expeditionNumber": number });
+  await resetAdvancedExploration(actor, number);
 
   const workflow = foundry.utils.deepClone(DEFAULT_WORKFLOW);
   workflow.stage = "identify";
