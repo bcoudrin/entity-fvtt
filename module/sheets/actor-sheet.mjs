@@ -79,6 +79,7 @@ export class PiaSheet extends HandlebarsApplicationMixin(ActorSheetV2) {
     const context = await super._prepareContext(options);
     const actor = this.actor;
 
+    context.actor = actor;
     context.system = actor.system;
     context.traits = Object.entries(TRAITS).map(([traitKey, trait]) => {
       const traitData = actor.system.traits?.[traitKey];
