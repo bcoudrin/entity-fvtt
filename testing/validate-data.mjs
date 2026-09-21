@@ -9,6 +9,14 @@ import { askOracleOutcome } from "../module/oracle-rules.mjs";
 import { ADVANCED_EXPLORATION_TABLES, ALIEN_LIFE_COLUMNS } from "../module/data/advanced-exploration-tables.mjs";
 import { ADVANCED_NARRATIVE_TABLES } from "../module/data/advanced-narrative-tables.mjs";
 import { suggestedSecondaryOracles } from "../module/advanced-secondary.mjs";
+import {
+  aggregateCustomRewards,
+  customEncounterRequirements,
+  customFindReward,
+  customKeywordFromD10,
+  customKeywordsReady,
+  resolvedCustomKeywords
+} from "../module/custom-encounter-rules.mjs";
 
 function coveredValues(entries) {
   const values = [];
@@ -120,6 +128,62 @@ assert.deepEqual(
   "La Réussite totale de Recharge d’Énergie propose ses supports et enrichissements"
 );
 assert.deepEqual(suggestedSecondaryOracles("energy", "failure"), [], "L’échec ne reçoit pas d’Oracle de résultat : il déclenche un Défi");
+
+assert.equal(customKeywordFromD10(1).abilityKey, "robotics", "Mot-clé 1 = Robotique");
+assert.equal(customKeywordFromD10(9).abilityKey, "navigation", "Mot-clé 9 = Navigation");
+assert.equal(customKeywordFromD10(10).abilityKey, null, "Mot-clé 10 exige un choix du joueur");
+assert.equal(customKeywordsReady([
+  { abilityKey: "robotics" },
+  { abilityKey: "physics" },
+  { abilityKey: "survival" }
+]), true, "Trois mots-clés résolus rendent le Défi personnalisable");
+assert.deepEqual(
+  resolvedCustomKeywords([
+    { abilityKey: "robotics" },
+    { abilityKey: "robotics" },
+    { abilityKey: "physics" }
+  ]),
+  ["robotics", "physics"],
+  "Les doublons de mots-clés sont conservés comme un seul choix"
+);
+
+assert.deepEqual(customFindReward(1).rewards, [{ resourceKey: "data", amount: 1 }]);
+assert.deepEqual(customFindReward(10).rewards, [
+  { resourceKey: "data", amount: 1 },
+  { resourceKey: "resources", amount: 1 },
+  { resourceKey: "energy", amount: 1 }
+]);
+assert.deepEqual(
+  aggregateCustomRewards([customFindReward(4), customFindReward(5)]),
+  [
+    { resourceKey: "data", amount: 1 },
+    { resourceKey: "resources", amount: 2 },
+    { resourceKey: "energy", amount: 1 }
+  ],
+  "Une Opportunité personnalisée cumule les deux jets de Trouvaille"
+);
+assert.equal(
+  customEncounterRequirements("challenge", {
+    anomaly: { text: "X" },
+    keywordRolls: [{ abilityKey: "robotics" }, { abilityKey: "physics" }, { abilityKey: "survival" }]
+  }).ready,
+  true,
+  "Un Défi personnalisé exige Anomalie + trois mots-clés résolus"
+);
+assert.equal(
+  customEncounterRequirements("opportunity", {
+    anomaly: { text: "X" },
+    keywordRolls: [{ abilityKey: "robotics" }, { abilityKey: "physics" }, { abilityKey: "survival" }],
+    findRolls: [customFindReward(1)]
+  }).ready,
+  false,
+  "Une Opportunité personnalisée exige deux jets de Trouvaille"
+);
+assert.equal(
+  customEncounterRequirements("find", { findRolls: [customFindReward(8)] }).ready,
+  true,
+  "Une Trouvaille personnalisée exige un jet de Trouvaille"
+);
 for (const table of CORE_TABLES) {
   if (table.formula === "1d100") {
     assert.equal(table.entries.length, 50, table.name + " doit avoir 50 entrées d100");
