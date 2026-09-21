@@ -298,19 +298,20 @@ export async function rerollWithImprovement(message, dieIndex, itemId) {
   await rerollDieAndRefresh(message, state, actor, dieIndex);
 }
 
-export async function applyRollConsequence(message, kind) {
+export async function applyRollConsequence(message, kind, customLabel = "") {
   const state = foundry.utils.deepClone(message.getFlag(SYSTEM_ID, "actionRoll"));
   if (!state || state.consequenceApplied || state.workflow?.secondary) return;
 
   const actor = await fromUuid(state.actorUuid);
   if (!actor) return;
 
-  const label = state.actionLabel || ABILITIES[state.abilityKey]?.label || "Jet d’Action";
+  const actionLabel = state.actionLabel || ABILITIES[state.abilityKey]?.label || "Jet d’Action";
+  const narratedLabel = String(customLabel || "").trim();
   let applied = false;
   if (kind === "constraint" && state.result === "partial") {
-    applied = await actor.addConstraint("Contrainte — " + label);
+    applied = await actor.addConstraint(narratedLabel || ("Contrainte — " + actionLabel));
   } else if (kind === "failure" && state.result === "failure") {
-    applied = await actor.addFailure("Défaillance — " + label);
+    applied = await actor.addFailure(narratedLabel || ("Défaillance — " + actionLabel));
   }
   if (!applied) return;
 
