@@ -15,6 +15,7 @@ import { clearPendingEffects, removePendingEffectsForItem } from "./improvements
 import { createCoreRollTables } from "./roll-tables.mjs";
 import { seedCoreContent } from "./content-seed.mjs";
 import { applySecondaryGain, recordEncounterRoll, resolveSecondaryFailure } from "./workflow.mjs";
+import { markPiaDestroyed, prepareSuccessor } from "./destruction.mjs";
 
 function embeddedImprovementData(definition) {
   const { key, name, ...system } = definition;
@@ -213,6 +214,10 @@ Hooks.on("renderChatMessageHTML", (message, html) => {
         const actor = await fromUuid(button.dataset.actorUuid);
         if (actor) await revealNextDiscovery(actor);
       }
+      if (action === "prepare-successor") {
+        const actor = await fromUuid(button.dataset.actorUuid);
+        if (actor) await prepareSuccessor(actor);
+      }
     });
   });
 });
@@ -225,10 +230,18 @@ Hooks.once("ready", async () => {
     clearPendingEffects,
     createCoreRollTables,
     seedCoreContent,
-    openCreation: (actor) => openCreationWizard(actor, { force: true }),
+    openCreation: (actor) => {
+      if (actor?.system?.destroyed && !actor.getFlag(SYSTEM_ID, "successorPending")) return prepareSuccessor(actor);
+      return openCreationWizard(actor, { force: true });
+    },
+    prepareSuccessor,
     openExpedition: (actor) => {
       if (!actor || actor.type !== "pia") {
         ui.notifications.warn("Sélectionnez un PIA.");
+        return null;
+      }
+      if (actor.system.destroyed) {
+        ui.notifications.warn("Ce PIA est détruit. Créez son successeur avant de poursuivre.");
         return null;
       }
       if (!isActorCreationReady(actor)) {
@@ -247,6 +260,9 @@ Hooks.once("ready", async () => {
   if (game.user?.isGM) {
     for (const actor of game.actors.filter((candidate) => candidate.type === "pia")) {
       await ensurePiaJournal(actor);
+      if (actor.suitState.destroyed && !actor.system.destroyed) {
+        await markPiaDestroyed(actor);
+      }
     }
 
     const version = game.settings.get(SYSTEM_ID, "coreDataVersion");
