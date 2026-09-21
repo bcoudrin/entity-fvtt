@@ -49,13 +49,18 @@
     <p class="entity-chat-success"><i class="fa-solid fa-shield-halved"></i> {{state.shieldName}} : Contrainte évitée.</p>
   {{/if}}
 
-  {{#if state.workflow.encounter}}
+  {{#if isChallenge}}
     {{#unless state.encounterRecorded}}
-      <div class="entity-chat-actions entity-encounter-record">
-        <button type="button" data-entity-chat-action="record-encounter-roll">
-          <i class="fa-solid fa-list-check"></i> Enregistrer pour le Défi
-        </button>
-      </div>
+      {{#if challengeNeedsConsequence}}
+        <p class="entity-chat-note"><i class="fa-solid fa-triangle-exclamation"></i> Appliquez d’abord la conséquence de ce jet avant de l’enregistrer pour le Défi.</p>
+      {{/if}}
+      {{#if challengeCanRecord}}
+        <div class="entity-chat-actions entity-encounter-record">
+          <button type="button" data-entity-chat-action="record-encounter-roll">
+            <i class="fa-solid fa-list-check"></i> Enregistrer pour le Défi
+          </button>
+        </div>
+      {{/if}}
     {{else}}
       <p class="entity-chat-success"><i class="fa-solid fa-check"></i> Jet enregistré pour la Valeur de Menace.</p>
     {{/unless}}
