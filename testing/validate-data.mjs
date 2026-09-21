@@ -1,5 +1,6 @@
 import assert from "node:assert/strict";
 import { CORE_DISCOVERIES, CORE_IMPROVEMENTS, CORE_MISSIONS, CORE_STRUCTURES } from "../module/data/core-items.mjs";
+import { EXTRA_MISSIONS, EXTRA_STRUCTURES, isExtraMissionKey } from "../module/data/extras-items.mjs";
 import { CORE_TABLES } from "../module/data/tables.mjs";
 import { clampDataSpend, locationEncounterPlan, opportunityOutcome, parseEncounterRewards, resolveChallengeOutcome, secondaryGain, travelEncounterType } from "../module/workflow-rules.mjs";
 import { isExactDistribution, validateCreationState } from "../module/creation-rules.mjs";
@@ -57,6 +58,30 @@ for (const mission of CORE_MISSIONS) {
 }
 
 assert.equal(CORE_DISCOVERIES.length, 10, "10 Découvertes attendues");
+
+assert.equal(EXTRA_MISSIONS.length, 18, "18 Missions additionnelles attendues");
+assert.equal(EXTRA_STRUCTURES.length, 18, "18 Structures additionnelles de récompense attendues");
+assert.ok(EXTRA_MISSIONS.every((mission) => isExtraMissionKey(mission.key)), "Toutes les Missions additionnelles utilisent un identifiant Extra");
+assert.ok(EXTRA_MISSIONS.slice(0, 9).every((mission) => mission.aspectsRequired === 4), "Extras 1–9 : 4 Aspects");
+assert.ok(EXTRA_MISSIONS.slice(9).every((mission) => mission.aspectsRequired === 3), "Extras 10–18 : 3 Aspects");
+assert.ok(EXTRA_MISSIONS.every((mission) =>
+  EXTRA_STRUCTURES.some((structure) => structure.name === mission.structureName)
+), "Chaque Mission additionnelle possède sa Structure de récompense");
+
+const extraAbilityBonus = EXTRA_STRUCTURES.filter((structure) => structure.effectType === "abilityBonus");
+const extraRerolls = EXTRA_STRUCTURES.filter((structure) => structure.effectType === "reroll");
+assert.equal(extraAbilityBonus.length, 9, "9 Structures additionnelles donnent +1 à une Capacité");
+assert.equal(extraRerolls.length, 9, "9 Structures additionnelles donnent une relance");
+assert.deepEqual(
+  new Set(extraAbilityBonus.map((structure) => structure.effectKey)),
+  new Set(["robotics", "engineering", "computing", "physics", "biology", "chemistry", "survival", "communication", "navigation"]),
+  "Les 9 Capacités sont couvertes une fois par les Structures additionnelles +1"
+);
+assert.deepEqual(
+  new Set(extraRerolls.map((structure) => structure.effectKey)),
+  new Set(["robotics", "engineering", "computing", "physics", "biology", "chemistry", "survival", "communication", "navigation"]),
+  "Les 9 Capacités sont couvertes une fois par les Structures additionnelles de relance"
+);
 
 const extractionTools = CORE_IMPROVEMENTS.find((entry) => entry.key === "advanced-extraction-tools");
 const dataAlgorithms = CORE_IMPROVEMENTS.find((entry) => entry.key === "data-exploration-algorithms");
