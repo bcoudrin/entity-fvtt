@@ -1,0 +1,35 @@
+<div class="entity-oracle-shell">
+  <header class="entity-oracle-header">
+    <span class="entity-kicker">RÈGLES AVANCÉES</span>
+    <h2>Demander à l’Oracle</h2>
+    <p>Posez une question fermée. L’Oracle fournit une impulsion narrative ; vous restez libre d’interpréter ou de relancer.</p>
+  </header>
+
+  <section class="entity-oracle-body">
+    <label class="entity-oracle-question">
+      <span>Question oui / non</span>
+      <textarea name="oracleQuestion" rows="3" placeholder="Y a-t-il une entrée cachée dans cette pièce ?">{{question}}</textarea>
+    </label>
+
+    <div class="entity-oracle-scale">
+      <span>1<br><b>Non, et aussi…</b></span>
+      <span>2<br><b>Non, mais…</b></span>
+      <span>3–5<br><b>Non</b></span>
+      <span>6–8<br><b>Oui</b></span>
+      <span>9<br><b>Oui, mais…</b></span>
+      <span>10+<br><b>Oui, et aussi…</b></span>
+    </div>
+
+    {{#if last}}
+      <div class="entity-oracle-last">
+        <span>Dernier résultat</span>
+        <strong>d10 {{last.total}} — {{last.label}}</strong>
+      </div>
+    {{/if}}
+  </section>
+
+  <footer class="entity-oracle-footer">
+    <button type="button" data-action="clear"><i class="fa-solid fa-eraser"></i> Effacer</button>
+    <button type="button" class="entity-primary" data-action="ask"><i class="fa-solid fa-dice-d10"></i> Consulter l’Oracle</button>
+  </footer>
+</div>
