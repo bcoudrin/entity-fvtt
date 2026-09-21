@@ -1,6 +1,7 @@
 import { ABILITIES, SYSTEM_ID, TRAITS } from "../constants.mjs";
 import { CORE_IMPROVEMENTS } from "../data/core-items.mjs";
 import { ABILITY_VALUES, isActorCreationValid, TRAIT_VALUES, validateCreationState } from "../creation-rules.mjs";
+import { appendJournalEntry } from "../journal.mjs";
 
 const { ApplicationV2, HandlebarsApplicationMixin } = foundry.applications.api;
 
@@ -243,9 +244,11 @@ export class CreationWizard extends HandlebarsApplicationMixin(ApplicationV2) {
       return;
     }
 
+    const successorPending = Boolean(this.actor.getFlag(SYSTEM_ID, "successorPending"));
     const update = {
       name: this.creationState.name || this.actor.name || "PIA",
-      "system.creationCompleted": true
+      "system.creationCompleted": true,
+      "system.destroyed": false
     };
 
     for (const [traitKey, trait] of Object.entries(TRAITS)) {
@@ -267,11 +270,20 @@ export class CreationWizard extends HandlebarsApplicationMixin(ApplicationV2) {
     await this.actor.update(update);
     await ensureStartingImprovements(this.actor);
 
+    if (successorPending) {
+      await this.actor.unsetFlag(SYSTEM_ID, "successorPending");
+      await appendJournalEntry(
+        this.actor,
+        "Nouveau PIA opérationnel",
+        "<p><strong>" + this.actor.name + "</strong> reprend l’exploration avec les Structures laissées par ses prédécesseurs.</p>"
+      );
+    }
+
     await ChatMessage.create({
       speaker: ChatMessage.getSpeaker({ actor: this.actor }),
       content:
         "<div class=\"entity-chat entity-creation-card\">" +
-        "<span class=\"entity-kicker\">PIA INITIALISÉ</span>" +
+        "<span class=\"entity-kicker\">" + (successorPending ? "SUCCESSEUR INITIALISÉ" : "PIA INITIALISÉ") + "</span>" +
         "<h3>" + this.actor.name + "</h3>" +
         "<p>Traits et Capacités configurés conformément aux règles de création.</p>" +
         "</div>"
@@ -284,6 +296,10 @@ export class CreationWizard extends HandlebarsApplicationMixin(ApplicationV2) {
 
 export function openCreationWizard(actor, { force = false } = {}) {
   if (!actor || actor.type !== "pia") return null;
+  if (actor.system.destroyed && !actor.getFlag(SYSTEM_ID, "successorPending")) {
+    ui.notifications.warn("Le PIA est détruit. Lancez d’abord la procédure de succession.");
+    return null;
+  }
   if (!force && (actor.system.creationCompleted || isActorCreationValid(actor))) return null;
 
   const existing = foundry.applications.instances.get("entity-creation-wizard");
