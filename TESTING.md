@@ -513,3 +513,50 @@ Ces contrôles sont prioritaires après les corrections issues du premier passag
 9. Migration d’un PIA créé avant v0.3.0 mais déjà configuré manuellement avec une répartition valide :
    - il est considéré comme prêt ;
    - aucune création forcée ne bloque sa campagne.
+
+
+## Régression v0.4.0 — Destruction et succession du PIA
+
+1. Utiliser un PIA configuré avec :
+   - une Mission active ;
+   - au moins 1 Aspect collecté ;
+   - au moins une Structure construite ;
+   - plusieurs Améliorations ;
+   - éventuellement une Découverte déjà révélée.
+2. Remplir progressivement la Combinaison avec des Contraintes et/ou Défaillances.
+   - à 19 dommages, le PIA n’est pas détruit ;
+   - si les 20 emplacements physiques sont occupés mais qu’il reste une Amélioration, l’ajout d’un dommage doit d’abord demander de défausser une Amélioration ;
+   - la destruction ne survient que lorsque les 20 emplacements sont effectivement des Contraintes et/ou Défaillances.
+3. Au vingtième dommage :
+   - le Chat affiche **PIA DÉTRUIT** ;
+   - la fiche affiche l’état **UNITÉ HORS SERVICE** ;
+   - le panneau Mission / Expédition se ferme ;
+   - aucun nouveau jet d’Action ne peut être lancé ;
+   - aucune Contrainte ne peut être réparée pour annuler rétroactivement la destruction ;
+   - la page de la Mission active reçoit une entrée **Destruction du PIA**.
+4. Avant de créer le successeur, fermer/recharger le monde.
+   - l’état détruit doit persister ;
+   - la Mission ne doit pas pouvoir reprendre.
+5. Cliquer **Créer le nouveau PIA**.
+   - toutes les Améliorations de l’ancien PIA disparaissent ;
+   - Contraintes et Défaillances sont remises à zéro ;
+   - Mission active et Aspects reviennent à zéro ;
+   - Ressources et Données reviennent à 0 ;
+   - Traits et Capacités reviennent à 0 ;
+   - les Structures sont toujours présentes avec leurs rangs ;
+   - l’assistant de création s’ouvre ;
+   - si l’assistant est fermé, le PIA reste hors service et Mission / Expédition reste bloqué.
+6. Terminer l’assistant avec une nouvelle désignation et une répartition valide.
+   - l’état détruit disparaît ;
+   - les trois Améliorations de départ sont installées ;
+   - le nouveau nom et les nouvelles caractéristiques sont appliqués ;
+   - Mission / Expédition redevient accessible.
+7. Vérifier la continuité :
+   - Structures et rangs inchangés ;
+   - Journal de campagne conservé ;
+   - anciennes pages de Mission conservées ;
+   - Découvertes déjà révélées toujours consultables ;
+   - une entrée **Nouveau PIA opérationnel** est ajoutée au Journal général.
+8. Commencer une nouvelle Mission.
+   - Énergie remplie à la capacité maximale courante, y compris les bonus de Structures ;
+   - aucune ancienne Contrainte, Défaillance ou progression de Mission ne réapparaît.
