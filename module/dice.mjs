@@ -15,8 +15,10 @@ function structureBonus(actor, abilityKey) {
     .reduce((sum, item) => sum + Number(item.system.effectValue || 0) * Number(item.system.ranks || 1), 0);
 }
 
-function hasStructureReroll(actor, abilityKey) {
-  return Boolean(abilityKey) && matchingStructures(actor, "reroll", abilityKey).length > 0;
+function structureRerollCount(actor, abilityKey) {
+  if (!abilityKey) return 0;
+  return matchingStructures(actor, "reroll", abilityKey)
+    .reduce((sum, item) => sum + Math.max(1, Number(item.system.ranks || 1)), 0);
 }
 
 function computeKeptIndexes(dice, mode) {
@@ -50,6 +52,15 @@ function resolveMode(manualMode, effects) {
 }
 
 function recalculate(state) {
+  const legacyMax = state.structureRerollMax == null
+    ? (state.structureRerollAvailable ? 1 : 0)
+    : Number(state.structureRerollMax || 0);
+  const used = Number(state.structureRerollUsed || 0);
+  state.structureRerollMax = Math.max(0, legacyMax);
+  state.structureRerollUsed = Math.max(0, used);
+  state.structureRerollRemaining = Math.max(0, state.structureRerollMax - state.structureRerollUsed);
+  state.structureRerollAvailable = state.structureRerollRemaining > 0;
+
   state.keptIndexes = computeKeptIndexes(state.dice, state.mode);
   state.discardedIndexes = state.dice
     .map((_, index) => index)
@@ -209,8 +220,10 @@ export async function rollAction(actor, abilityKey, { mode = "normal", workflow 
     diceDisplay: [],
     result: "",
     resultLabel: "",
-    structureRerollAvailable: hasStructureReroll(actor, abilityKey),
-    structureRerollUsed: false,
+    structureRerollMax: structureRerollCount(actor, abilityKey),
+    structureRerollUsed: 0,
+    structureRerollRemaining: structureRerollCount(actor, abilityKey),
+    structureRerollAvailable: structureRerollCount(actor, abilityKey) > 0,
     consequenceApplied: false,
     secondaryApplied: false,
     shieldUsed: false,
@@ -252,8 +265,10 @@ export async function rollThresholdAction(actor, {
     diceDisplay: [],
     result: "",
     resultLabel: "",
+    structureRerollMax: 0,
+    structureRerollUsed: 0,
+    structureRerollRemaining: 0,
     structureRerollAvailable: false,
-    structureRerollUsed: false,
     consequenceApplied: false,
     secondaryApplied: false,
     shieldUsed: false,
@@ -266,12 +281,22 @@ export async function rollThresholdAction(actor, {
 export async function rerollWithStructure(message, dieIndex) {
   const state = foundry.utils.deepClone(message.getFlag(SYSTEM_ID, "actionRoll"));
   if (!state || state.consequenceApplied || state.secondaryApplied || state.encounterRecorded) return;
-  if (!state.structureRerollAvailable || state.structureRerollUsed) return;
 
   const actor = await fromUuid(state.actorUuid);
-  if (!actor || !hasStructureReroll(actor, state.abilityKey)) return;
+  if (!actor) return;
 
-  state.structureRerollUsed = true;
+  const currentMax = structureRerollCount(actor, state.abilityKey);
+  const storedMax = state.structureRerollMax == null
+    ? (state.structureRerollAvailable ? 1 : 0)
+    : Number(state.structureRerollMax || 0);
+  const max = Math.min(currentMax, Math.max(0, storedMax));
+  const used = Number(state.structureRerollUsed || 0);
+  if (used >= max) return;
+
+  state.structureRerollMax = max;
+  state.structureRerollUsed = used + 1;
+  state.structureRerollRemaining = Math.max(0, max - state.structureRerollUsed);
+  state.structureRerollAvailable = state.structureRerollRemaining > 0;
   await rerollDieAndRefresh(message, state, actor, dieIndex);
 }
 
