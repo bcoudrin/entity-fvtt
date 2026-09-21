@@ -6,6 +6,7 @@ import { isActorCreationReady } from "./creation-rules.mjs";
 import { clearPendingEffects } from "./improvements.mjs";
 import { installEffectPlan } from "./improvement-rules.mjs";
 import { resetAdvancedExploration } from "./advanced-exploration.mjs";
+import { resetAdvancedSecondary, setAdvancedSecondaryOutcome } from "./advanced-secondary.mjs";
 import {
   clampDataSpend,
   locationEncounterPlan,
@@ -361,6 +362,7 @@ export async function startExpedition(actor) {
   const number = Number(actor.system.expeditionNumber || 0) + 1;
   await actor.update({ "system.expeditionNumber": number });
   await resetAdvancedExploration(actor, number);
+  await resetAdvancedSecondary(actor, number);
 
   const workflow = foundry.utils.deepClone(DEFAULT_WORKFLOW);
   workflow.stage = "identify";
@@ -736,6 +738,7 @@ export async function applySecondaryGain(message) {
 
   state.secondaryApplied = true;
   state.secondaryGain = gain;
+  await setAdvancedSecondaryOutcome(actor, state.workflow.secondaryKind, state.result);
   await refreshActionRollMessage(message, state, actor);
 
   const workflow = workflowCopy(actor);
@@ -766,6 +769,7 @@ export async function resolveSecondaryFailure(message) {
   });
   workflow.stage = "encounter";
   state.secondaryApplied = true;
+  await setAdvancedSecondaryOutcome(actor, state.workflow.secondaryKind, "failure");
 
   await refreshActionRollMessage(message, state, actor);
   await saveWorkflow(actor, workflow);
