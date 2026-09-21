@@ -102,6 +102,10 @@ export class EntityActor extends Actor {
   }
 
   async removeCondition(kind, index) {
+    if (this.system.destroyed) {
+      ui.notifications.warn("La destruction du PIA est définitive. Créez un nouveau personnage.");
+      return;
+    }
     if (kind !== "constraints") {
       ui.notifications.warn("Une Défaillance est permanente jusqu’à la destruction du PIA.");
       return;
