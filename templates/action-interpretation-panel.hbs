@@ -1,0 +1,90 @@
+<div class="entity-action-interpretation-shell">
+  <header class="entity-action-interpretation-header">
+    <span class="entity-kicker">RÈGLES AVANCÉES — INTERPRÉTER LES ACTIONS ET LES RÉSULTATS</span>
+    <h2>{{state.actionLabel}} — {{state.resultLabel}}</h2>
+    {{#if state.traitLabel}}<p>{{state.traitLabel}}</p>{{/if}}
+  </header>
+
+  <div class="entity-action-interpretation-body">
+    {{#if hasAbilityGuide}}
+      <section class="entity-panel">
+        <span class="entity-kicker">DÉCRIRE L’ACTION</span>
+        <h3>{{abilityGuide.label}}</h3>
+        <p>{{abilityGuide.summary}}</p>
+        <p class="entity-dialog-note">Ces pistes sont des exemples d’usage de la Capacité, pas une liste fermée d’actions autorisées.</p>
+      </section>
+    {{else}}
+      <section class="entity-panel">
+        <span class="entity-kicker">DÉCRIRE L’ACTION</span>
+        <h3>{{state.actionLabel}}</h3>
+        <p>Ce jet utilise une difficulté propre à l’Activité plutôt qu’une Capacité individuelle. Décrivez librement la procédure, les outils et les conditions qui expliquent son résultat.</p>
+      </section>
+    {{/if}}
+
+    {{#if resultGuide}}
+      <section class="entity-panel entity-result-interpretation-panel">
+        <span class="entity-kicker">INTERPRÉTER LE RÉSULTAT</span>
+        <h3>{{resultGuide.label}}</h3>
+        <p>{{resultGuide.summary}}</p>
+        {{#if resultGuide.suitExamples}}
+          <div class="entity-interpretation-example">
+            <strong><i class="fa-solid fa-user-astronaut"></i> Combinaison Spatiale</strong>
+            <p>{{resultGuide.suitExamples}}</p>
+          </div>
+        {{/if}}
+        {{#if resultGuide.aiExamples}}
+          <div class="entity-interpretation-example">
+            <strong><i class="fa-solid fa-microchip"></i> Noyau d’IA</strong>
+            <p>{{resultGuide.aiExamples}}</p>
+          </div>
+        {{/if}}
+
+        {{#if hasNarrativeConsequence}}
+          <div class="entity-narrated-consequence">
+            <label>
+              <span>Décrire la {{consequenceLabel}}</span>
+              <input type="text" name="narrativeConsequence" placeholder="Ex. visière obscurcie par intermittence" />
+            </label>
+            <button type="button" class="entity-primary" data-action="applyNarratedConsequence" data-kind="{{consequenceKind}}">
+              <i class="fa-solid fa-pen-to-square"></i> Ajouter cette {{consequenceLabel}}
+            </button>
+            <p class="entity-dialog-note">L’ajout reste volontaire : rien n’est appliqué tant que vous ne confirmez pas ici ou depuis le message de Chat.</p>
+          </div>
+        {{/if}}
+      </section>
+    {{/if}}
+
+    <section class="entity-panel">
+      <span class="entity-kicker">ORACLE — ACTION + THÈME</span>
+      <h3>Donner une direction à la scène</h3>
+      <p>Action + Thème peut servir de déclencheur narratif si le détail précis de ce qui se passe ne vient pas immédiatement.</p>
+      <div class="entity-three-actions">
+        <button type="button" class="entity-primary" data-action="rollPair"><i class="fa-solid fa-dice"></i> Action + Thème</button>
+        <button type="button" data-action="rollAction"><i class="fa-solid fa-person-running"></i> Action seule</button>
+        <button type="button" data-action="rollTheme"><i class="fa-solid fa-lightbulb"></i> Thème seul</button>
+      </div>
+
+      {{#if oracle.action}}
+        <div class="entity-advanced-oracle-result">
+          <strong>Action — d100 {{oracle.action.roll}}</strong>
+          <p>{{oracle.action.text}}</p>
+        </div>
+      {{/if}}
+      {{#if oracle.theme}}
+        <div class="entity-advanced-oracle-result entity-advanced-oracle-secondary">
+          <strong>Thème — d100 {{oracle.theme.roll}}</strong>
+          <p>{{oracle.theme.text}}</p>
+        </div>
+      {{/if}}
+    </section>
+
+    <section class="entity-panel">
+      <span class="entity-kicker">JOURNAL DE BORD</span>
+      <h3>Fixer votre interprétation</h3>
+      <p>Ajoutez si vous le souhaitez quelques lignes décrivant ce que le PIA a tenté, ce qui s’est réellement produit et ce que cela change dans la fiction.</p>
+      <textarea name="journalNote" rows="5" placeholder="Ex. Le PIA détourne son drone de maintenance pour inspecter le mécanisme à distance…"></textarea>
+      <button type="button" data-action="journal"><i class="fa-solid fa-book"></i> Ajouter au Journal de bord</button>
+      <p class="entity-dialog-note">Cette note complète les entrées automatiques sans les remplacer.</p>
+    </section>
+  </div>
+</div>
