@@ -1,4 +1,5 @@
 import { SYSTEM_ID } from "./constants.mjs";
+import { CORE_DISCOVERIES } from "./data/core-items.mjs";
 
 function missionNumberFromKey(key) {
   const match = String(key || "").match(/(\d+)$/);
@@ -27,6 +28,85 @@ function legacyPageData() {
   };
 }
 
+function discoveryStatus(actor) {
+  const unlocked = Math.min(CORE_DISCOVERIES.length, Number(actor.system.discoveriesUnlocked || 0));
+  const revealed = Math.min(unlocked, Number(actor.system.discoveriesRevealed || 0));
+  return {
+    total: CORE_DISCOVERIES.length,
+    unlocked,
+    revealed,
+    pending: Math.max(0, unlocked - revealed),
+    nextIndex: revealed < unlocked ? revealed + 1 : null
+  };
+}
+
+function discoveriesPageContent(actor) {
+  const status = discoveryStatus(actor);
+  const entries = CORE_DISCOVERIES.map((discovery) => {
+    if (discovery.index <= status.revealed) {
+      return (
+        "<section class=\"entity-discovery-entry entity-discovery-revealed\">" +
+        "<h3>Découverte " + discovery.index + " — " + discovery.name + "</h3>" +
+        "<p>" + discovery.text + "</p>" +
+        "</section>"
+      );
+    }
+
+    if (discovery.index <= status.unlocked) {
+      return (
+        "<section class=\"entity-discovery-entry entity-discovery-available\">" +
+        "<h3>Découverte " + discovery.index + " — À révéler</h3>" +
+        "<p>Cette entrée a été débloquée par une Mission accomplie. Révélez-la depuis la fiche du PIA.</p>" +
+        "</section>"
+      );
+    }
+
+    return (
+      "<section class=\"entity-discovery-entry entity-discovery-locked\">" +
+      "<h3>Découverte " + discovery.index + " — Verrouillée</h3>" +
+      "<p>Accomplissez une Mission pour progresser dans le journal des Découvertes.</p>" +
+      "</section>"
+    );
+  }).join("<hr>");
+
+  return (
+    "<section class=\"entity-discoveries-log\">" +
+    "<h2>Découvertes</h2>" +
+    "<p>Les Découvertes retracent les révélations majeures de votre voyage. Chaque Mission accomplie débloque l’entrée suivante.</p>" +
+    "<p><strong>Révélées :</strong> " + status.revealed + " / " + status.total +
+    " — <strong>Débloquées :</strong> " + status.unlocked + " / " + status.total + "</p>" +
+    "<hr>" + entries +
+    "</section>"
+  );
+}
+
+function discoveriesPageData(actor) {
+  return {
+    name: "Découvertes",
+    type: "text",
+    text: { content: discoveriesPageContent(actor) },
+    flags: {
+      [SYSTEM_ID]: {
+        pageType: "discoveries"
+      }
+    }
+  };
+}
+
+function discoveriesPage(journal) {
+  return journal.pages?.contents?.find((page) => page.getFlag(SYSTEM_ID, "pageType") === "discoveries")
+    || null;
+}
+
+async function ensureDiscoveriesPage(actor, journal) {
+  let page = discoveriesPage(journal);
+  if (page) return page;
+
+  const created = await journal.createEmbeddedDocuments("JournalEntryPage", [discoveriesPageData(actor)]);
+  page = created?.[0] || null;
+  return page;
+}
+
 async function getActiveMissionPage(actor, journal) {
   const pageId = actor.getFlag(SYSTEM_ID, "journalMissionPageId");
   if (!pageId) return null;
@@ -38,22 +118,89 @@ async function getActiveMissionPage(actor, journal) {
   return null;
 }
 
+export async function ensureDiscoveryState(actor) {
+  if (!actor || actor.type !== "pia") return;
+
+  const version = Number(actor.getFlag(SYSTEM_ID, "discoveryStateVersion") || 0);
+  if (version >= 1) return;
+
+  // Avant v0.2.5, toute Découverte débloquée était immédiatement révélée.
+  // La migration conserve donc exactement ce qui a déjà été vu.
+  const legacyUnlocked = Math.min(CORE_DISCOVERIES.length, Number(actor.system.discoveriesUnlocked || 0));
+  await actor.update({ "system.discoveriesRevealed": legacyUnlocked });
+  await actor.setFlag(SYSTEM_ID, "discoveryStateVersion", 1);
+}
+
+export function getDiscoveryStatus(actor) {
+  return discoveryStatus(actor);
+}
+
 export async function ensurePiaJournal(actor) {
   if (!actor || actor.type !== "pia") return null;
+
+  await ensureDiscoveryState(actor);
 
   const storedUuid = actor.getFlag(SYSTEM_ID, "journalUuid");
   if (storedUuid) {
     const existing = await fromUuid(storedUuid);
-    if (existing) return existing;
+    if (existing) {
+      await ensureDiscoveriesPage(actor, existing);
+      return existing;
+    }
   }
 
   const journal = await JournalEntry.create({
     name: "Journal de bord — " + actor.name,
-    pages: [legacyPageData()]
+    pages: [legacyPageData(), discoveriesPageData(actor)]
   });
 
   if (journal) await actor.setFlag(SYSTEM_ID, "journalUuid", journal.uuid);
   return journal;
+}
+
+export async function syncDiscoveriesPage(actor) {
+  const journal = await ensurePiaJournal(actor);
+  if (!journal) return null;
+
+  const page = await ensureDiscoveriesPage(actor, journal);
+  if (!page) return null;
+
+  await page.update({ "text.content": discoveriesPageContent(actor) });
+  return page;
+}
+
+export async function revealNextDiscovery(actor) {
+  if (!actor || actor.type !== "pia") return false;
+
+  await ensureDiscoveryState(actor);
+
+  const status = discoveryStatus(actor);
+  if (!status.nextIndex) {
+    ui.notifications.info(status.revealed >= status.total
+      ? "Toutes les Découvertes ont déjà été révélées."
+      : "Aucune nouvelle Découverte n’est disponible.");
+    return false;
+  }
+
+  const discovery = CORE_DISCOVERIES.find((entry) => entry.index === status.nextIndex);
+  if (!discovery) return false;
+
+  await actor.update({ "system.discoveriesRevealed": discovery.index });
+  await syncDiscoveriesPage(actor);
+
+  await ChatMessage.create({
+    speaker: ChatMessage.getSpeaker({ actor }),
+    content:
+      "<div class=\"entity-chat entity-discovery-card\">" +
+      "<span class=\"entity-kicker\">NOUVELLE DÉCOUVERTE</span>" +
+      "<h3>Découverte " + discovery.index + " — " + discovery.name + "</h3>" +
+      "<p>" + discovery.text + "</p>" +
+      "<p><i class=\"fa-solid fa-book\"></i> Cette entrée est désormais conservée dans la page <strong>Découvertes</strong> du Journal de bord.</p>" +
+      "</div>"
+  });
+
+  actor.sheet?.render({ force: true });
+  return true;
 }
 
 export async function openPiaJournal(actor) {
