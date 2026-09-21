@@ -1,0 +1,47 @@
+export const EXTRA_STRUCTURES = [
+  { key: "extra-robot-recycling-plant", name: "Usine de Recyclage de Robots", effectType: "abilityBonus", effectKey: "robotics", effectValue: 1, description: "Recycle robots et drones pour en fabriquer de nouveaux plus performants. Gagnez +1 en Robotique." },
+  { key: "extra-electronic-components-fabricator", name: "Unité de Fabrication de Composants Électroniques", effectType: "abilityBonus", effectKey: "engineering", effectValue: 1, description: "Fabrique de manière autonome les composants électroniques nécessaires. Gagnez +1 en Ingénierie." },
+  { key: "extra-nanocard-storage-server", name: "Serveur de Stockage à Nanocartes", effectType: "abilityBonus", effectKey: "computing", effectValue: 1, description: "Augmente les capacités de gestion et de traitement des données. Gagnez +1 en Informatique." },
+  { key: "extra-physics-research-lab", name: "Laboratoire de Recherche en Physique", effectType: "abilityBonus", effectKey: "physics", effectValue: 1, description: "Permet des recherches sur la physique locale dans des conditions optimales. Gagnez +1 en Physique." },
+  { key: "extra-biology-research-lab", name: "Laboratoire de Recherche en Biologie", effectType: "abilityBonus", effectKey: "biology", effectValue: 1, description: "Permet des recherches sur la biologie locale dans des conditions optimales. Gagnez +1 en Biologie." },
+  { key: "extra-sample-analysis-unit", name: "Unité d’Analyse d’Échantillons", effectType: "abilityBonus", effectKey: "chemistry", effectValue: 1, description: "Permet de réaliser des analyses de terrain sur les échantillons prélevés. Gagnez +1 en Chimie." },
+  { key: "extra-weapons-factory", name: "Fabrique d’Armements", effectType: "abilityBonus", effectKey: "survival", effectValue: 1, description: "Fournit de nouveaux moyens de défense et permet de fabriquer des armements portatifs. Gagnez +1 en Survie." },
+  { key: "extra-holographic-communicator", name: "Communicateur Holographique", effectType: "abilityBonus", effectKey: "communication", effectValue: 1, description: "Traduit les paroles en images holographiques pour faciliter la communication avec des formes de vie inconnues. Gagnez +1 en Communication." },
+  { key: "extra-advanced-recon-drones", name: "Drones de Reconnaissance Avancée", effectType: "abilityBonus", effectKey: "navigation", effectValue: 1, description: "Drones autonomes de longue portée rapportant des informations détaillées sur les lieux explorés. Gagnez +1 en Navigation." },
+
+  { key: "extra-portable-robot-repair-workshop", name: "Atelier Portatif de Réparation de Robots et de Drones", effectType: "reroll", effectKey: "robotics", effectValue: 1, description: "Permet de réparer directement robots et drones au cours des Missions. Relancez un seul dé pour un jet d’Action en Robotique." },
+  { key: "extra-nanoconstructor-swarm", name: "Essaim de Drones Nanoconstructeurs", effectType: "reroll", effectKey: "engineering", effectValue: 1, description: "Essaim microscopique destiné aux réparations délicates des engins, robots et structures. Ne répare pas les Défaillances de la Combinaison. Relancez un seul dé pour un jet d’Action en Ingénierie." },
+  { key: "extra-overpowered-processor", name: "Processeur Surpuissant", effectType: "reroll", effectKey: "computing", effectValue: 1, description: "Augmente fortement la vitesse de calcul des systèmes. Relancez un seul dé pour un jet d’Action en Informatique." },
+  { key: "extra-environmental-adapter", name: "Adaptateur Environnemental", effectType: "reroll", effectKey: "physics", effectValue: 1, description: "Analyse les données locales pour améliorer l’adaptation de la Combinaison à l’environnement. Relancez un seul dé pour un jet d’Action en Physique." },
+  { key: "extra-alien-fauna-zoo", name: "Zoo de Faune Extraterrestre", effectType: "reroll", effectKey: "biology", effectValue: 1, description: "Regroupe les espèces capturées afin de permettre leur étude. Relancez un seul dé pour un jet d’Action en Biologie." },
+  { key: "extra-chemical-compound-storage", name: "Unité de Stockage et de Référencement de Composés Chimiques", effectType: "reroll", effectKey: "chemistry", effectValue: 1, description: "Stocke, référence et cartographie les composés chimiques prélevés. Relancez un seul dé pour un jet d’Action en Chimie." },
+  { key: "extra-rover", name: "Rover", effectType: "reroll", effectKey: "survival", effectValue: 1, description: "Véhicule tout-terrain conçu pour traverser rapidement les terrains difficiles. Relancez un seul dé pour un jet d’Action en Survie." },
+  { key: "extra-signal-decoder-encoder", name: "Décrypteur/Encodeur de Signaux", effectType: "reroll", effectKey: "communication", effectValue: 1, description: "Crypte et décrypte des messages sous forme de signaux sur de nombreuses longueurs d’onde. Relancez un seul dé pour un jet d’Action en Communication." },
+  { key: "extra-high-frequency-sensors", name: "Senseurs à Haute Fréquence", effectType: "reroll", effectKey: "navigation", effectValue: 1, description: "Étend fortement la portée de collecte des informations sensorielles. Relancez un seul dé pour un jet d’Action en Navigation." }
+];
+
+export const EXTRA_MISSIONS = [
+  { key: "extra-mission-01", name: "Recycleur", aspectsRequired: 4, structureName: "Usine de Recyclage de Robots", description: "Construisez une Usine de Recyclage de Robots pour fabriquer de nouveaux robots et drones." },
+  { key: "extra-mission-02", name: "Fabrication de composants électroniques", aspectsRequired: 4, structureName: "Unité de Fabrication de Composants Électroniques", description: "Créez une unité autonome pour produire les composants électroniques dont vous avez besoin." },
+  { key: "extra-mission-03", name: "Gestionnaire de données", aspectsRequired: 4, structureName: "Serveur de Stockage à Nanocartes", description: "Fabriquez un Serveur de Stockage à Nanocartes pour améliorer la gestion de vos données." },
+  { key: "extra-mission-04", name: "Laboratoire de Recherche en Physique", aspectsRequired: 4, structureName: "Laboratoire de Recherche en Physique", description: "Construisez un Laboratoire de Recherche en Physique locale." },
+  { key: "extra-mission-05", name: "Laboratoire de Recherche en Biologie", aspectsRequired: 4, structureName: "Laboratoire de Recherche en Biologie", description: "Construisez un Laboratoire de Recherche en Biologie locale." },
+  { key: "extra-mission-06", name: "Échantillonnage et analyse", aspectsRequired: 4, structureName: "Unité d’Analyse d’Échantillons", description: "Créez une Unité d’Analyse d’Échantillons pour vos prélèvements." },
+  { key: "extra-mission-07", name: "Affronter le danger", aspectsRequired: 4, structureName: "Fabrique d’Armements", description: "Construisez une Fabrique d’Armements afin de disposer de nouveaux moyens de défense." },
+  { key: "extra-mission-08", name: "Parler par l’image", aspectsRequired: 4, structureName: "Communicateur Holographique", description: "Fabriquez un Communicateur Holographique pour faciliter les rencontres avec les formes de vie extraterrestres." },
+  { key: "extra-mission-09", name: "Éclaireurs", aspectsRequired: 4, structureName: "Drones de Reconnaissance Avancée", description: "Fabriquez des Drones de Reconnaissance Avancée pour obtenir des informations sur les lieux à traverser." },
+
+  { key: "extra-mission-10", name: "Kit de réparation de robots", aspectsRequired: 3, structureName: "Atelier Portatif de Réparation de Robots et de Drones", description: "Fabriquez un Atelier Portatif de Réparation de Robots et de Drones." },
+  { key: "extra-mission-11", name: "Essaim de nanoconstructeurs", aspectsRequired: 3, structureName: "Essaim de Drones Nanoconstructeurs", description: "Créez un Essaim de Drones Nanoconstructeurs pour les réparations délicates." },
+  { key: "extra-mission-12", name: "Mémoire vive", aspectsRequired: 3, structureName: "Processeur Surpuissant", description: "Fabriquez un Processeur Surpuissant pour accélérer vos capacités de calcul." },
+  { key: "extra-mission-13", name: "S’adapter ou mourir", aspectsRequired: 3, structureName: "Adaptateur Environnemental", description: "Fabriquez un Adaptateur Environnemental pour mieux faire face à la physique locale." },
+  { key: "extra-mission-14", name: "Zoo", aspectsRequired: 3, structureName: "Zoo de Faune Extraterrestre", description: "Construisez un Zoo de Faune Extraterrestre pour étudier la faune locale." },
+  { key: "extra-mission-15", name: "Échantillons chimiques", aspectsRequired: 3, structureName: "Unité de Stockage et de Référencement de Composés Chimiques", description: "Fabriquez une unité de stockage et de référencement pour étudier les composés chimiques prélevés." },
+  { key: "extra-mission-16", name: "Véhicule", aspectsRequired: 3, structureName: "Rover", description: "Construisez un Rover pour vous déplacer plus rapidement et affronter les terrains difficiles." },
+  { key: "extra-mission-17", name: "Comprendre l’incompréhensible", aspectsRequired: 3, structureName: "Décrypteur/Encodeur de Signaux", description: "Fabriquez un Décrypteur/Encodeur de Signaux pour comprendre les langages extraterrestres ou autres." },
+  { key: "extra-mission-18", name: "Voir et entendre plus loin", aspectsRequired: 3, structureName: "Senseurs à Haute Fréquence", description: "Créez des Senseurs à Haute Fréquence pour étendre votre champ de perception." }
+];
+
+export function isExtraMissionKey(key) {
+  return String(key || "").startsWith("extra-mission-");
+}
