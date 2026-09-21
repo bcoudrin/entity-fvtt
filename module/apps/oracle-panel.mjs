@@ -58,10 +58,12 @@ export class OraclePanel extends HandlebarsApplicationMixin(ApplicationV2) {
     const outcome = askOracleOutcome(total);
     this.last = { total, ...outcome };
 
+    const safeQuestion = foundry.utils.escapeHTML(this.question);
+
     const content =
       "<div class=\"entity-chat entity-oracle-card\">" +
       "<span class=\"entity-kicker\">DEMANDER À L’ORACLE</span>" +
-      "<h3>" + this.question + "</h3>" +
+      "<h3>" + safeQuestion + "</h3>" +
       "<p class=\"entity-oracle-result\"><strong>d10 " + total + "</strong> — " + outcome.label + "</p>" +
       "</div>";
 
@@ -74,7 +76,7 @@ export class OraclePanel extends HandlebarsApplicationMixin(ApplicationV2) {
     await appendJournalEntry(
       this.actor,
       "Oracle — " + outcome.label,
-      "<p><strong>Question :</strong> " + this.question + "</p><p><strong>d10 " + total + "</strong> — " + outcome.label + "</p>"
+      "<p><strong>Question :</strong> " + safeQuestion + "</p><p><strong>d10 " + total + "</strong> — " + outcome.label + "</p>"
     );
 
     this.render({ force: true });
