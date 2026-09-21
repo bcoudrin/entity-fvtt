@@ -19,7 +19,7 @@ Le système couvre les règles de base jusqu’à la page 30 et commence l’int
 - 10 Découvertes, débloquées dans l’ordre à chaque Mission accomplie, puis révélées explicitement ;
 - six RollTables natives : Voyage, Lieu, Défis, Opportunités, Trouvailles et Lieux ;
 - journal de bord Foundry lié au PIA, avec une page par Mission et une page persistante **Découvertes** ;
-- outils de Règles Avancées : **Demander à l’Oracle** (1d10), **Exploration enrichie** et **Activités Secondaires enrichies** avec les tables narratives recommandées par le livre.
+- outils de Règles Avancées : **Demander à l’Oracle** (1d10), **Exploration enrichie**, **Activités Secondaires enrichies** et **Rencontres personnalisées**.
 
 Le contenu de base est importé automatiquement une fois par monde au premier lancement par un MJ. Il peut être resynchronisé avec :
 
@@ -116,7 +116,7 @@ Un audit règle par règle des pages imprimées 6 à 30 est maintenu dans [AUDIT
 - les gains d’Opportunités et de Trouvailles sont détectés et proposés par boutons explicites ; les rares gains alternatifs (« ou ») restent un choix du joueur ; pour une Opportunité, le gain reste verrouillé jusqu’à validation d’une Réussite totale ou partielle ;
 - l’Unité de conversion adaptative des Ressources est disponible explicitement lors des Opportunités et Trouvailles de Lieu ;
 - la Valeur de Menace est suivie jet par jet : chaque résultat est enregistré explicitement depuis le Chat, puis le panneau détermine si le Défi est réussi ou échoué avant validation ;
-- Règles Avancées encore partielles : **Demander à l’Oracle**, l’Exploration enrichie et les Activités Secondaires enrichies sont intégrés ; les Rencontres personnalisées et l’interprétation avancée Actions/Résultats restent à intégrer ;
+- Règles Avancées encore partielles : **Demander à l’Oracle**, l’Exploration enrichie, les Activités Secondaires enrichies et les Rencontres personnalisées sont intégrés ; l’interprétation avancée Actions/Résultats reste à intégrer ;
 - Extras exclus.
 
 
@@ -142,6 +142,14 @@ Les **Activités Secondaires avancées** prolongent les trois activités qui uti
 - Anomalies et Formes de Vie restent disponibles comme développements inattendus lorsque le livre les suggère.
 
 L’échec reste volontairement hors de ce générateur : il déclenche le Défi prévu par les règles de base. Les tirages d’Oracle ne modifient jamais le gain mécanique.
+
+Les **Rencontres personnalisées** peuvent maintenant remplacer un Défi, une Opportunité ou une Trouvaille active avant le début de sa résolution. Le générateur respecte la structure avancée du livre :
+- Défi : Anomalie obligatoire, puis trois d10 de mots-clés ; les doublons réduisent le nombre de Capacités possibles et un résultat 10 demande explicitement au joueur de choisir le mot-clé ;
+- Trouvaille : un d10 détermine le gain mécanique ;
+- Opportunité : le même squelette qu’un Défi, puis **deux** jets de Trouvaille dont les gains sont cumulés ;
+- Incidents, Actions, Thèmes, Objets, Informations, Matériaux, Descripteurs, Terrain/Structure et Formes de Vie peuvent enrichir librement le brouillon.
+
+L’application d’une Rencontre personnalisée conserve la **Valeur de Menace**, le **Désavantage** éventuel, le contexte Voyage/Lieu et sa position dans la séquence. Elle remplace uniquement le scénario, les mots-clés et la récompense. Une fois un jet d’Action enregistré ou une récompense encaissée, la Rencontre ne peut plus être remplacée.
 
 ## Validation
 
