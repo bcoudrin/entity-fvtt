@@ -7,7 +7,7 @@ import { EntityItem } from "./documents/item.mjs";
 import { PiaSheet } from "./sheets/actor-sheet.mjs";
 import { EntityItemSheet } from "./sheets/item-sheet.mjs";
 import { ExpeditionPanel } from "./apps/expedition-panel.mjs";
-import { ensurePiaJournal } from "./journal.mjs";
+import { ensurePiaJournal, revealNextDiscovery } from "./journal.mjs";
 import { applyRollConsequence, rerollWithImprovement, rerollWithStructure, useShieldForRoll } from "./dice.mjs";
 import { clearPendingEffects, removePendingEffectsForItem } from "./improvements.mjs";
 import { createCoreRollTables } from "./roll-tables.mjs";
@@ -206,6 +206,10 @@ Hooks.on("renderChatMessageHTML", (message, html) => {
       if (action === "record-encounter-roll") await recordEncounterRoll(message);
       if (action === "secondary-gain") await applySecondaryGain(message);
       if (action === "secondary-challenge") await resolveSecondaryFailure(message);
+      if (action === "reveal-discovery") {
+        const actor = await fromUuid(button.dataset.actorUuid);
+        if (actor) await revealNextDiscovery(actor);
+      }
     });
   });
 });
@@ -214,6 +218,7 @@ Hooks.once("ready", async () => {
   game.entity = {
     ensureStartingImprovements,
     ensureJournal: ensurePiaJournal,
+    revealNextDiscovery,
     clearPendingEffects,
     createCoreRollTables,
     seedCoreContent,
