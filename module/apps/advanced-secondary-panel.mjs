@@ -137,7 +137,7 @@ export async function openAdvancedSecondaryPanel(actor, { kind = "", outcome = "
   const existing = foundry.applications.instances.get("entity-advanced-secondary-panel");
   if (existing) existing.close();
 
-  const panel = new AdvancedSecondaryPanel(actor, { kind, outcome });
+  const panel = new AdvancedSecondaryPanel(actor);
   panel.render({ force: true });
   return panel;
 }
