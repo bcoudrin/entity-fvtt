@@ -4,7 +4,7 @@ Système Foundry VTT v14 pour **Entité — Jeu de rôle solo NASA Punk**.
 
 ## Phase actuelle
 
-Le système couvre les règles de base jusqu’à la page 30 et commence l’intégration optionnelle des **Règles Avancées**. Il propose un **workflow guidé Mission → Expédition** :
+Le système couvre les règles de base jusqu’à la page 30 ainsi que les **Règles Avancées p.32–63**. Il propose un **workflow guidé Mission → Expédition** :
 
 - Actor PIA unique avec assistant de création guidé ;
 - trois Traits et neuf Capacités ;
@@ -116,10 +116,14 @@ Un audit règle par règle des pages imprimées 6 à 30 est maintenu dans [AUDIT
 - les gains d’Opportunités et de Trouvailles sont détectés et proposés par boutons explicites ; les rares gains alternatifs (« ou ») restent un choix du joueur ; pour une Opportunité, le gain reste verrouillé jusqu’à validation d’une Réussite totale ou partielle ;
 - l’Unité de conversion adaptative des Ressources est disponible explicitement lors des Opportunités et Trouvailles de Lieu ;
 - la Valeur de Menace est suivie jet par jet : chaque résultat est enregistré explicitement depuis le Chat, puis le panneau détermine si le Défi est réussi ou échoué avant validation ;
-- Règles Avancées encore partielles : **Demander à l’Oracle**, l’Exploration enrichie, les Activités Secondaires enrichies, les Rencontres personnalisées et l’interprétation Actions/Résultats sont intégrés ; les sections avancées suivantes restent à intégrer ;
-- Extras exclus.
+- les Règles Avancées p.32–63 sont couvertes ; voir [AUDIT_ADVANCED_RULES.md](AUDIT_ADVANCED_RULES.md) ;
+- Extras p.65+ exclus du périmètre actuel.
 
 
+
+## Audit des Règles Avancées
+
+L’audit exhaustif des pages imprimées 32 à 63 est maintenu dans [AUDIT_ADVANCED_RULES.md](AUDIT_ADVANCED_RULES.md). Il confirme la couverture des workflows avancés et des quatorze familles de tables listées dans le livre.
 
 ## Règles Avancées
 
