@@ -361,3 +361,22 @@ Sur une Opportunité ou une Trouvaille de **Lieu** :
 
 - l’assistant de création reste reporté ;
 - règles avancées et Extras toujours exclus.
+
+
+## Régression v0.2.1
+
+Ces contrôles sont prioritaires après les corrections issues du premier passage réel sous Foundry v14.
+
+1. Créer un PIA nommé `TEST-PIA`, ouvrir sa fiche et vérifier que **Nom / Désignation** affiche immédiatement `TEST-PIA`.
+2. Effectuer un jet d’Action et vérifier qu’aucun warning Firefox `URI invalide. Le chargement de la ressource média a échoué.` n’est émis au moment de la création du message de jet.
+3. Ouvrir **Mission / Expédition**, sélectionner une Mission puis cliquer **Commencer la Mission**.
+4. Vérifier qu’aucune erreur `can't access private field or method: object is not the right class` n’apparaît.
+5. Vérifier immédiatement après le démarrage :
+   - nom de Mission affiché ;
+   - compteur d’Aspects correct ;
+   - Énergie au maximum ;
+   - Ressources et Données à 0 ;
+   - Contraintes supprimées ;
+   - Défaillances conservées.
+6. Ouvrir le Journal et vérifier qu’une entrée de début de Mission a bien été ajoutée.
+7. Continuer ensuite le plan à partir de **D — Expédition normale**.
