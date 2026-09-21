@@ -435,3 +435,41 @@ Ces contrôles sont prioritaires après les corrections issues du premier passag
    - l’ancien contenu reste intact ;
    - les nouvelles Missions utilisent les nouvelles pages dédiées ;
    - aucune migration destructive de l’ancien texte n’est effectuée.
+
+
+## Régression v0.2.5 — Révélation des Découvertes
+
+1. Sur un PIA neuf, ouvrir l’onglet **Journal**.
+   - afficher **0 révélée / 0 débloquée / 10** ;
+   - aucun texte de Découverte ne doit être visible.
+2. Ouvrir le Journal de bord.
+   - une page dédiée **Découvertes** existe ;
+   - les 10 entrées y apparaissent comme verrouillées.
+3. Accomplir une Mission.
+   - la Mission se clôt normalement et construit sa Structure ;
+   - la Découverte 1 passe à l’état débloqué mais son texte n’est pas révélé ;
+   - le message de fin de Mission propose **Révéler la Découverte** ;
+   - la page de Mission indique seulement que la Découverte 1 a été débloquée ;
+   - la page **Découvertes** affiche **Découverte 1 — À révéler** sans son contenu.
+4. Ne pas révéler immédiatement et fermer/recharger le monde.
+   - l’état 1 débloquée / 0 révélée persiste.
+5. Révéler depuis l’onglet Journal de la fiche PIA.
+   - le texte complet de la Découverte 1 apparaît dans le Chat ;
+   - la page **Découvertes** est mise à jour avec son nom et son texte ;
+   - le compteur devient 1 révélée / 1 débloquée.
+6. Accomplir une deuxième Mission sans révéler immédiatement.
+   - seule la Découverte 2 est disponible ;
+   - la Découverte 1 reste visible ;
+   - les Découvertes 3 à 10 restent verrouillées.
+7. Tester le bouton de révélation directement depuis le message Chat de fin de Mission.
+8. Accomplir plusieurs Missions sans révéler les Découvertes intermédiaires.
+   - plusieurs entrées peuvent être débloquées ;
+   - **Révéler** dévoile toujours l’entrée suivante dans l’ordre, jamais une entrée ultérieure.
+9. Après la dixième Découverte :
+   - toutes les entrées restent visibles ;
+   - les Missions suivantes ne débloquent aucune Découverte supplémentaire ;
+   - aucun onzième emplacement n’est créé.
+10. Migration d’un monde v0.2.4 :
+   - une Découverte déjà débloquée avant mise à jour doit être considérée comme déjà révélée ;
+   - aucun texte déjà lu ne doit être remasqué ;
+   - la page **Découvertes** est créée automatiquement sans modifier les anciennes pages de Mission.
