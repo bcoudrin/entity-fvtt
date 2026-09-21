@@ -48,6 +48,7 @@ export class PiaData extends foundry.abstract.TypeDataModel {
       constraints: new fields.ArrayField(text()),
       failures: new fields.ArrayField(text()),
       discoveriesUnlocked: number(0, 0, 10),
+      discoveriesRevealed: number(0, 0, 10),
       mission: missionSchema(),
       expeditionNumber: number(0),
       notes: new fields.HTMLField({ required: true, nullable: false, initial: "" })
