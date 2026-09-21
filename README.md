@@ -19,7 +19,7 @@ Le système couvre les règles de base jusqu’à la page 30 et commence l’int
 - 10 Découvertes, débloquées dans l’ordre à chaque Mission accomplie, puis révélées explicitement ;
 - six RollTables natives : Voyage, Lieu, Défis, Opportunités, Trouvailles et Lieux ;
 - journal de bord Foundry lié au PIA, avec une page par Mission et une page persistante **Découvertes** ;
-- outils de Règles Avancées : **Demander à l’Oracle** (1d10) et premier workflow d’**Exploration enrichie** avec Structures, Caractéristiques de Terrain/Structure, Descripteurs, Ciel, Distance et Formes de Vie Extraterrestre.
+- outils de Règles Avancées : **Demander à l’Oracle** (1d10), **Exploration enrichie** et **Activités Secondaires enrichies** avec les tables narratives recommandées par le livre.
 
 Le contenu de base est importé automatiquement une fois par monde au premier lancement par un MJ. Il peut être resynchronisé avec :
 
@@ -116,7 +116,7 @@ Un audit règle par règle des pages imprimées 6 à 30 est maintenu dans [AUDIT
 - les gains d’Opportunités et de Trouvailles sont détectés et proposés par boutons explicites ; les rares gains alternatifs (« ou ») restent un choix du joueur ; pour une Opportunité, le gain reste verrouillé jusqu’à validation d’une Réussite totale ou partielle ;
 - l’Unité de conversion adaptative des Ressources est disponible explicitement lors des Opportunités et Trouvailles de Lieu ;
 - la Valeur de Menace est suivie jet par jet : chaque résultat est enregistré explicitement depuis le Chat, puis le panneau détermine si le Défi est réussi ou échoué avant validation ;
-- Règles Avancées encore partielles : **Demander à l’Oracle** et le premier bloc d’Exploration enrichie sont intégrés ; Activités Secondaires enrichies, Rencontres personnalisées, Anomalies/Actions/Thèmes et autres générateurs restent à intégrer ;
+- Règles Avancées encore partielles : **Demander à l’Oracle**, l’Exploration enrichie et les Activités Secondaires enrichies sont intégrés ; les Rencontres personnalisées et l’interprétation avancée Actions/Résultats restent à intégrer ;
 - Extras exclus.
 
 
@@ -134,6 +134,14 @@ L’**Exploration avancée** est maintenant accessible dès qu’un Lieu a été
 - de générer une Forme de Vie Extraterrestre à partir de quatre jets indépendants : Forme, Trait, Caractéristique et Comportement.
 
 Ces résultats sont persistants pour l’Expédition en cours, copiés dans le Chat et le Journal, mais ne modifient aucun état mécanique. Le livre présente ces Oracles comme des outils d’inspiration et autorise à les ignorer, les choisir ou les relancer ; le système conserve cette liberté.
+
+Les **Activités Secondaires avancées** prolongent les trois activités qui utilisent un jet d’Action : Collecte de Données, Collecte de Ressources et Recharge d’Énergie. Avant le jet, le joueur peut préparer narrativement le terrain en conservant le Lieu courant ou en tirant un autre Lieu, puis en déterminant Structure éventuelle et Caractéristique d’environnement. Après une Réussite totale ou partielle, le Chat propose de rouvrir le panneau avec les Oracles adaptés au résultat :
+- Données : Informations, Thèmes, Actions, Objets, ou, sur réussite partielle, Incident + complication de Terrain/Structure ;
+- Ressources : Matériaux et/ou Objets, Actions, ou Incident + complication sur réussite partielle ;
+- Énergie : Matériaux, Objets et/ou Forme de Vie, Descripteurs et Actions, ou Incident + complication sur réussite partielle ;
+- Anomalies et Formes de Vie restent disponibles comme développements inattendus lorsque le livre les suggère.
+
+L’échec reste volontairement hors de ce générateur : il déclenche le Défi prévu par les règles de base. Les tirages d’Oracle ne modifient jamais le gain mécanique.
 
 ## Validation
 
