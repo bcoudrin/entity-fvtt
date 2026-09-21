@@ -115,10 +115,13 @@ async function ensureMissionPageForCurrentState(actor, journal) {
   const mission = actor.system.mission;
   if (!mission?.activeKey) return null;
 
+  const completions = foundry.utils.deepClone(actor.getFlag(SYSTEM_ID, "missionCompletions") || {});
+  const occurrence = Number(completions[mission.activeKey] || 0) + 1;
+
   return startMissionJournalPage(actor, {
     missionKey: mission.activeKey,
     missionName: mission.name || "Mission",
-    occurrence: 1,
+    occurrence,
     aspectsRequired: Number(mission.aspectsRequired || 0)
   });
 }
