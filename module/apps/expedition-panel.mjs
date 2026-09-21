@@ -1,6 +1,7 @@
 import { ABILITIES, SYSTEM_ID } from "../constants.mjs";
 import { locationEncounterPlan } from "../workflow-rules.mjs";
 import { openAdvancedExplorationPanel } from "./advanced-exploration-panel.mjs";
+import { openAdvancedSecondaryPanel } from "./advanced-secondary-panel.mjs";
 import {
   addAspectAndAdvance,
   advanceEncounter,
@@ -152,6 +153,7 @@ export class ExpeditionPanel extends HandlebarsApplicationMixin(ApplicationV2) {
       applyEncounterReward: ExpeditionPanel.#applyEncounterReward,
       convertEncounter: ExpeditionPanel.#convertEncounter,
       addAspect: ExpeditionPanel.#addAspect,
+      advancedSecondary: ExpeditionPanel.#advancedSecondary,
       secondaryRoll: ExpeditionPanel.#secondaryRoll,
       installImprovement: ExpeditionPanel.#installImprovement,
       selfRepair: ExpeditionPanel.#selfRepair
@@ -278,6 +280,10 @@ export class ExpeditionPanel extends HandlebarsApplicationMixin(ApplicationV2) {
 
   static async #addAspect() {
     if (await addAspectAndAdvance(this.actor)) this.render({ force: true });
+  }
+
+  static async #advancedSecondary(event, target) {
+    await openAdvancedSecondaryPanel(this.actor, { kind: target.dataset.kind });
   }
 
   static async #secondaryRoll(event, target) {
