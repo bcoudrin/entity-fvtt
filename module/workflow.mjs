@@ -805,7 +805,10 @@ export async function installImprovementAsSecondary(actor, itemId) {
     return false;
   }
 
-  const installPlan = installEffectPlan(source.system, actor.system);
+  const resourcesAfterCost = Number(actor.system.resources.value) - 10;
+  const installActorState = foundry.utils.deepClone(actor.system);
+  installActorState.resources.value = resourcesAfterCost;
+  const installPlan = installEffectPlan(source.system, installActorState);
   if (installPlan && !installPlan.enoughEnergy) {
     ui.notifications.warn(
       source.name + " nécessite également " + installPlan.energyCost +
@@ -815,7 +818,7 @@ export async function installImprovementAsSecondary(actor, itemId) {
   }
 
   const update = {
-    "system.resources.value": Number(actor.system.resources.value) - 10
+    "system.resources.value": resourcesAfterCost
   };
   let installGainText = "";
 
