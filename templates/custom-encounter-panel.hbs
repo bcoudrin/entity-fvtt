@@ -1,0 +1,154 @@
+<div class="entity-custom-encounter-shell">
+  <header class="entity-custom-encounter-header">
+    <span class="entity-kicker">RÈGLES AVANCÉES — RENCONTRE PERSONNALISÉE</span>
+    <h2>{{typeLabel}}</h2>
+    {{#if encounter}}
+      <p>{{#if (eq encounter.context "travel")}}Voyage{{else}}Lieu{{/if}}{{#if encounter.threat}} · VM {{encounter.threat}}{{/if}}{{#if encounter.disadvantage}} · Désavantage (D){{/if}}</p>
+    {{/if}}
+  </header>
+
+  <div class="entity-custom-encounter-body">
+    {{#unless canCustomize}}
+      <section class="entity-panel entity-warning-panel">
+        <h3>Rencontre déjà engagée</h3>
+        <p>Une Rencontre ne peut plus être remplacée après le début de sa résolution.</p>
+      </section>
+    {{else}}
+      <section class="entity-panel">
+        <span class="entity-kicker">GÉNÉRATION DE BASE</span>
+        {{#if isChallenge}}
+          <p>Un Défi personnalisé part d’une Anomalie puis reçoit trois jets de mot-clé. Les doublons réduisent naturellement le nombre de Capacités disponibles.</p>
+        {{/if}}
+        {{#if isFind}}
+          <p>Une Trouvaille personnalisée utilise un d10 pour déterminer son contenu mécanique.</p>
+        {{/if}}
+        {{#if isOpportunity}}
+          <p>Une Opportunité personnalisée combine un Défi facultatif et une Trouvaille potentielle. Son gain est déterminé par deux jets sur la table de Trouvaille personnalisée.</p>
+        {{/if}}
+        <div class="entity-two-actions">
+          <button type="button" class="entity-primary" data-action="generateBase"><i class="fa-solid fa-dice"></i> {{#if hasBase}}Regénérer{{else}}Générer{{/if}} les éléments obligatoires</button>
+          <button type="button" data-action="reset"><i class="fa-solid fa-eraser"></i> Réinitialiser</button>
+        </div>
+      </section>
+
+      {{#if needsChallenge}}
+        <section class="entity-panel">
+          <span class="entity-kicker">DANGER</span>
+          <div class="entity-custom-section-title">
+            <h3>Anomalie</h3>
+            <button type="button" data-action="rerollAnomaly"><i class="fa-solid fa-rotate"></i> Relancer</button>
+          </div>
+          {{#if draft.anomaly}}
+            <div class="entity-advanced-oracle-result">
+              <strong>d100 {{draft.anomaly.roll}}</strong>
+              <p>{{draft.anomaly.text}}</p>
+            </div>
+          {{else}}
+            <p class="entity-dialog-note">Générez l’Anomalie de base.</p>
+          {{/if}}
+
+          <div class="entity-custom-section-title">
+            <h3>Mots-clés</h3>
+            <button type="button" data-action="rerollKeywords"><i class="fa-solid fa-rotate"></i> Relancer les 3d10</button>
+          </div>
+          {{#if keywordRolls.length}}
+            <div class="entity-custom-keywords">
+              {{#each keywordRolls as |slot|}}
+                <div class="entity-custom-keyword-slot">
+                  <strong>d10 {{slot.roll}}</strong>
+                  {{#if slot.resolved}}
+                    <span>{{slot.label}}</span>
+                  {{else}}
+                    <select name="customKeyword-{{slot.index}}">
+                      <option value="">Choisissez…</option>
+                      {{#each ../abilities as |ability|}}
+                        <option value="{{ability.key}}">{{ability.label}}</option>
+                      {{/each}}
+                    </select>
+                    <button type="button" data-action="chooseKeyword" data-index="{{slot.index}}">Valider</button>
+                  {{/if}}
+                </div>
+              {{/each}}
+            </div>
+            <p class="entity-dialog-note">Si plusieurs jets donnent le même mot-clé, il ne sera proposé qu’une fois dans la Rencontre finale.</p>
+          {{else}}
+            <p class="entity-dialog-note">Les trois mots-clés sont obligatoires avant application.</p>
+          {{/if}}
+        </section>
+      {{/if}}
+
+      {{#if needsFind}}
+        <section class="entity-panel">
+          <span class="entity-kicker">RÉCOMPENSE</span>
+          <div class="entity-custom-section-title">
+            <h3>{{#if isOpportunity}}Deux Trouvailles potentielles{{else}}Contenu de la Trouvaille{{/if}}</h3>
+            <button type="button" data-action="rerollFind"><i class="fa-solid fa-rotate"></i> Relancer</button>
+          </div>
+          {{#if findRolls.length}}
+            <div class="entity-custom-find-rolls">
+              {{#each findRolls as |find|}}
+                <span class="entity-chip">d10 {{find.roll}} — {{find.label}}</span>
+              {{/each}}
+            </div>
+            {{#if aggregateRewards.length}}
+              <p><strong>Gain total :</strong>
+                {{#each aggregateRewards as |reward|}}{{reward.label}}{{#unless @last}} + {{/unless}}{{/each}}
+              </p>
+            {{/if}}
+          {{else}}
+            <p class="entity-dialog-note">Générez {{findRollCount}} jet(s) de Trouvaille.</p>
+          {{/if}}
+        </section>
+      {{/if}}
+
+      <section class="entity-panel">
+        <span class="entity-kicker">ENRICHISSEMENT FACULTATIF</span>
+        <h3>Tables d’Oracle</h3>
+        <p>Ajoutez uniquement les éléments qui vous inspirent. Chaque nouveau tirage est conservé dans le brouillon ; vous pouvez supprimer ceux que vous ne souhaitez pas retenir.</p>
+        <div class="entity-custom-oracle-grid">
+          {{#each oracles as |oracle|}}
+            {{#if (eq oracle.key "alienLife")}}
+              <button type="button" data-action="alienLife"><i class="{{oracle.icon}}"></i><strong>{{oracle.label}}</strong></button>
+            {{else}}
+              <button type="button" data-action="rollOracle" data-table="{{oracle.key}}"><i class="{{oracle.icon}}"></i><strong>{{oracle.label}}</strong></button>
+            {{/if}}
+          {{/each}}
+        </div>
+
+        {{#if draft.alienLife}}
+          <div class="entity-advanced-oracle-result">
+            <strong>Forme de Vie Extraterrestre</strong>
+            {{#each draft.alienLife as |part|}}
+              <p><b>{{part.label}} — d100 {{part.roll}}</b> : {{part.text}}</p>
+            {{/each}}
+          </div>
+        {{/if}}
+
+        {{#if draft.parts.length}}
+          <div class="entity-custom-parts">
+            {{#each draft.parts as |part|}}
+              <div class="entity-custom-part">
+                <div>
+                  <strong>{{part.tableName}} — d100 {{part.roll}}</strong>
+                  <p>{{part.text}}</p>
+                </div>
+                <button type="button" data-action="removePart" data-part-id="{{part.id}}" title="Ignorer ce résultat"><i class="fa-solid fa-xmark"></i></button>
+              </div>
+            {{/each}}
+          </div>
+        {{/if}}
+      </section>
+
+      <section class="entity-panel entity-custom-apply-panel">
+        <span class="entity-kicker">REMPLACER L’ENTRÉE PRÉÉCRITE</span>
+        <p>La VM, le Désavantage éventuel et la position dans la séquence de Rencontre restent inchangés. Seuls le scénario, les mots-clés et/ou la récompense sont remplacés.</p>
+        <button type="button" class="entity-primary" data-action="apply" {{#unless canApply}}disabled{{/unless}}>
+          <i class="fa-solid fa-check"></i> Utiliser cette Rencontre personnalisée
+        </button>
+        {{#unless canApply}}
+          <p class="entity-dialog-note">Complétez d’abord les éléments obligatoires.</p>
+        {{/unless}}
+      </section>
+    {{/unless}}
+  </div>
+</div>
