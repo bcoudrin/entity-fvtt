@@ -236,6 +236,10 @@ Hooks.once("ready", async () => {
   };
 
   if (game.user?.isGM) {
+    for (const actor of game.actors.filter((candidate) => candidate.type === "pia")) {
+      await ensurePiaJournal(actor);
+    }
+
     const version = game.settings.get(SYSTEM_ID, "coreDataVersion");
     if (version < CORE_DATA_VERSION) {
       await seedCoreContent();
