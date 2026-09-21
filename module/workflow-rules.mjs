@@ -111,3 +111,10 @@ export function resolveChallengeOutcome(results, threat = 1) {
     return value === "failure";
   }) ? "failed" : "success";
 }
+
+
+export function opportunityOutcome(result) {
+  if (result === "full" || result === "partial") return "success";
+  if (result === "failure") return "failed";
+  return null;
+}
