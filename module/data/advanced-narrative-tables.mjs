@@ -1,0 +1,203 @@
+function paired(values) {
+  return values.map((text, index) => ({ range: [index * 2 + 1, index * 2 + 2], text }));
+}
+
+function single(values) {
+  return values.map((text, index) => ({ range: [index + 1, index + 1], text }));
+}
+
+const ANOMALIES = paired([
+  "Génère une impulsion électromagnétique",
+  "Décharge des ondes de choc d’énergie cinétique",
+  "Modifie les conditions météorologiques locales",
+  "Déclenche une distorsion spatiale",
+  "Provoque une formation rapide de minéraux",
+  "Induit un changement rapide de température",
+  "Modifie la visibilité dans les environs",
+  "Cause un déphasage des objets",
+  "Projette des visuelles holographiques",
+  "Émet des sons à haute fréquence",
+  "Favorise une croissance rapide de la végétation",
+  "Déforme l’espace physique qui l’entoure",
+  "Modifie radicalement le comportement de la faune locale",
+  "Provoque des changements soudains de la pression atmosphérique",
+  "Draine la force vitale des organismes à proximité",
+  "Crée sa propre forme de vie",
+  "Induit l’immobilité chez les organismes vivants",
+  "Modifie le spectre des couleurs locales",
+  "Émet une aura de silence annulant le son",
+  "Modifie le processus de vieillissement de la matière environnante",
+  "Fait rétrécir ou grossir les objets proches",
+  "Génère une tempête électromagnétique",
+  "Transforme la matière solide en liquide",
+  "Crée des mutations soudaines dans les formes de vie à proximité",
+  "Génère des ondes sonores",
+  "Crée une boucle temporelle, provoquant des événements répétés",
+  "Provoque la lévitation des objets proches",
+  "Génère un champ de force",
+  "Absorbe l’énergie environnante",
+  "Provoque la réplication des objets",
+  "Génère une attraction gravitationnelle vers elle",
+  "Exerce une attraction magnétique sur les objets métalliques",
+  "Décharge des jets de froid extrême",
+  "Décharge des jets de chaleur extrême",
+  "Réfléchit ou déforme les sources lumineuses proches",
+  "Diminue la vitesse des objets en mouvement à proximité",
+  "Augmente la vitesse des objets en mouvement à proximité",
+  "Affecte le processus de vieillissement des formes de vie voisines",
+  "Modifie le terrain environnant de manière imprévisible",
+  "Modifie la couleur de la matière environnante",
+  "Déclenche une activité sismique sporadique à proximité",
+  "Transforme la matière organique en matière inorganique",
+  "Ouvre une brèche ou un chemin vers un autre endroit",
+  "Invoque un ou plusieurs êtres",
+  "Génère une illusion d’optique",
+  "Transforme la faune environnante en pierre",
+  "Déclenche des visions de réalités parallèles",
+  "Déforme les sons en créant des échos sinistres",
+  "Émet des éclairs de lumière aveuglants",
+  "Transforme les gaz environnants en structures solides"
+]);
+
+const INFORMATION = paired([
+  "Montre un type d’armement inconnu jusqu’alors",
+  "Révèle une forme de mathématiques encore incomprise",
+  "Indique une ancienne méthode de navigation",
+  "Suggère une mutation ou une évolution génétique importante",
+  "Dévoile l’histoire d’une civilisation primitive inconnue",
+  "Suggère la véritable raison d’être d’un artefact perdu depuis longtemps",
+  "Révèle des informations sur une entité notable du passé",
+  "Suggère une migration massive",
+  "Révèle la raison d’être d’un phénomène inexpliqué",
+  "Implique un concept exotique et peu familier",
+  "Révèle une anomalie inhabituelle",
+  "Dirige vers un lieu secret",
+  "Guide vers un territoire inexploré",
+  "Révèle l’échec d’un soulèvement ou d’une rébellion",
+  "Indique une découverte scientifique majeure",
+  "Révèle l’existence d’un phénomène naturel inhabituel",
+  "Révèle une ligne temporelle alternative ou un événement historique",
+  "Suggère un système élaboré de troc ou de commerce",
+  "Indique un événement ou un alignement céleste particulier",
+  "Provoque une prophétie ou une prédiction intrigante",
+  "Contient des détails sur une ancienne merveille technologique",
+  "Indique une espèce qui n’a pas encore été découverte",
+  "Montre une structure sociétale ou une hiérarchie",
+  "Confirme l’existence d’un objet astronomique supposé",
+  "Révèle les secrets d’une technologie archaïque",
+  "Révèle des informations approfondies sur une expédition importante",
+  "Découvre la véritable cause de l’extinction d’une espèce",
+  "Découvre une bataille oubliée",
+  "Suggère un lieu de pèlerinage ou de culte",
+  "Indique l’existence d’univers parallèles",
+  "Suggère une ressource rare ou précieuse",
+  "Suggère une pratique culturelle inhabituelle",
+  "Dévoile une source d’énergie potentielle",
+  "Indique une menace cachée",
+  "Fournit un aperçu d’une technologie extraterrestre",
+  "Exhume une méthode pour prolonger la durée de vie",
+  "Indique un gisement riche d’un minéral rare",
+  "Révèle une carte ancienne",
+  "Fournit un aperçu de l’art ou de la musique extraterrestre",
+  "Montre la preuve d’un pacte",
+  "Révèle une nouvelle forme de communication",
+  "Indique une expérience scientifique ratée",
+  "Révèle le plan d’une machine avancée",
+  "Indique une stratégie de survie unique",
+  "Révèle une pratique ou une croyance religieuse inconnue",
+  "Indique une conception architecturale avancée",
+  "Révèle un concept philosophique complexe",
+  "Suggère un rite ou un rituel mystérieux",
+  "Indique une catastrophe naturelle inattendue",
+  "Révèle une stratégie militaire essentielle"
+]);
+
+const INCIDENTS = paired([
+  "Éclater / Éclaté","Briser / Brisé","Effondrer / Effondré","Trahir / Trahi","Détruire / Détruit",
+  "Intimider / Intimidé","Piéger / Piégé","Transformer / Transformé","Durcir / Durci","Désintégrer / Désintégré",
+  "Polluer / Pollué","Obscurcir / Obscurci","Oppresser / Oppressé","Tromper / Trompé","Enterrer / Enterré",
+  "Intoxiquer / Intoxiqué","Enfreindre / Enfreint","Infester / Infesté","Libérer / Libéré","Faire enrager / Enragé",
+  "Envahir / Envahi","Vilipender / Vilipendé","Mentir / Menti","Irradier / Irradié","Déstabiliser / Déstabilisé",
+  "Désarçonner / Désarçonné","Souiller / Souillé","Corroder / Corrodé","Perturber / Perturbé","Dénaturer / Dénaturé",
+  "Désorganiser / Désorganisé","Ravager / Ravagé","Consommer / Consommé","Aggraver / Aggravé","Dégrader / Dégradé",
+  "Obstruer / Obstrué","Désactiver / Désactivé","Drainer / Drainé","Répliquer / Répliqué","Contaminer / Contaminé",
+  "Manipuler / Manipulé","Muter / Muté","Déranger / Dérangé","Reconfigurer / Reconfiguré","Inverser / Inversé",
+  "Insonoriser / Insonorisé","Déformer / Déformé","Disperser / Dispersé","Enchevêtrer / Enchevêtré","Déplacer / Déplacé"
+]);
+
+const ACTIONS = paired([
+  "Obtenir","Progresser","Assister","Atteindre","Éviter","Anticiper","Renforcer","Communiquer","Organiser","Inventer",
+  "Discuter","Protéger","Transporter","Guider","Explorer","Suivre","Collecter","Construire","Focaliser","Initier",
+  "Examiner","Déplacer","Maintenir","Enquêter","Révéler","Chercher","Équiper","Comprendre","Préparer","Pister",
+  "Enregistrer","Valider","Superviser","Réparer","Naviguer","Faciliter","Localiser","Planifier","Découvrir","Activer",
+  "Évaluer","Déchiffrer","Changer","Escalader","Porter","Abandonner","Apprendre","Terminer","Retirer","Préserver"
+]);
+
+const THEMES = single([
+  "Connaissance","Tradition","Liberté","Autorité","Maîtrise","Survie","Équilibre","Croyance","Dévotion","Pouvoir",
+  "Mémoire","Culture","Devoir","Héritage","Sécurité","Défense","Stratégie","Technologie","Création","Art",
+  "Découverte","Solution","Destinée","Justice","Paix","Lien","Croissance","Protection","Force","Voie",
+  "Innocence","Histoire","Famille","Expédition","Avantage","Alliance","Rumeur","Responsabilité","Possession","Vérité",
+  "Message","Existence","Opportunité","Terre","Nature","Vie","Outil","Énergie","Temps","Loi",
+  "Immortalité","Communauté","Maladie","Sanctuaire","Prophétie","Divertissement","Guérison","Contrôle","Responsabilité","Maison",
+  "Guerre","Ressource","Commerce","Phénomène","Personnalité","Langue","Faiblesse","Secret","Ennemi","Arme",
+  "Danger","Incompréhension","Catastrophe","Approvisionnement","Étranger","Transcendance","Confiance","Loyauté","Sagesse","Sacrifice",
+  "Ambition","Espoir","Conflit","Rébellion","Conséquence","Progrès","Isolement","Exploration","Transformation","Identité",
+  "Évolution","Obstacle","Unité","Voyage","Perte","Capacité","Équipement","Prix","Relique","Prison"
+]);
+
+const OBJECTS = single([
+  "Clé organique","Conteneur de particules exotiques","Cristal de résonance extraterrestre","Spécimen conservé par cryogénie","Capsule d’hibernation suspendue",
+  "Ancienne tablette inscrite","Exosquelette métallique","Échantillon microbien extraterrestre","Composé organique inconnu","Noyau énergétique cristallin",
+  "Émetteur archaïque","Ancien module de données","Fragment d’alliage extraterrestre","Organe extraterrestre pulsant","Éclat de météorite",
+  "Journal de bord oublié d’un astronaute","Pierre de résonance sonique","Capsule de mémoire génétique","Carte holographique","Larve extraterrestre avec enveloppe protectrice",
+  "Cristal absorbant l’énergie","Chrysalide translucide","Géode d’où provient un écho","Graine de singularité","Bioscanner extraterrestre",
+  "Balise de téléportation","Vestige xénoarchéologique","Orbe en lévitation","Fleur prismatique","Gelée mutagène",
+  "Implant biomécanique","Boussole astrale","Sac de couchage vintage pour station spatiale","Cocon d’insecte","Amulette étrange",
+  "Holo-Tome","Graines exotiques","Ichor extraterrestre","Poignard de phase","Sable dimensionnel",
+  "Oeuf extraterrestre","Ancien manuscrit","Ambre plasmique contenant des insectes extraterrestres","Vestige intemporel d’une culture ancienne","Fossile énigmatique",
+  "Fruit hybride","Mousse électrostatique","Fibre extraterrestre","Fleur éphémère","Sel lumineux",
+  "Fossiles de vers géants","Corne extraterrestre","Grande plume","Coquille xénofaune","Combinaison d’astronaute ancienne",
+  "Photographie vintage d’une mission spatiale","Totem extraterrestre sculpté","Kit d’hygiène personnelle d’astronaute","Balise à impulsions","Astrolabe de conception extraterrestre",
+  "Dépôt d’antimatière","Pile d’os","Tuyère de fusée archaïque","Corps momifié","Vieux livre",
+  "Masque tribal","Armure antique","Arme à feu ancienne","Arme extraterrestre","Lentille de télescope spatial",
+  "Crâne géant","Masque respiratoire extraterrestre","Ordinateur archaïque","Bocaux exotiques","Kit d’outils informatiques",
+  "Caisse contenant de la technologie extraterrestre","Casque de scaphandre antique","Instruments de la culture antique","Chronomètre bien conservé","Instrument de musique",
+  "Soudeur à plasma","Affiche rétro du programme spatial","Androïde dormant","Kit d’outils pour la robotique","Kit d’escalade",
+  "Bande de données télémétriques d’époque","Manuscrits anciens","Enregistreur audio","Microscope","Siège du cockpit d’une navette spatiale",
+  "Récepteur vidéo","Bijoux","Fragment d’un satellite Spoutnik","Appareils médicaux","Combinaison extraterrestre",
+  "Badge de mission de navette spatiale","Roue cassée d’un rover spatial","Lichen brillant","Écorce d’arbre métallique","Combinaison spatiale soviétique pour chien"
+]);
+
+const MATERIALS = single([
+  "Silice (dioxyde de silicium sous forme de quartz)","Hydrogène (sous forme d’eau glacée ou de gaz)","Hélium (sous forme de gaz dans l’atmosphère)","Azote (sous forme de gaz ou de nitrates)","Carbone (sous forme de graphite ou de diamant)",
+  "Oxygène (sous forme d’oxydes ou de gaz)","Soufre (sous forme d’élément natif ou de sulfate)","Fer (sous forme d’hématite ou de magnétite)","Aluminium (sous forme de bauxite)","Magnésium (sous forme de magnésite)",
+  "Calcium (sous forme de calcite ou de gypse)","Sodium (sous forme d’halite)","Potassium (dans du feldspath)","Nickel (dans de la garniérite)","Chrome (sous forme de chromite)",
+  "Manganèse (sous forme de pyrolusite)","Cobalt (sous forme de skuttérudite)","Titane (sous forme d’ilménite)","Zinc (sous forme de smithsonite)","Vanadium (sous forme de vanadinite)",
+  "Cuivre (sous forme de chalcopyrite)","Argon (sous forme de gaz)","Néon (sous forme de gaz)","Krypton (sous forme de gaz)","Xénon (sous forme de gaz)",
+  "Radon (sous forme de gaz)","Phosphore (dans de l’apatite)","Chlore (sous forme d’halite)","Brome (dans l’eau salée)","Iode (dans l’eau salée)",
+  "Lithium (sous forme de spodumène)","Béryllium (sous forme de béryl)","Fluor (sous forme de fluorine)","Bore (sous forme de borax)","Dioxyde de carbone (sous forme de neige carbonique)",
+  "Eau (sous forme de glace ou de liquide)","Méthane (sous forme de clathrates)","Ammoniac (sous forme de gaz ou en solution)","Acide nitreux (sous forme de gaz)","Dioxyde de soufre (sous forme de gaz)",
+  "Feldspath (minéral)","Mica (minéral)","Talc (minéral)","Kaolinite (minéral argileux)","Calcite (minéral)",
+  "Gypse (sulfate de calcium hydraté)","Dolomite (minéral)","Pyrite (sulfure de fer)","Chalcopyrite (sulfure de cuivre et de fer)","Galène (sulfure de plomb)",
+  "Hématite (oxyde de fer)","Magnétite (oxyde de fer)","Ilménite (oxyde de fer et de titane)","Graphite (carbone)","Diamant (carbone)",
+  "Fluorite (fluorure de calcium)","Bauxite (minerai d’aluminium)","Halite (chlorure de sodium)","Borax (borate de sodium)","Calcaire (carbonate de calcium)",
+  "Basalte (roche ignée)","Granit (roche ignée)","Obsidienne (verre volcanique)","Pierre ponce (roche volcanique)","Grès (roche sédimentaire)",
+  "Schiste (roche sédimentaire)","Roche volcanique (roche ignée)","Tuf (roche ignée)","Argile (matériau sédimentaire)","Marne (roche sédimentaire)",
+  "Charbon (roche carbonée)","Ambre (résine fossilisée)","Pétrole (hydrocarbure)","Gaz naturel (hydrocarbure)","Nitrate (sels)",
+  "Phosphate (sels)","Sulfate (sels)","Cyanure (composés)","Acide sulfurique (en solution)","Acide chlorhydrique (en solution)",
+  "Acide nitrique (en solution)","Hydroxyde de sodium (sous forme solide)","Hydroxyde de potassium (sous forme solide)","Oxyde de fer (sous forme de rouille)","Carbure de silicium (sous forme de moissanite)",
+  "Carbure de tungstène (carbure cémenté)","Oxychlorure de bismuth (minéral naturel)","Sulfate de baryum (sous forme de baryte)","Dioxyde de titane (sous forme de rutile)","Oxyde de zinc (sous forme solide)",
+  "Oxyde d’aluminium (sous forme de corindon)","Sulfate de cuivre (sous forme de chalcanthite)","Nitrate d’argent (sous forme solide)","Chlorure d’or (en solution)","Oxyde de platine (sous forme solide)",
+  "Sulfure de mercure (sous forme de cinabre)","Carbonate de plomb (sous forme de cérusite)","Oxyde d’étain (sous forme de cassitérite)","Trioxyde d’antimoine (sous forme solide)","Hexafluorure d’uranium (sous forme solide ou gazeuse)"
+]);
+
+export const ADVANCED_NARRATIVE_TABLES = {
+  anomalies: { key: "anomalies", name: "Anomalies", formula: "1d100", entries: ANOMALIES },
+  information: { key: "information", name: "Informations", formula: "1d100", entries: INFORMATION },
+  incidents: { key: "incidents", name: "Incidents", formula: "1d100", entries: INCIDENTS },
+  actions: { key: "actions", name: "Actions", formula: "1d100", entries: ACTIONS },
+  themes: { key: "themes", name: "Thèmes", formula: "1d100", entries: THEMES },
+  objects: { key: "objects", name: "Objets", formula: "1d100", entries: OBJECTS },
+  materials: { key: "materials", name: "Matériaux", formula: "1d100", entries: MATERIALS }
+};
