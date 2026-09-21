@@ -4,7 +4,7 @@
     <h2>{{step.label}}</h2>
     <div class="entity-creation-progress">
       <span>Étape {{stepNumber}} / {{stepCount}}</span>
-      <div><i style="width: calc(({{stepNumber}} / {{stepCount}}) * 100%)"></i></div>
+      <div><i style="width: {{progressPercent}}%"></i></div>
     </div>
   </header>
 
