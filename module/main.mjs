@@ -12,6 +12,8 @@ import { isActorCreationReady } from "./creation-rules.mjs";
 import { ensurePiaJournal, revealNextDiscovery } from "./journal.mjs";
 import { applyRollConsequence, rerollWithImprovement, rerollWithStructure, useShieldForRoll } from "./dice.mjs";
 import { clearPendingEffects, removePendingEffectsForItem } from "./improvements.mjs";
+import { installEffectPlan } from "./improvement-rules.mjs";
+import { openOraclePanel } from "./apps/oracle-panel.mjs";
 import { createCoreRollTables } from "./roll-tables.mjs";
 import { seedCoreContent } from "./content-seed.mjs";
 import { applySecondaryGain, recordEncounterRoll, recordOpportunityRoll, resolveSecondaryFailure } from "./workflow.mjs";
@@ -50,30 +52,26 @@ async function applyInstallEffect(item) {
   if (!actor || actor.documentName !== "Actor" || actor.type !== "pia" || item.type !== "improvement") return true;
   if (item.getFlag(SYSTEM_ID, "installApplied")) return true;
 
-  const type = item.system.effectType;
-  if (!["installResource", "installData"].includes(type)) return true;
+  const plan = installEffectPlan(item.system, actor.system);
+  if (!plan) return true;
 
-  const energyCost = Number(item.system.energyCost || 0);
-  const energy = Number(actor.system.energy?.value || 0);
-  if (energy < energyCost) {
-    ui.notifications.warn(item.name + " nécessite " + energyCost + " Énergies lors de son installation pour déclencher son effet.");
+  if (!plan.enoughEnergy) {
+    ui.notifications.warn(
+      item.name + " nécessite " + plan.energyCost +
+      " Énergies lors de son installation pour déclencher son effet."
+    );
     await item.delete();
     return false;
   }
 
-  const resourceKey = type === "installResource" ? "resources" : "data";
-  const current = Number(actor.system[resourceKey]?.value || 0);
-  const max = Number(actor.system[resourceKey]?.max || 10);
-  const gain = Number(item.system.effectValue || 0);
-
   await actor.update({
-    "system.energy.value": energy - energyCost,
-    ["system." + resourceKey + ".value"]: Math.min(max, current + gain)
+    "system.energy.value": plan.nextEnergy,
+    ["system." + plan.resourceKey + ".value"]: plan.nextValue
   });
   await item.setFlag(SYSTEM_ID, "installApplied", true);
   ui.notifications.info(
-    item.name + " : -" + energyCost + " Énergies, +" + gain +
-    (resourceKey === "resources" ? " Ressource" : " Donnée") + "."
+    item.name + " : -" + plan.energyCost + " Énergies, +" + plan.gain +
+    (plan.resourceKey === "resources" ? " Ressource" : " Donnée") + "."
   );
   return true;
 }
@@ -247,6 +245,7 @@ Hooks.once("ready", async () => {
     clearPendingEffects,
     createCoreRollTables,
     seedCoreContent,
+    openOracle: (actor) => openOraclePanel(actor),
     openCreation: (actor) => {
       if (actor?.system?.destroyed && !actor.getFlag(SYSTEM_ID, "successorPending")) return prepareSuccessor(actor);
       return openCreationWizard(actor, { force: true });
