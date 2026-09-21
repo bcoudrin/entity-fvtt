@@ -356,7 +356,11 @@ export async function rollTravel(actor, requestedData = 0) {
   const workflow = workflowCopy(actor);
   if (workflow.stage !== "travel") return false;
 
-  const dataSpent = clampDataSpend(requestedData, actor.system.data?.value);
+  const availableData = Number(actor.system.data?.value || 0);
+  const dataSpent = clampDataSpend(requestedData, availableData);
+  if (Number(requestedData || 0) > availableData) {
+    ui.notifications.warn("Dépense de Données ramenée au maximum disponible : " + availableData + ".");
+  }
   if (dataSpent > 0) {
     await actor.update({ "system.data.value": Number(actor.system.data.value) - dataSpent });
   }
@@ -402,7 +406,11 @@ export async function rollLocationEncounter(actor, requestedData = 0) {
   const workflow = workflowCopy(actor);
   if (workflow.stage !== "locationEncounter") return false;
 
-  const dataSpent = clampDataSpend(requestedData, actor.system.data?.value);
+  const availableData = Number(actor.system.data?.value || 0);
+  const dataSpent = clampDataSpend(requestedData, availableData);
+  if (Number(requestedData || 0) > availableData) {
+    ui.notifications.warn("Dépense de Données ramenée au maximum disponible : " + availableData + ".");
+  }
   if (dataSpent > 0) {
     await actor.update({ "system.data.value": Number(actor.system.data.value) - dataSpent });
   }
