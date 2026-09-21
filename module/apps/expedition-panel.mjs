@@ -1,4 +1,5 @@
 import { ABILITIES, SYSTEM_ID } from "../constants.mjs";
+import { locationEncounterPlan } from "../workflow-rules.mjs";
 import {
   addAspectAndAdvance,
   advanceEncounter,
@@ -23,6 +24,31 @@ const { ApplicationV2, HandlebarsApplicationMixin } = foundry.applications.api;
 
 function formValue(root, selector, fallback = "") {
   return root.querySelector(selector)?.value ?? fallback;
+}
+
+function locationStepLabel(step) {
+  if (step.type === "challenge") {
+    let label = "Défi";
+    if (Number(step.threat || 1) > 1) label += " (VM " + Number(step.threat) + ")";
+    if (step.disadvantage) label += " (D)";
+    return label;
+  }
+  if (step.type === "opportunity") return "Opportunité" + (step.disadvantage ? " (D)" : "");
+  if (step.type === "find") return "Trouvaille";
+  if (step.type === "aspect") return "Aspect";
+  return step.type;
+}
+
+function locationEncounterSummary(workflow) {
+  const encounter = workflow.locationEncounter;
+  if (!encounter) return null;
+  return {
+    ...encounter,
+    steps: locationEncounterPlan(encounter.total).map((step) => ({
+      ...step,
+      label: locationStepLabel(step)
+    }))
+  };
 }
 
 function rewardLabel(reward) {
@@ -131,6 +157,7 @@ export class ExpeditionPanel extends HandlebarsApplicationMixin(ApplicationV2) {
     context.system = actor.system;
     context.workflow = workflow;
     context.currentEncounter = currentEncounterView(workflow, actor);
+    context.locationEncounterSummary = locationEncounterSummary(workflow);
     context.missions = missions;
     context.hasMission = Boolean(activeKey);
     context.missionReady =
@@ -152,6 +179,25 @@ export class ExpeditionPanel extends HandlebarsApplicationMixin(ApplicationV2) {
     context.canInstall = Number(actor.system.resources?.value || 0) >= 10 && actor.suitState.free > 0;
     context.canRepair = Number(actor.system.resources?.value || 0) >= 5 && context.constraints.length > 0;
     return context;
+  }
+
+  async _onRender(context, options) {
+    await super._onRender(context, options);
+
+    this.element.querySelectorAll("[data-data-spend]").forEach((input) => {
+      input.addEventListener("input", () => {
+        if (input.value === "") return;
+        const min = Number(input.min || 0);
+        const max = Number(input.max || 0);
+        const value = Number(input.value);
+        if (!Number.isFinite(value)) {
+          input.value = min;
+          return;
+        }
+        if (value < min) input.value = min;
+        else if (value > max) input.value = max;
+      });
+    });
   }
 
   static async #startMission() {
