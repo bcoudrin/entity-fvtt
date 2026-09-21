@@ -806,3 +806,45 @@ Relire [AUDIT_BASE_RULES.md](AUDIT_BASE_RULES.md) lors de toute modification des
 11. Vérifier le Journal.
     - l’application d’une Rencontre personnalisée ajoute une entrée avec les Oracles retenus, les mots-clés, le gain potentiel et VM/D le cas échéant.
 12. Vérifier qu’une Rencontre personnalisée n’altère pas la composition globale de la Rencontre de Lieu : Défi → Opportunité → Trouvaille → Aspect reste inchangé.
+
+
+## Régression v0.11.0 — Interpréter les Actions et les Résultats
+
+1. Effectuer un jet avec chacune des neuf Capacités.
+   - chaque carte de Chat affiche **Interpréter le jet** ;
+   - le panneau reprend la Capacité et le résultat courant ;
+   - un court guide narratif adapté à la Capacité est affiché sans limiter les actions autorisées.
+2. Obtenir une **Réussite totale**.
+   - l’assistant décrit un objectif pleinement atteint ;
+   - aucune Contrainte ni Défaillance n’est proposée.
+3. Obtenir une **Réussite partielle** hors Activité Secondaire.
+   - l’assistant rappelle qu’une Contrainte est temporaire et réparable ;
+   - des pistes distinctes pour la Combinaison et le noyau d’IA sont visibles ;
+   - saisir un libellé personnalisé puis confirmer ;
+   - la Contrainte apparaît sous ce libellé exact sur la fiche ;
+   - fermer le panneau sans confirmer ne doit rien ajouter.
+4. Obtenir un **Échec** hors Activité Secondaire.
+   - l’assistant rappelle le caractère permanent de la Défaillance ;
+   - saisir un libellé personnalisé et confirmer ;
+   - la Défaillance apparaît sous ce libellé exact ;
+   - le bouton générique du Chat continue aussi de fonctionner et conserve son libellé automatique.
+5. Tester une **Activité Secondaire**.
+   - réussite partielle : le panneau indique demi-gain et absence de Contrainte générique ;
+   - échec : le panneau indique que le résultat déclenche un Défi, sans Défaillance générique ;
+   - aucun bouton de conséquence narrative mécanique ne doit apparaître dans ces deux cas.
+6. Tester **Action + Thème**.
+   - le bouton principal génère un d100 Action et un d100 Thème ;
+   - les boutons séparés permettent de relancer uniquement l’un des deux ;
+   - fermer puis rouvrir le panneau du même message conserve les derniers résultats.
+7. Effectuer une relance du jet d’Action après avoir généré Action + Thème.
+   - le panneau relu depuis la carte doit afficher le nouveau résultat mécanique ;
+   - les Oracles Action/Thème restent disponibles comme inspiration.
+8. Ajouter une note dans **Journal de bord**.
+   - la note contient le nom du jet et son résultat ;
+   - les Oracles Action/Thème présents sont inclus ;
+   - pendant une Mission, l’entrée va dans la page de cette Mission ;
+   - hors Mission, elle va dans la page générale.
+9. Tenter d’ajouter au Journal sans note et sans Oracle.
+   - l’opération est refusée avec une notification ;
+   - aucune entrée vide n’est créée.
+10. Vérifier qu’ouvrir l’assistant, tirer les Oracles ou écrire une note ne modifie jamais le résultat du jet, l’Énergie, les Ressources, les Données, les Aspects ou la progression de Rencontre.
