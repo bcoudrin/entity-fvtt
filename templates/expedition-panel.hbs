@@ -76,7 +76,8 @@
           <p>Avant le d10, vous pouvez dépenser des Données. Chaque Donnée ajoute +1 au résultat.</p>
           <label class="entity-inline-field">
             <span>Données dépensées</span>
-            <input type="number" name="travelData" value="0" min="0" max="{{system.data.value}}" />
+            <input type="number" name="travelData" value="0" min="0" max="{{system.data.value}}" data-data-spend />
+            <small>Disponibles : {{system.data.value}}</small>
           </label>
           <button type="button" data-action="rollTravel"><i class="fa-solid fa-route"></i> Lancer la Rencontre de Voyage</button>
         </section>
@@ -96,9 +97,22 @@
           <p>Avant le d10, vous pouvez à nouveau dépenser des Données.</p>
           <label class="entity-inline-field">
             <span>Données dépensées</span>
-            <input type="number" name="locationData" value="0" min="0" max="{{system.data.value}}" />
+            <input type="number" name="locationData" value="0" min="0" max="{{system.data.value}}" data-data-spend />
+            <small>Disponibles : {{system.data.value}}</small>
           </label>
           <button type="button" data-action="rollLocationEncounter"><i class="fa-solid fa-satellite-dish"></i> Lancer la Rencontre de Lieu</button>
+        </section>
+      {{/if}}
+
+      {{#if locationEncounterSummary}}
+        <section class="entity-panel entity-location-plan">
+          <span class="entity-kicker">RENCONTRE DE LIEU — RÉSULTAT GLOBAL</span>
+          <p>d10 {{locationEncounterSummary.roll}}{{#if locationEncounterSummary.dataSpent}} + {{locationEncounterSummary.dataSpent}} Donnée(s){{/if}} = <strong>{{locationEncounterSummary.total}}</strong></p>
+          <div class="entity-chip-row">
+            {{#each locationEncounterSummary.steps as |step|}}
+              <span class="entity-chip">{{step.label}}</span>
+            {{/each}}
+          </div>
         </section>
       {{/if}}
 
