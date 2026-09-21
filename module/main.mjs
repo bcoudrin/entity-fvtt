@@ -16,6 +16,7 @@ import { installEffectPlan } from "./improvement-rules.mjs";
 import { openOraclePanel } from "./apps/oracle-panel.mjs";
 import { openAdvancedExplorationPanel } from "./apps/advanced-exploration-panel.mjs";
 import { openAdvancedSecondaryPanel } from "./apps/advanced-secondary-panel.mjs";
+import { openCustomEncounterPanel } from "./apps/custom-encounter-panel.mjs";
 import { createCoreRollTables } from "./roll-tables.mjs";
 import { seedCoreContent } from "./content-seed.mjs";
 import { applySecondaryGain, recordEncounterRoll, recordOpportunityRoll, resolveSecondaryFailure } from "./workflow.mjs";
@@ -260,6 +261,7 @@ Hooks.once("ready", async () => {
     openOracle: (actor) => openOraclePanel(actor),
     openAdvancedExploration: (actor) => openAdvancedExplorationPanel(actor),
     openAdvancedSecondary: (actor, options = {}) => openAdvancedSecondaryPanel(actor, options),
+    openCustomEncounter: (actor) => openCustomEncounterPanel(actor),
     openCreation: (actor) => {
       if (actor?.system?.destroyed && !actor.getFlag(SYSTEM_ID, "successorPending")) return prepareSuccessor(actor);
       return openCreationWizard(actor, { force: true });
