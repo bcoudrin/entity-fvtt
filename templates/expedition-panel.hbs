@@ -129,7 +129,20 @@
         <section class="entity-panel entity-encounter-panel">
           <span class="entity-kicker">{{currentEncounter.context}} — {{currentEncounter.label}}</span>
           {{#if currentEncounter.detailRoll}}<div class="entity-roll-badge">d100 {{currentEncounter.detailRoll}}</div>{{/if}}
+          {{#if currentEncounter.isCustom}}
+            <div class="entity-custom-encounter-badge"><i class="fa-solid fa-wand-magic-sparkles"></i> Rencontre personnalisée</div>
+          {{/if}}
           <p>{{currentEncounter.text}}</p>
+
+          {{#if currentEncounter.canCustomize}}
+            <div class="entity-custom-encounter-callout">
+              <div>
+                <strong>Règles Avancées — Rencontre personnalisée</strong>
+                <small>Remplacer l’entrée préécrite par un scénario généré avec les tables d’Oracle, sans modifier VM, Désavantage ni ordre de résolution.</small>
+              </div>
+              <button type="button" data-action="customEncounter"><i class="fa-solid fa-wand-magic-sparkles"></i> Personnaliser</button>
+            </div>
+          {{/if}}
 
           {{#if currentEncounter.disadvantage}}
             <p class="entity-warning-text"><i class="fa-solid fa-angles-up"></i> Désavantage (D)</p>
