@@ -3,6 +3,7 @@ import { CORE_DISCOVERIES, CORE_IMPROVEMENTS, CORE_MISSIONS, CORE_STRUCTURES } f
 import { CORE_TABLES } from "../module/data/tables.mjs";
 import { clampDataSpend, locationEncounterPlan, parseEncounterRewards, resolveChallengeOutcome, secondaryGain, travelEncounterType } from "../module/workflow-rules.mjs";
 import { isExactDistribution, validateCreationState } from "../module/creation-rules.mjs";
+import { isDestroyedByDamage, successorResetUpdate } from "../module/destruction-rules.mjs";
 
 function coveredValues(entries) {
   const values = [];
@@ -108,5 +109,18 @@ assert.equal(validateCreationState(validCreation).valid, true, "Une création 3/
 const invalidCreation = structuredClone(validCreation);
 invalidCreation.traits.analysis.abilities.physics = 3;
 assert.equal(validateCreationState(invalidCreation).valid, false, "Un doublon de Capacité invalide la création");
+
+assert.equal(isDestroyedByDamage(new Array(19).fill("C"), [], 20), false, "19 dommages ne détruisent pas le PIA");
+assert.equal(isDestroyedByDamage(new Array(12).fill("C"), new Array(8).fill("D"), 20), true, "20 Contraintes/Défaillances détruisent le PIA");
+assert.equal(isDestroyedByDamage([], new Array(20).fill("D"), 20), true, "20 Défaillances détruisent le PIA");
+
+const successorReset = successorResetUpdate();
+assert.equal(successorReset["system.creationCompleted"], false, "Le successeur doit repasser par la création");
+assert.equal(successorReset["system.mission.aspectsCurrent"], 0, "Les Aspects de la Mission sont perdus");
+assert.equal(successorReset["system.mission.activeKey"], "", "La progression de Mission active est perdue");
+assert.deepEqual(successorReset["system.constraints"], [], "Les Contraintes du nouveau PIA repartent à zéro");
+assert.deepEqual(successorReset["system.failures"], [], "Les Défaillances du nouveau PIA repartent à zéro");
+assert.equal(Object.hasOwn(successorReset, "system.discoveriesUnlocked"), false, "La succession ne réinitialise pas l’historique des Découvertes");
+assert.equal(Object.hasOwn(successorReset, "system.destroyed"), false, "Le PIA reste marqué détruit jusqu’à validation du successeur");
 
 console.log("Validation Entité OK");
