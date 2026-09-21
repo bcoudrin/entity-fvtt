@@ -409,3 +409,29 @@ Ces contrôles sont prioritaires après les corrections issues du premier passag
 2. Effectuer plusieurs jets d’Action normaux, avec Avantage et avec Désavantage.
 3. Vérifier que le son de dés se joue normalement.
 4. Vérifier l’absence du warning `URI invalide. Le chargement de la ressource média a échoué. game` au moment de la création du jet.
+
+
+## Régression v0.2.4 — Journal par Mission
+
+1. Créer un nouveau PIA et ouvrir son Journal.
+   - une page générale **Journal de bord** existe pour les notes hors Mission ;
+   - elle ne doit plus recevoir les événements automatiques d’une Mission.
+2. Démarrer une première Mission.
+   - une nouvelle page est créée immédiatement ;
+   - son nom suit la forme **Mission NN — Nom de la Mission** ;
+   - le démarrage de Mission est écrit dans cette page.
+3. Effectuer une Expédition complète.
+   - Lieu, Voyage, Rencontres, jets de Défi enregistrés, Aspect, Activité Secondaire et autres événements journalisés restent tous dans la page de cette Mission.
+4. Accomplir la Mission.
+   - l’accomplissement, la Structure et la Découverte éventuelle sont écrits dans la même page ;
+   - la page est ensuite considérée comme close pour la journalisation automatique.
+5. Démarrer une autre Mission.
+   - une nouvelle page distincte est créée ;
+   - aucune nouvelle entrée ne doit être ajoutée à la page précédente.
+6. Pour une Mission répétable (19–21), accomplir puis redémarrer la même Mission.
+   - le second passage crée une nouvelle page nommée avec **Passage 2** ;
+   - les passages suivants créent chacun leur propre page.
+7. Mettre à jour un monde existant possédant déjà l’ancienne page unique.
+   - l’ancien contenu reste intact ;
+   - les nouvelles Missions utilisent les nouvelles pages dédiées ;
+   - aucune migration destructive de l’ancien texte n’est effectuée.
