@@ -19,7 +19,7 @@ Le système couvre les règles de base jusqu’à la page 30 et commence l’int
 - 10 Découvertes, débloquées dans l’ordre à chaque Mission accomplie, puis révélées explicitement ;
 - six RollTables natives : Voyage, Lieu, Défis, Opportunités, Trouvailles et Lieux ;
 - journal de bord Foundry lié au PIA, avec une page par Mission et une page persistante **Découvertes** ;
-- premier outil de Règles Avancées : **Demander à l’Oracle** (1d10), accessible directement depuis la fiche.
+- outils de Règles Avancées : **Demander à l’Oracle** (1d10) et premier workflow d’**Exploration enrichie** avec Structures, Caractéristiques de Terrain/Structure, Descripteurs, Ciel, Distance et Formes de Vie Extraterrestre.
 
 Le contenu de base est importé automatiquement une fois par monde au premier lancement par un MJ. Il peut être resynchronisé avec :
 
@@ -116,7 +116,7 @@ Un audit règle par règle des pages imprimées 6 à 30 est maintenu dans [AUDIT
 - les gains d’Opportunités et de Trouvailles sont détectés et proposés par boutons explicites ; les rares gains alternatifs (« ou ») restent un choix du joueur ; pour une Opportunité, le gain reste verrouillé jusqu’à validation d’une Réussite totale ou partielle ;
 - l’Unité de conversion adaptative des Ressources est disponible explicitement lors des Opportunités et Trouvailles de Lieu ;
 - la Valeur de Menace est suivie jet par jet : chaque résultat est enregistré explicitement depuis le Chat, puis le panneau détermine si le Défi est réussi ou échoué avant validation ;
-- Règles Avancées encore partielles : **Demander à l’Oracle** est intégré ; Exploration enrichie, Activités Secondaires enrichies, Rencontres personnalisées et autres tables d’Oracle restent à intégrer ;
+- Règles Avancées encore partielles : **Demander à l’Oracle** et le premier bloc d’Exploration enrichie sont intégrés ; Activités Secondaires enrichies, Rencontres personnalisées, Anomalies/Actions/Thèmes et autres générateurs restent à intégrer ;
 - Extras exclus.
 
 
@@ -125,7 +125,15 @@ Un audit règle par règle des pages imprimées 6 à 30 est maintenu dans [AUDIT
 
 La première brique est **Demander à l’Oracle**. Depuis la fiche du PIA, le bouton **Oracle** ouvre un panneau où le joueur formule une question appelant une réponse oui/non. Le système lance 1d10, affiche la nuance obtenue dans le Chat et la journalise dans la page de Mission active (ou dans le journal général hors Mission).
 
-L’outil reste volontairement non prescriptif : il peut être relancé librement et sert d’impulsion narrative. Les autres tables et générateurs avancés seront ajoutés progressivement sans modifier le workflow mécanique des règles de base.
+L’**Exploration avancée** est maintenant accessible dès qu’un Lieu a été identifié. Le panneau optionnel permet :
+- de lancer le d10 qui détermine si le Lieu se trouve dans une Structure (6+) ;
+- si oui, de déterminer le rôle de cette Structure sur la table dédiée ;
+- de tirer la Caractéristique adaptée au contexte (Terrain ou Structure) ;
+- d’ajouter librement un Descripteur ;
+- de tirer ce que l’on voit dans le Ciel ou à Distance ;
+- de générer une Forme de Vie Extraterrestre à partir de quatre jets indépendants : Forme, Trait, Caractéristique et Comportement.
+
+Ces résultats sont persistants pour l’Expédition en cours, copiés dans le Chat et le Journal, mais ne modifient aucun état mécanique. Le livre présente ces Oracles comme des outils d’inspiration et autorise à les ignorer, les choisir ou les relancer ; le système conserve cette liberté.
 
 ## Validation
 
