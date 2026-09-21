@@ -102,11 +102,13 @@ function actionDescriptor(state) {
 
 async function renderCard(state, actor) {
   const rerollsLocked = Boolean(state.consequenceApplied || state.secondaryApplied || state.encounterRecorded);
+  const isSecondary = Boolean(state.workflow?.secondary);
   return renderTemplate("systems/entity/templates/chat/action-roll.hbs", {
     state,
     actor,
     ability: actionDescriptor(state),
-    shields: state.result === "partial" && !state.consequenceApplied ? shieldItems(actor) : [],
+    isSecondary,
+    shields: !isSecondary && state.result === "partial" && !state.consequenceApplied ? shieldItems(actor) : [],
     rerollItem: rerollsLocked ? null : rerollImprovement(actor),
     rerollsLocked
   });
@@ -271,7 +273,7 @@ export async function rerollWithImprovement(message, dieIndex, itemId) {
 
 export async function applyRollConsequence(message, kind) {
   const state = foundry.utils.deepClone(message.getFlag(SYSTEM_ID, "actionRoll"));
-  if (!state || state.consequenceApplied) return;
+  if (!state || state.consequenceApplied || state.workflow?.secondary) return;
 
   const actor = await fromUuid(state.actorUuid);
   if (!actor) return;
@@ -291,7 +293,7 @@ export async function applyRollConsequence(message, kind) {
 
 export async function useShieldForRoll(message, itemId) {
   const state = foundry.utils.deepClone(message.getFlag(SYSTEM_ID, "actionRoll"));
-  if (!state || state.result !== "partial" || state.consequenceApplied) return;
+  if (!state || state.result !== "partial" || state.consequenceApplied || state.workflow?.secondary) return;
 
   const actor = await fromUuid(state.actorUuid);
   if (!actor) return;
