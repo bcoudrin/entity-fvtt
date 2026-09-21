@@ -577,3 +577,41 @@ Ces contrôles sont prioritaires après les corrections issues du premier passag
    - le compteur de la Combinaison reste à 20.
 7. Répéter jusqu’à ce que les 20 emplacements soient uniquement des Contraintes/Défaillances.
    - la destruction du PIA doit alors se déclencher normalement.
+
+
+## Régression v0.5.0 — Résolution complète des Opportunités
+
+Les règles de base présentent une petite tension éditoriale : la p.15 décrit le jet d’Action d’une Opportunité comme facultatif, tandis que la p.16 et les entrées de la table donnent le gain « en cas de succès ». Le système conserve donc le choix **Laisser l’Opportunité**, mais dès qu’elle est tentée, son gain est strictement lié au résultat du jet.
+
+1. Obtenir une Opportunité de Voyage ou de Lieu.
+   - les gains éventuels peuvent être affichés comme information ;
+   - aucun bouton permettant de les appliquer ne doit être utilisable avant résolution du jet.
+2. Cliquer une Capacité proposée et obtenir une **Réussite totale**.
+   - le Chat propose **Valider pour l’Opportunité** ;
+   - après validation, le panneau indique l’Opportunité réussie ;
+   - le gain devient disponible ;
+   - appliquer le gain puis continuer.
+3. Obtenir une **Réussite partielle**.
+   - le Chat demande d’abord de résoudre la Contrainte ;
+   - tester une fois avec **Ajouter une Contrainte**, puis une autre fois avec le Bouclier énergétique adaptatif ;
+   - **Valider pour l’Opportunité** ne devient disponible qu’après résolution de cette conséquence ;
+   - le gain devient ensuite disponible.
+4. Obtenir un **Échec**.
+   - ajouter d’abord la Défaillance ;
+   - valider ensuite pour l’Opportunité ;
+   - le panneau affiche **Opportunité échouée** ;
+   - aucun bouton d’application du gain ne doit apparaître ;
+   - continuer après l’échec.
+5. Tester une Opportunité marquée **(D)**.
+   - le jet lié doit automatiquement utiliser le Désavantage ;
+   - le reste du cycle est identique.
+6. Tester **Laisser l’Opportunité** sans effectuer de jet.
+   - aucun gain n’est appliqué ;
+   - l’Expédition continue ;
+   - le Journal note que l’Opportunité a été ignorée.
+7. Tester un gain avec « et » puis un gain avec « ou ».
+   - « et » applique tous les gains après succès ;
+   - « ou » ne permet qu’un choix après succès.
+8. Recharger le monde après avoir validé le jet mais avant d’appliquer le gain.
+   - l’état **Opportunité réussie** persiste ;
+   - le gain reste disponible une seule fois.
