@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import { CORE_DISCOVERIES, CORE_IMPROVEMENTS, CORE_MISSIONS, CORE_STRUCTURES } from "../module/data/core-items.mjs";
 import { CORE_TABLES } from "../module/data/tables.mjs";
-import { clampDataSpend, locationEncounterPlan, parseEncounterRewards, resolveChallengeOutcome, secondaryGain, travelEncounterType } from "../module/workflow-rules.mjs";
+import { clampDataSpend, locationEncounterPlan, opportunityOutcome, parseEncounterRewards, resolveChallengeOutcome, secondaryGain, travelEncounterType } from "../module/workflow-rules.mjs";
 import { isExactDistribution, validateCreationState } from "../module/creation-rules.mjs";
 import { isDestroyedByDamage, successorResetUpdate } from "../module/destruction-rules.mjs";
 
@@ -66,6 +66,9 @@ assert.equal(secondaryGain("failure", 5), 0);
 assert.equal(resolveChallengeOutcome([{ result: "full" }], 2), null, "Une VM 2 exige deux jets enregistrés");
 assert.equal(resolveChallengeOutcome([{ result: "full" }, { result: "partial" }], 2), "success", "Une réussite partielle n’est pas un échec du Défi");
 assert.equal(resolveChallengeOutcome([{ result: "failure" }, { result: "full" }, { result: "full" }], 3), "failed", "Un seul Échec fait échouer le Défi VM");
+assert.equal(opportunityOutcome("full"), "success", "Une Réussite totale réussit l’Opportunité");
+assert.equal(opportunityOutcome("partial"), "success", "Une Réussite partielle réussit l’Opportunité avec sa complication");
+assert.equal(opportunityOutcome("failure"), "failed", "Un Échec fait échouer l’Opportunité");
 
 assert.deepEqual(
   parseEncounterRewards("Gagnez 2 Données et 3 Ressources en cas de succès."),
