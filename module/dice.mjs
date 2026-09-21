@@ -103,7 +103,16 @@ function actionDescriptor(state) {
 async function renderCard(state, actor) {
   const rerollsLocked = Boolean(state.consequenceApplied || state.secondaryApplied || state.encounterRecorded);
   const isSecondary = Boolean(state.workflow?.secondary);
+  const isChallenge = Boolean(state.workflow?.encounter);
   const isOpportunity = Boolean(state.workflow?.opportunity);
+  const challengeNeedsConsequence =
+    isChallenge &&
+    ["partial", "failure"].includes(state.result) &&
+    !state.consequenceApplied;
+  const challengeCanRecord =
+    isChallenge &&
+    !state.encounterRecorded &&
+    (state.result === "full" || state.consequenceApplied);
   const opportunityNeedsConsequence =
     isOpportunity &&
     ["partial", "failure"].includes(state.result) &&
@@ -118,6 +127,9 @@ async function renderCard(state, actor) {
     actor,
     ability: actionDescriptor(state),
     isSecondary,
+    isChallenge,
+    challengeNeedsConsequence,
+    challengeCanRecord,
     isOpportunity,
     opportunityNeedsConsequence,
     opportunityCanRecord,
