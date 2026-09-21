@@ -6,6 +6,7 @@ import { openCreationWizard } from "../apps/creation-wizard.mjs";
 import { isActorCreationReady, isActorCreationValid } from "../creation-rules.mjs";
 import { getDiscoveryStatus, revealNextDiscovery } from "../journal.mjs";
 import { prepareSuccessor } from "../destruction.mjs";
+import { openOraclePanel } from "../apps/oracle-panel.mjs";
 
 const { ActorSheetV2 } = foundry.applications.sheets;
 const { HandlebarsApplicationMixin } = foundry.applications.api;
@@ -71,6 +72,7 @@ export class PiaSheet extends HandlebarsApplicationMixin(ActorSheetV2) {
       createImprovement: PiaSheet.#createImprovement,
       createStructure: PiaSheet.#createStructure,
       openJournal: PiaSheet.#openJournal,
+      openOracle: PiaSheet.#openOracle,
       revealDiscovery: PiaSheet.#revealDiscovery,
       openCreation: PiaSheet.#openCreation,
       openExpedition: PiaSheet.#openExpedition
@@ -246,6 +248,10 @@ export class PiaSheet extends HandlebarsApplicationMixin(ActorSheetV2) {
 
   static async #openJournal() {
     await this.actor.openJournal();
+  }
+
+  static #openOracle() {
+    openOraclePanel(this.actor);
   }
 
   static async #revealDiscovery() {
