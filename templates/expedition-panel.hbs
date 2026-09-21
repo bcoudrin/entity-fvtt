@@ -170,31 +170,50 @@
             {{/if}}
           {{/if}}
           {{#if currentEncounter.isOpportunity}}
-            {{#if currentEncounter.hasRewards}}
-              <div class="entity-reward-panel">
-                <strong>Gain en cas de succès</strong>
-                <div class="entity-chip-row">
-                  {{#each currentEncounter.rewards as |reward|}}<span class="entity-chip">{{reward.label}}</span>{{/each}}
-                </div>
-                {{#unless currentEncounter.rewardApplied}}
-                  {{#if currentEncounter.rewardChoice}}
-                    <div class="entity-two-actions">
-                      {{#each currentEncounter.rewards as |reward|}}
-                        <button type="button" class="entity-primary" data-action="applyEncounterReward" data-reward-index="{{reward.index}}">
-                          <i class="fa-solid fa-box"></i> Choisir {{reward.label}}
-                        </button>
-                      {{/each}}
-                    </div>
-                  {{else}}
-                    <button type="button" class="entity-primary" data-action="applyEncounterReward">
-                      <i class="fa-solid fa-box"></i> Appliquer le gain
-                    </button>
-                  {{/if}}
-                {{else}}
-                  <p class="entity-chat-success"><i class="fa-solid fa-check"></i> Gain appliqué.</p>
-                {{/unless}}
+            {{#unless currentEncounter.opportunityResolved}}
+              <div class="entity-opportunity-state">
+                <strong>Résolution de l’Opportunité</strong>
+                <p>Vous pouvez tenter l’Opportunité avec l’une des Capacités proposées, ou la laisser de côté sans gain.</p>
+                <p class="entity-dialog-note">Après le jet, appliquez d’abord toute Contrainte ou Défaillance éventuelle dans le Chat, puis cliquez <strong>Valider pour l’Opportunité</strong>.</p>
               </div>
-            {{/if}}
+            {{else}}
+              {{#if currentEncounter.opportunitySucceeded}}
+                {{#if currentEncounter.opportunityRoll}}
+                  <p class="entity-chat-success"><i class="fa-solid fa-check"></i> {{currentEncounter.opportunityRoll.abilityLabel}} — {{currentEncounter.opportunityRoll.resultLabel}}.</p>
+                {{/if}}
+                {{#if currentEncounter.hasRewards}}
+                  <div class="entity-reward-panel">
+                    <strong>Gain de l’Opportunité réussie</strong>
+                    <div class="entity-chip-row">
+                      {{#each currentEncounter.rewards as |reward|}}<span class="entity-chip">{{reward.label}}</span>{{/each}}
+                    </div>
+                    {{#unless currentEncounter.rewardApplied}}
+                      {{#if currentEncounter.rewardChoice}}
+                        <div class="entity-two-actions">
+                          {{#each currentEncounter.rewards as |reward|}}
+                            <button type="button" class="entity-primary" data-action="applyEncounterReward" data-reward-index="{{reward.index}}">
+                              <i class="fa-solid fa-box"></i> Choisir {{reward.label}}
+                            </button>
+                          {{/each}}
+                        </div>
+                      {{else}}
+                        <button type="button" class="entity-primary" data-action="applyEncounterReward">
+                          <i class="fa-solid fa-box"></i> Appliquer le gain
+                        </button>
+                      {{/if}}
+                    {{else}}
+                      <p class="entity-chat-success"><i class="fa-solid fa-check"></i> Gain appliqué.</p>
+                    {{/unless}}
+                  </div>
+                {{/if}}
+              {{/if}}
+              {{#if currentEncounter.opportunityFailed}}
+                <div class="entity-opportunity-failed">
+                  <strong><i class="fa-solid fa-xmark"></i> Opportunité échouée</strong>
+                  <p>Aucun gain n’est obtenu.</p>
+                </div>
+              {{/if}}
+            {{/unless}}
           {{/if}}
 
           {{#if currentEncounter.isFind}}
@@ -228,11 +247,19 @@
 
           {{#if currentEncounter.isOpportunity}}
             <div class="entity-two-actions">
-              {{#if currentEncounter.rewardApplied}}
-                <button type="button" class="entity-primary" data-action="encounterResolved"><i class="fa-solid fa-check"></i> Continuer</button>
+              {{#unless currentEncounter.opportunityResolved}}
+                <button type="button" data-action="encounterResolved"><i class="fa-solid fa-forward"></i> Laisser l’Opportunité</button>
               {{else}}
-                <button type="button" data-action="encounterResolved"><i class="fa-solid fa-forward"></i> Passer sans gain</button>
-              {{/if}}
+                {{#if currentEncounter.opportunityFailed}}
+                  <button type="button" class="entity-primary" data-action="encounterResolved"><i class="fa-solid fa-forward"></i> Continuer après l’échec</button>
+                {{else}}
+                  {{#if currentEncounter.rewardApplied}}
+                    <button type="button" class="entity-primary" data-action="encounterResolved"><i class="fa-solid fa-check"></i> Continuer</button>
+                  {{else}}
+                    <button type="button" data-action="encounterResolved"><i class="fa-solid fa-forward"></i> Renoncer au gain et continuer</button>
+                  {{/if}}
+                {{/if}}
+              {{/unless}}
             </div>
           {{/if}}
           {{#if currentEncounter.isFind}}
