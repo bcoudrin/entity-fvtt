@@ -21,6 +21,10 @@ import {
 
 const { ApplicationV2, HandlebarsApplicationMixin } = foundry.applications.api;
 
+function formValue(root, selector, fallback = "") {
+  return root.querySelector(selector)?.value ?? fallback;
+}
+
 function rewardLabel(reward) {
   if (reward.resourceKey === "data") return reward.amount + " Donnée(s)";
   if (reward.resourceKey === "energy") return reward.amount + " Énergie";
@@ -150,12 +154,8 @@ export class ExpeditionPanel extends HandlebarsApplicationMixin(ApplicationV2) {
     return context;
   }
 
-  static #formValue(root, selector, fallback = "") {
-    return root.querySelector(selector)?.value ?? fallback;
-  }
-
   static async #startMission() {
-    const key = this.#formValue(this.element, "[name='missionKey']");
+    const key = formValue(this.element, "[name='missionKey']");
     if (await startMission(this.actor, key)) this.render({ force: true });
   }
 
@@ -176,12 +176,12 @@ export class ExpeditionPanel extends HandlebarsApplicationMixin(ApplicationV2) {
   }
 
   static async #rollTravel() {
-    const data = Number(this.#formValue(this.element, "[name='travelData']", 0));
+    const data = Number(formValue(this.element, "[name='travelData']", 0));
     if (await rollTravel(this.actor, data)) this.render({ force: true });
   }
 
   static async #rollLocationEncounter() {
-    const data = Number(this.#formValue(this.element, "[name='locationData']", 0));
+    const data = Number(formValue(this.element, "[name='locationData']", 0));
     if (await rollLocationEncounter(this.actor, data)) this.render({ force: true });
   }
 
@@ -219,7 +219,7 @@ export class ExpeditionPanel extends HandlebarsApplicationMixin(ApplicationV2) {
   }
 
   static async #installImprovement() {
-    const itemId = this.#formValue(this.element, "[name='improvementId']");
+    const itemId = formValue(this.element, "[name='improvementId']");
     if (await installImprovementAsSecondary(this.actor, itemId)) this.render({ force: true });
   }
 
