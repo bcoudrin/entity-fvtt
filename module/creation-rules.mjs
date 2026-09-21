@@ -56,3 +56,8 @@ export function isActorCreationValid(actor) {
 
   return validateCreationState(state).valid;
 }
+
+
+export function isActorCreationReady(actor) {
+  return Boolean(actor?.system?.creationCompleted) || isActorCreationValid(actor);
+}
