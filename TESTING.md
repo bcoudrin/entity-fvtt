@@ -253,7 +253,9 @@ Attendu :
 - réussite partielle → gain égal à la moitié d’Analyse, arrondie à l’inférieur ;
 - échec → génération d’un Défi ;
 - la ressource ne dépasse pas sa capacité maximale ;
-- les boutons habituels de Contrainte / Défaillance du jet restent explicites.
+- aucun bouton **Ajouter une Contrainte** ou **Ajouter une Défaillance** n’est proposé pour ce jet d’Activité Secondaire ;
+- une Réussite partielle propose uniquement le demi-gain ;
+- un Échec propose uniquement de résoudre le Défi prévu par l’Activité Secondaire.
 
 ### Recharge d’Énergie
 
@@ -380,3 +382,22 @@ Ces contrôles sont prioritaires après les corrections issues du premier passag
    - Défaillances conservées.
 6. Ouvrir le Journal et vérifier qu’une entrée de début de Mission a bien été ajoutée.
 7. Continuer ensuite le plan à partir de **D — Expédition normale**.
+
+
+## Régression v0.2.2
+
+1. Au Voyage avec 3 Données disponibles, saisir/passer une valeur supérieure à 3.
+   - le champ doit être immédiatement ramené à 3 ;
+   - la valeur disponible est affichée à côté du champ ;
+   - la logique serveur conserve également une borne de sécurité et signale tout écrêtage résiduel.
+2. Répéter le même contrôle avant le jet de Rencontre de Lieu.
+3. Lancer une Rencontre de Lieu et vérifier qu’un encart **Résultat global** reste visible pendant toute sa résolution :
+   - résultat du d10 ;
+   - Données dépensées ;
+   - total ;
+   - composition complète, par exemple **Défi (VM 2) + Opportunité** ou **Défi + Opportunité + Trouvaille + Aspect**.
+4. Tester Collecte de Données, Recharge d’Énergie et Collecte de Ressources :
+   - Réussite totale → seulement le gain complet ;
+   - Réussite partielle → seulement le demi-gain ;
+   - Échec → seulement **Résoudre le Défi** ;
+   - aucune Contrainte/Défaillance générique et aucun Bouclier énergétique adaptatif ne doit être proposé sur ces trois jets.
