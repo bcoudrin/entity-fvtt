@@ -4,7 +4,7 @@ Système Foundry VTT v14 pour **Entité — Jeu de rôle solo NASA Punk**.
 
 ## Phase actuelle
 
-Le système couvre les règles de base jusqu’à la page 30 et propose maintenant un **workflow guidé Mission → Expédition** :
+Le système couvre les règles de base jusqu’à la page 30 et commence l’intégration optionnelle des **Règles Avancées**. Il propose un **workflow guidé Mission → Expédition** :
 
 - Actor PIA unique avec assistant de création guidé ;
 - trois Traits et neuf Capacités ;
@@ -18,7 +18,8 @@ Le système couvre les règles de base jusqu’à la page 30 et propose maintena
 - 21 Missions ;
 - 10 Découvertes, débloquées dans l’ordre à chaque Mission accomplie, puis révélées explicitement ;
 - six RollTables natives : Voyage, Lieu, Défis, Opportunités, Trouvailles et Lieux ;
-- journal de bord Foundry lié au PIA, avec une page par Mission et une page persistante **Découvertes**.
+- journal de bord Foundry lié au PIA, avec une page par Mission et une page persistante **Découvertes** ;
+- premier outil de Règles Avancées : **Demander à l’Oracle** (1d10), accessible directement depuis la fiche.
 
 Le contenu de base est importé automatiquement une fois par monde au premier lancement par un MJ. Il peut être resynchronisé avec :
 
@@ -57,7 +58,7 @@ Les Améliorations restent déclenchées explicitement par le joueur. Le systèm
 - Avantage ;
 - relance d’un dé ;
 - Bouclier énergétique adaptatif après une réussite partielle ;
-- gains d’installation des Outils d’extraction avancés et des Algorithmes d’exploration de Données.
+- gains d’installation des Outils d’extraction avancés et des Algorithmes d’exploration de Données ; leur effet unique paie également le coût imprimé de 2 Énergies lors de l’installation.
 
 ### Structures
 
@@ -112,12 +113,19 @@ Un audit règle par règle des pages imprimées 6 à 30 est maintenu dans [AUDIT
 ## Limites actuelles
 
 - le workflow d’Expédition est volontairement figé en **Exploration → Activité Secondaire** ;
-- un seul point éditorial des règles de base reste à arbitrer : le coût 2E des deux Améliorations dont l’effet se produit à l’installation ;
 - les gains d’Opportunités et de Trouvailles sont détectés et proposés par boutons explicites ; les rares gains alternatifs (« ou ») restent un choix du joueur ; pour une Opportunité, le gain reste verrouillé jusqu’à validation d’une Réussite totale ou partielle ;
 - l’Unité de conversion adaptative des Ressources est disponible explicitement lors des Opportunités et Trouvailles de Lieu ;
 - la Valeur de Menace est suivie jet par jet : chaque résultat est enregistré explicitement depuis le Chat, puis le panneau détermine si le Défi est réussi ou échoué avant validation ;
-- règles avancées exclues ;
+- Règles Avancées encore partielles : **Demander à l’Oracle** est intégré ; Exploration enrichie, Activités Secondaires enrichies, Rencontres personnalisées et autres tables d’Oracle restent à intégrer ;
 - Extras exclus.
+
+
+
+## Règles Avancées
+
+La première brique est **Demander à l’Oracle**. Depuis la fiche du PIA, le bouton **Oracle** ouvre un panneau où le joueur formule une question appelant une réponse oui/non. Le système lance 1d10, affiche la nuance obtenue dans le Chat et la journalise dans la page de Mission active (ou dans le journal général hors Mission).
+
+L’outil reste volontairement non prescriptif : il peut être relancé librement et sert d’impulsion narrative. Les autres tables et générateurs avancés seront ajoutés progressivement sans modifier le workflow mécanique des règles de base.
 
 ## Validation
 
