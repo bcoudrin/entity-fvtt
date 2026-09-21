@@ -61,6 +61,27 @@
     {{/unless}}
   {{/if}}
 
+  {{#if isOpportunity}}
+    {{#unless state.encounterRecorded}}
+      {{#if opportunityNeedsConsequence}}
+        <p class="entity-chat-note"><i class="fa-solid fa-triangle-exclamation"></i> Appliquez d’abord la conséquence de ce jet, puis validez son résultat pour l’Opportunité.</p>
+      {{/if}}
+      {{#if opportunityCanRecord}}
+        <div class="entity-chat-actions entity-encounter-record">
+          <button type="button" data-entity-chat-action="record-opportunity-roll">
+            <i class="fa-solid fa-list-check"></i> Valider pour l’Opportunité
+          </button>
+        </div>
+      {{/if}}
+    {{else}}
+      {{#if (eq state.opportunityOutcome "success")}}
+        <p class="entity-chat-success"><i class="fa-solid fa-check"></i> Opportunité réussie : le gain est disponible.</p>
+      {{else}}
+        <p class="entity-chat-note"><i class="fa-solid fa-xmark"></i> Opportunité échouée : aucun gain.</p>
+      {{/if}}
+    {{/unless}}
+  {{/if}}
+
   {{#unless isSecondary}}
   {{#unless state.consequenceApplied}}
     {{#if (eq state.result "partial")}}
