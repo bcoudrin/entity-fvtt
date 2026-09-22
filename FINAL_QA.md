@@ -44,8 +44,12 @@ L’Avantage reste un état unique du jet : payer plusieurs activations d’une 
 8. coexistence de deux relances de Structures ;
 9. changement d’onglets, Journal et contrôle Mission après rechargement du monde.
 
-## Point de règle à confirmer avant « 1.0 »
+## Décision de campagne pour la succession
 
-Le texte de destruction précise que **seules les Structures** sont transférées dans la progression du nouveau personnage. Le système conserve actuellement le Journal de campagne ainsi que certains marqueurs de campagne (dont la progression des Découvertes et l’historique d’accomplissement des Missions) afin d’éviter de perdre l’historique et de reconstruire involontairement les mêmes Structures.
+Décision retenue pour ce système : la succession conserve **les Structures, le Journal, les Découvertes débloquées/révélées et l’historique d’accomplissement des Missions**. Le nouveau PIA perd en revanche son état de personnage : Améliorations, Contraintes, Défaillances, Traits, Capacités, Aspects et progression de la Mission en cours.
 
-Le Journal peut raisonnablement rester une archive sans effet sur le personnage, mais la conservation des compteurs de Découvertes est une interprétation de campagne et mérite une décision explicite avant de figer une version 1.0. Aucune modification supplémentaire n’est faite silencieusement sur ce point.
+Cette interprétation considère Journal et Découvertes comme une continuité de campagne plutôt que comme des caractéristiques du PIA détruit.
+
+## Plan de validation recommandé
+
+Pour la recette finale, utiliser **`ACCEPTANCE_1_0.md`**. `FINAL_QA.md` sert de synthèse de couverture et `TESTING.md` reste l’historique détaillé des tests de régression par version.
