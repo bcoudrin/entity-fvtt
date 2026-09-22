@@ -1,6 +1,6 @@
 export const SYSTEM_ID = "entity";
 export const SUIT_SLOTS = 20;
-export const CORE_DATA_VERSION = 2;
+export const CORE_DATA_VERSION = 3;
 
 export const TRAITS = {
   technology: { label: "Technologie", abilities: ["computing", "engineering", "robotics"] },
