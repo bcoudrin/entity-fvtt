@@ -3,9 +3,9 @@ export const SUIT_SLOTS = 20;
 export const CORE_DATA_VERSION = 3;
 
 export const TRAITS = {
-  technology: { label: "Technologie", abilities: ["computing", "engineering", "robotics"] },
-  analysis: { label: "Analyse", abilities: ["biology", "chemistry", "physics"] },
-  adaptability: { label: "Adaptabilité", abilities: ["communication", "navigation", "survival"] }
+  technology: { label: "Technologie", abilities: ["robotics", "engineering", "computing"] },
+  analysis: { label: "Analyse", abilities: ["physics", "biology", "chemistry"] },
+  adaptability: { label: "Adaptabilité", abilities: ["survival", "navigation", "communication"] }
 };
 
 export const ABILITIES = {
