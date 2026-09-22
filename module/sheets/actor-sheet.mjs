@@ -34,8 +34,9 @@ function resourceMeter(key, label, code, resource) {
   };
 }
 
-function improvementSlot(item, pendingIds) {
+function improvementSlot(item, pendingCounts) {
   const type = item.system.effectType;
+  const pendingCount = Number(pendingCounts.get(item.id) || 0);
   const activatable = ["abilityBonus", "advantage"].includes(type);
   let status = "Module";
 
@@ -43,7 +44,7 @@ function improvementSlot(item, pendingIds) {
   else if (type === "preventConstraint") status = "Réactif sur réussite partielle";
   else if (type === "convertResource") status = "Réactif en Rencontre";
   else if (["installResource", "installData"].includes(type)) status = "Effet d’installation";
-  else if (activatable) status = pendingIds.has(item.id) ? "Armé" : "À activer";
+  else if (activatable) status = pendingCount > 0 ? "Armé" : "À activer";
 
   return {
     kind: "improvement",
@@ -52,8 +53,9 @@ function improvementSlot(item, pendingIds) {
     icon: "fa-solid fa-puzzle-piece",
     cost: Number(item.system.energyCost || 0),
     activatable,
-    pending: pendingIds.has(item.id),
-    status
+    pending: pendingCount > 0,
+    pendingCount,
+    status: pendingCount > 1 ? status + " ×" + pendingCount : status
   };
 }
 
@@ -155,8 +157,11 @@ export class PiaSheet extends HandlebarsApplicationMixin(ActorSheetV2) {
       expeditionNumber: Number(actor.system.expeditionNumber || 0)
     };
 
-    const pendingIds = new Set(context.pendingEffects.map((effect) => effect.itemId));
-    const slots = context.improvements.map((item) => improvementSlot(item, pendingIds));
+    const pendingCounts = new Map();
+    for (const effect of context.pendingEffects) {
+      pendingCounts.set(effect.itemId, Number(pendingCounts.get(effect.itemId) || 0) + 1);
+    }
+    const slots = context.improvements.map((item) => improvementSlot(item, pendingCounts));
 
     Array.from(actor.system.constraints || []).forEach((label, index) => {
       slots.push({ kind: "constraint", label, index, removable: true, icon: "fa-solid fa-triangle-exclamation" });
