@@ -985,3 +985,43 @@ Ce jalon n’ajoute volontairement pas de nouvelle mécanique : il vérifie qu�
    - leur historique reste dans le Journal de Mission.
 7. Vérifier que ces deux Oracles ne modifient jamais Énergie, Ressources, Données, Contraintes, Défaillances, Aspects, Rencontres ou gains d’Activité Secondaire.
 8. Vérifier que les deux tables couvrent bien 1–100 sans trou ni chevauchement.
+
+## Régression v0.16.0 — Fiche PIA et QA finale
+
+1. Ouvrir une fiche PIA configurée à la taille par défaut.
+   - le titre **ENTITÉ** et le cartouche Nom dominent la tête de fiche ;
+   - les contrôles Création / Mission / Oracle / Journal restent accessibles.
+2. Onglet **Systèmes** :
+   - ordre Technologie = Robotique / Ingénierie / Informatique ;
+   - ordre Analyse = Physique / Biologie / Chimie ;
+   - ordre Adaptabilité = Survie / Navigation / Communication ;
+   - score de Trait dans un losange, score de Capacité dans un cercle ;
+   - chaque rail de Capacité permet toujours le jet ;
+   - le seuil calculé reste visible.
+3. Vérifier les jauges **R / E / D**.
+   - elles sont verticales et segmentées ;
+   - Énergie utilise le canal rouge ;
+   - l’édition numérique met à jour la fiche ;
+   - tester une capacité maximale augmentée par Structure (11 à 15).
+4. Vérifier le résumé de Mission.
+   - hors Mission : état d’attente et bouton de démarrage ;
+   - en Mission : nom, Aspects et numéro d’Expédition.
+5. Onglet **Combinaison** :
+   - cadre noir arrondi ;
+   - exactement 20 emplacements en deux colonnes de dix ;
+   - Améliorations, Contraintes et Défaillances restent distinguables ;
+   - les contrôles d’activation, détail, défausse et réparation fonctionnent.
+6. Passer le PIA en état détruit.
+   - les jets et modifications de Combinaison sont désactivés ;
+   - la procédure de succession reste accessible.
+7. Redimensionner la fenêtre sous 900 px puis sous 700 px.
+   - les jauges passent sous les Traits ;
+   - à petite largeur les emplacements de Combinaison passent en une colonne ;
+   - aucun contrôle essentiel ne doit être coupé.
+8. Activer deux fois la même Amélioration +1 avant un jet compatible.
+   - les deux coûts d’Énergie sont payés ;
+   - la fiche indique le nombre d’activations armées ;
+   - le prochain jet reçoit la somme des deux bonus ;
+   - les deux activations sont consommées ensemble.
+9. Vérifier qu’une même Amélioration réactive (relance, bouclier) reste utilisable plusieurs fois sur des jets tant que l’Énergie suffit, selon son mode d’utilisation.
+10. Refaire le parcours court : création → Mission → Expédition → Rencontre → Activité Secondaire → Mission accomplie → Découverte, afin de détecter toute régression de navigation introduite par la refonte visuelle.
