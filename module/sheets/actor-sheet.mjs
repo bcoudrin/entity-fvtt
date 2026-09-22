@@ -168,7 +168,10 @@ export class PiaSheet extends HandlebarsApplicationMixin(ActorSheetV2) {
 
     while (slots.length < SUIT_SLOTS) slots.push({ kind: "empty", label: "Libre" });
 
-    context.suitSlots = slots.slice(0, SUIT_SLOTS);
+    context.suitSlots = slots.slice(0, SUIT_SLOTS).map((slot, index) => ({
+      ...slot,
+      number: index + 1
+    }));
     context.suit = actor.suitState;
     return context;
   }
