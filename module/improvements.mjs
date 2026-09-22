@@ -36,10 +36,6 @@ export async function activateImprovement(actor, item) {
   }
 
   const pending = foundry.utils.deepClone(actor.getFlag(SYSTEM_ID, "pendingEffects") || []);
-  if (pending.some((effect) => effect.itemId === item.id)) {
-    ui.notifications.info(item.name + " est déjà armé pour un prochain jet compatible.");
-    return true;
-  }
 
   if ((actor.system.energy?.value ?? 0) < cost) {
     ui.notifications.warn("Énergie insuffisante pour activer cette Amélioration.");
@@ -49,6 +45,8 @@ export async function activateImprovement(actor, item) {
   if (cost > 0) {
     await actor.update({ "system.energy.value": actor.system.energy.value - cost });
   }
+
+  const activationCount = pending.filter((effect) => effect.itemId === item.id).length + 1;
 
   pending.push({
     itemId: item.id,
@@ -64,7 +62,10 @@ export async function activateImprovement(actor, item) {
   const effect = effectType === "abilityBonus"
     ? "+" + Number(item.system.effectValue || 0)
     : "Avantage";
-  ui.notifications.info(item.name + " armé" + (ability ? " pour " + ability : "") + " (" + effect + ").");
+  ui.notifications.info(
+    item.name + " armé" + (activationCount > 1 ? " ×" + activationCount : "") +
+    (ability ? " pour " + ability : "") + " (" + effect + ")."
+  );
   actor.sheet?.render({ force: true });
   return true;
 }
