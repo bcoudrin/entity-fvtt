@@ -18,6 +18,22 @@ function passiveAbilityBonus(actor, abilityKey) {
     .reduce((sum, item) => sum + Number(item.system.effectValue || 0) * Number(item.system.ranks || 1), 0);
 }
 
+function resourceMeter(key, label, code, resource) {
+  const value = Math.max(0, Number(resource?.value || 0));
+  const max = Math.max(1, Number(resource?.max || 10));
+  return {
+    key,
+    label,
+    code,
+    value,
+    max,
+    segments: Array.from({ length: max }, (_, index) => ({
+      index: index + 1,
+      filled: index < value
+    }))
+  };
+}
+
 function improvementSlot(item, pendingIds) {
   const type = item.system.effectType;
   const activatable = ["abilityBonus", "advantage"].includes(type);
@@ -125,6 +141,19 @@ export class PiaSheet extends HandlebarsApplicationMixin(ActorSheetV2) {
     context.discoveries = getDiscoveryStatus(actor);
     context.discoveries.hasPending = context.discoveries.pending > 0;
     context.discoveries.complete = context.discoveries.revealed >= context.discoveries.total;
+    context.rollsDisabled = Boolean(context.isDestroyed || context.creation.needsCreation);
+    context.resourceMeters = [
+      resourceMeter("resources", "Ressources", "R", actor.system.resources),
+      resourceMeter("energy", "Énergie", "E", actor.system.energy),
+      resourceMeter("data", "Données", "D", actor.system.data)
+    ];
+    context.missionSummary = {
+      active: Boolean(actor.system.mission?.activeKey),
+      name: actor.system.mission?.name || "",
+      aspectsCurrent: Number(actor.system.mission?.aspectsCurrent || 0),
+      aspectsRequired: Number(actor.system.mission?.aspectsRequired || 0),
+      expeditionNumber: Number(actor.system.expeditionNumber || 0)
+    };
 
     const pendingIds = new Set(context.pendingEffects.map((effect) => effect.itemId));
     const slots = context.improvements.map((item) => improvementSlot(item, pendingIds));
