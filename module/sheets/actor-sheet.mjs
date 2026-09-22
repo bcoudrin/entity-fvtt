@@ -73,7 +73,7 @@ export class PiaSheet extends HandlebarsApplicationMixin(ActorSheetV2) {
   static DEFAULT_OPTIONS = {
     classes: ["entity", "sheet", "pia-sheet"],
     tag: "form",
-    position: { width: 920, height: 800 },
+    position: { width: 1040, height: 860 },
     window: { resizable: true },
     form: { submitOnChange: false, closeOnSubmit: false },
     actions: {
