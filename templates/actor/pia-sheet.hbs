@@ -1,22 +1,24 @@
-<div class="entity-pia-shell">
-  <header class="entity-header">
-    <div class="entity-brand">
-      <span class="entity-kicker">PIONNIER INTERPLANÉTAIRE ADAPTATIF</span>
+<div class="entity-pia-shell entity-pia-refined">
+  <header class="entity-character-header">
+    <div class="entity-character-title">
       <h1>ENTITÉ</h1>
+      <span>JEU DE RÔLE SOLO NASA PUNK · PIA</span>
     </div>
-    <div class="entity-identity">
-      <label>
-        <span>Nom / Désignation</span>
-        <input name="name" type="text" value="{{actor.name}}" />
-      </label>
+
+    <label class="entity-name-plate">
+      <span>NOM / DÉSIGNATION</span>
+      <input name="name" type="text" value="{{actor.name}}" />
+    </label>
+
+    <div class="entity-command-bar">
       <button type="button" data-action="openCreation"><i class="fa-solid fa-user-gear"></i> {{#if isDestroyed}}Successeur{{else}}Création{{/if}}</button>
       {{#if isDestroyed}}
-        <button type="button" data-action="openExpedition" disabled title="Ce PIA est détruit"><i class="fa-solid fa-rocket"></i> Mission / Expédition</button>
+        <button type="button" data-action="openExpedition" disabled title="Ce PIA est détruit"><i class="fa-solid fa-rocket"></i> Mission</button>
       {{else}}
-        <button type="button" data-action="openExpedition" {{#if creation.needsCreation}}disabled title="Terminez d’abord la création du PIA"{{/if}}><i class="fa-solid fa-rocket"></i> Mission / Expédition</button>
+        <button type="button" data-action="openExpedition" {{#if creation.needsCreation}}disabled title="Terminez d’abord la création du PIA"{{/if}}><i class="fa-solid fa-rocket"></i> Mission</button>
       {{/if}}
       <button type="button" data-action="openOracle"><i class="fa-solid fa-question"></i> Oracle</button>
-      <button type="button" data-action="openJournal"><i class="fa-solid fa-book"></i> Journal de bord</button>
+      <button type="button" data-action="openJournal"><i class="fa-solid fa-book"></i> Journal</button>
     </div>
   </header>
 
@@ -38,20 +40,14 @@
     </section>
   {{/if}}
 
-  <section class="entity-resource-strip">
-    <label><span>Énergie</span><input type="number" name="system.energy.value" value="{{system.energy.value}}" /><b>/ {{system.energy.max}}</b></label>
-    <label><span>Ressources</span><input type="number" name="system.resources.value" value="{{system.resources.value}}" /><b>/ {{system.resources.max}}</b></label>
-    <label><span>Données</span><input type="number" name="system.data.value" value="{{system.data.value}}" /><b>/ {{system.data.max}}</b></label>
-  </section>
-
-  <nav class="entity-tabs tabs" data-group="primary">
+  <nav class="entity-tabs tabs entity-console-tabs" data-group="primary">
     <a class="{{tabs.systems.cssClass}}" data-action="tab" data-group="primary" data-tab="systems"><i class="fa-solid fa-microchip"></i> Systèmes</a>
     <a class="{{tabs.suit.cssClass}}" data-action="tab" data-group="primary" data-tab="suit"><i class="fa-solid fa-user-astronaut"></i> Combinaison</a>
     <a class="{{tabs.structures.cssClass}}" data-action="tab" data-group="primary" data-tab="structures"><i class="fa-solid fa-building"></i> Structures</a>
     <a class="{{tabs.journal.cssClass}}" data-action="tab" data-group="primary" data-tab="journal"><i class="fa-solid fa-book"></i> Journal</a>
   </nav>
 
-  <section class="entity-body">
+  <section class="entity-body entity-character-body">
     <section class="tab {{tabs.systems.cssClass}}" data-group="primary" data-tab="systems">
       {{#if creation.needsCreation}}
         <section class="entity-panel entity-creation-required">
@@ -63,59 +59,112 @@
           <button type="button" class="entity-primary" data-action="openCreation"><i class="fa-solid fa-user-gear"></i> Lancer l’assistant</button>
         </section>
       {{/if}}
-      <div class="entity-traits-grid">
-        {{#each traits as |trait|}}
-          <section class="entity-panel entity-trait">
-            <header>
-              <h2>{{trait.label}}</h2>
-              <input type="number" name="system.traits.{{trait.key}}.value" value="{{trait.value}}" min="0" />
-            </header>
-            <div class="entity-ability-list">
-              {{#each trait.abilities as |ability|}}
-                <div class="entity-ability-row">
-                  <button type="button" class="entity-die" data-action="rollAbility" data-ability="{{ability.key}}" title="Lancer {{ability.label}}">
-                    <i class="fa-solid fa-dice-d10"></i>
-                  </button>
-                  <span class="entity-ability-name">{{ability.label}}</span>
-                  <input type="number" name="system.traits.{{trait.key}}.abilities.{{ability.key}}.value" value="{{ability.value}}" min="0" />
-                  <span class="entity-target" title="Niveau de Difficulté avec bonus de Structures">≤ {{ability.target}}</span>
+
+      <div class="entity-sheet-dashboard">
+        <div class="entity-traits-stack">
+          {{#each traits as |trait|}}
+            <section class="entity-trait-console">
+              <header class="entity-trait-band">
+                <div class="entity-trait-diamond">
+                  <input type="number" name="system.traits.{{trait.key}}.value" value="{{trait.value}}" min="0" aria-label="{{trait.label}}" />
                 </div>
-              {{/each}}
-            </div>
+                <h2>{{trait.label}}</h2>
+              </header>
+
+              <div class="entity-ability-console">
+                {{#each trait.abilities as |ability|}}
+                  <div class="entity-ability-console-row">
+                    <input class="entity-ability-score" type="number" name="system.traits.{{trait.key}}.abilities.{{ability.key}}.value" value="{{ability.value}}" min="0" aria-label="{{ability.label}}" />
+                    <button type="button" class="entity-ability-launch" data-action="rollAbility" data-ability="{{ability.key}}" title="Lancer {{ability.label}}" {{#if ../../rollsDisabled}}disabled{{/if}}>
+                      <span>{{ability.label}}</span>
+                      <i class="fa-solid fa-dice-d10"></i>
+                    </button>
+                    <div class="entity-ability-target" title="Trait + Capacité + bonus permanent de Structures">
+                      <small>SEUIL</small>
+                      <strong>≤ {{ability.target}}</strong>
+                      {{#if ability.structureBonus}}<em>+{{ability.structureBonus}} structure</em>{{/if}}
+                    </div>
+                  </div>
+                {{/each}}
+              </div>
+            </section>
+          {{/each}}
+        </div>
+
+        <aside class="entity-status-console">
+          <section class="entity-red-meter-bank" aria-label="Ressources, Énergie et Données">
+            {{#each resourceMeters as |meter|}}
+              <div class="entity-resource-meter entity-resource-meter-{{meter.key}}">
+                <div class="entity-resource-code">{{meter.code}}</div>
+                <div class="entity-resource-segments" title="{{meter.value}} / {{meter.max}} {{meter.label}}">
+                  {{#each meter.segments as |segment|}}
+                    <span class="{{#if segment.filled}}filled{{/if}}"></span>
+                  {{/each}}
+                </div>
+                <label>
+                  <span>{{meter.label}}</span>
+                  <div>
+                    <input type="number" name="system.{{meter.key}}.value" value="{{meter.value}}" min="0" max="{{meter.max}}" />
+                    <b>/ {{meter.max}}</b>
+                  </div>
+                </label>
+              </div>
+            {{/each}}
           </section>
-        {{/each}}
+
+          <section class="entity-mission-status {{#unless missionSummary.active}}idle{{/unless}}">
+            <span class="entity-kicker">MISSION</span>
+            {{#if missionSummary.active}}
+              <h3>{{missionSummary.name}}</h3>
+              <div class="entity-mission-readout">
+                <span>Aspects <strong>{{missionSummary.aspectsCurrent}} / {{missionSummary.aspectsRequired}}</strong></span>
+                <span>Expédition <strong>{{missionSummary.expeditionNumber}}</strong></span>
+              </div>
+              <button type="button" data-action="openExpedition"><i class="fa-solid fa-satellite"></i> Ouvrir le contrôle de Mission</button>
+            {{else}}
+              <h3>Aucune Mission active</h3>
+              <p>Les systèmes sont en attente d’un nouvel objectif.</p>
+              <button type="button" data-action="openExpedition" {{#if rollsDisabled}}disabled{{/if}}><i class="fa-solid fa-rocket"></i> Démarrer une Mission</button>
+            {{/if}}
+          </section>
+        </aside>
       </div>
 
       {{#if pendingEffects.length}}
-        <section class="entity-panel entity-pending">
+        <section class="entity-panel entity-pending entity-pending-console">
           <header class="entity-panel-title">
             <h2>Améliorations armées</h2>
             <button type="button" data-action="clearPending"><i class="fa-solid fa-rotate-left"></i> Annuler et rembourser</button>
           </header>
           <div class="entity-chip-row">
-            {{#each pendingEffects}}<span class="entity-chip">{{name}}</span>{{/each}}
+            {{#each pendingEffects}}<span class="entity-chip"><i class="fa-solid fa-bolt"></i> {{name}}</span>{{/each}}
           </div>
         </section>
       {{/if}}
     </section>
 
     <section class="tab {{tabs.suit.cssClass}}" data-group="primary" data-tab="suit">
-      <section class="entity-panel entity-suit-panel">
-        <header class="entity-panel-title">
+      <section class="entity-suit-frame">
+        <header class="entity-suit-frame-header">
           <div>
-            <h2>Combinaison spatiale</h2>
-            <p>{{suit.used}} / {{suit.max}} emplacements occupés</p>
+            <span class="entity-kicker">20 EMPLACEMENTS</span>
+            <h2>COMBINAISON SPATIALE</h2>
+          </div>
+          <div class="entity-suit-occupancy">
+            <strong>{{suit.used}}</strong><span>/ {{suit.max}}</span>
+            <small>{{suit.free}} libre(s)</small>
           </div>
           <div class="entity-inline-actions">
-            <button type="button" data-action="createImprovement"><i class="fa-solid fa-plus"></i> Module</button>
-            <button type="button" data-action="addConstraint"><i class="fa-solid fa-triangle-exclamation"></i> Contrainte</button>
-            <button type="button" data-action="addFailure"><i class="fa-solid fa-burst"></i> Défaillance</button>
+            <button type="button" data-action="createImprovement" {{#if isDestroyed}}disabled{{/if}}><i class="fa-solid fa-plus"></i> Module</button>
+            <button type="button" data-action="addConstraint" {{#if isDestroyed}}disabled{{/if}}><i class="fa-solid fa-triangle-exclamation"></i> Contrainte</button>
+            <button type="button" data-action="addFailure" {{#if isDestroyed}}disabled{{/if}}><i class="fa-solid fa-burst"></i> Défaillance</button>
           </div>
         </header>
 
-        <div class="entity-suit-grid">
+        <div class="entity-suit-grid entity-suit-grid-refined">
           {{#each suitSlots as |slot|}}
             <div class="entity-slot entity-slot-{{slot.kind}} {{#if slot.pending}}entity-slot-pending{{/if}}" title="{{slot.label}}" {{#if slot.itemId}}data-item-id="{{slot.itemId}}"{{/if}}>
+              <span class="entity-slot-number">{{slot.number}}</span>
               {{#if slot.itemId}}
                 <button type="button" class="entity-slot-name" data-action="openItem" data-item-id="{{slot.itemId}}">
                   <i class="{{slot.icon}}"></i>
@@ -127,14 +176,14 @@
                 </div>
                 <div class="entity-slot-actions">
                   {{#if slot.activatable}}
-                    <button type="button" class="entity-slot-activate" data-action="activateImprovement" data-item-id="{{slot.itemId}}" title="Armer pour le prochain jet compatible">
+                    <button type="button" class="entity-slot-activate" data-action="activateImprovement" data-item-id="{{slot.itemId}}" title="Armer pour le prochain jet compatible" {{#if ../isDestroyed}}disabled{{/if}}>
                       <i class="fa-solid fa-bolt"></i><span>{{#if slot.pending}}Armé{{else}}Armer{{/if}}</span>
                     </button>
                   {{/if}}
                   <button type="button" data-action="openItem" data-item-id="{{slot.itemId}}" title="Détails">
                     <i class="fa-solid fa-circle-info"></i>
                   </button>
-                  <button type="button" class="entity-danger" data-action="deleteItem" data-item-id="{{slot.itemId}}" title="Défausser">
+                  <button type="button" class="entity-danger" data-action="deleteItem" data-item-id="{{slot.itemId}}" title="Défausser" {{#if ../isDestroyed}}disabled{{/if}}>
                     <i class="fa-solid fa-trash"></i>
                   </button>
                 </div>
@@ -144,7 +193,7 @@
                   <span>{{slot.label}}</span>
                 </div>
                 {{#if slot.removable}}
-                  <button type="button" class="entity-slot-remove" data-action="removeCondition" data-kind="{{slot.kind}}s" data-index="{{slot.index}}" title="Retirer">
+                  <button type="button" class="entity-slot-remove" data-action="removeCondition" data-kind="{{slot.kind}}s" data-index="{{slot.index}}" title="Retirer" {{#if ../isDestroyed}}disabled{{/if}}>
                     <i class="fa-solid fa-xmark"></i>
                   </button>
                 {{/if}}
@@ -156,20 +205,24 @@
     </section>
 
     <section class="tab {{tabs.structures.cssClass}}" data-group="primary" data-tab="structures">
-      <section class="entity-panel">
+      <section class="entity-panel entity-structures-console">
         <header class="entity-panel-title">
           <div>
+            <span class="entity-kicker">INFRASTRUCTURE PERSISTANTE</span>
             <h2>Structures</h2>
-            <p>Les Structures sont permanentes et n’occupent pas la Combinaison.</p>
+            <p>Les Structures sont permanentes, survivent au PIA et n’occupent pas la Combinaison.</p>
           </div>
           <button type="button" data-action="createStructure"><i class="fa-solid fa-plus"></i> Ajouter</button>
         </header>
-        <ol class="entity-item-list">
+        <ol class="entity-item-list entity-structure-list">
           {{#each structures as |item|}}
             <li>
-              <button type="button" class="entity-item-name" data-action="openItem" data-item-id="{{item.id}}">{{item.name}}</button>
+              <div class="entity-structure-index">{{@index}}</div>
+              <button type="button" class="entity-item-name" data-action="openItem" data-item-id="{{item.id}}">
+                <strong>{{item.name}}</strong>
+                <small>{{item.system.description}}</small>
+              </button>
               <span class="entity-chip">rang {{item.system.ranks}}</span>
-              <span></span>
               <button type="button" class="entity-danger" data-action="deleteItem" data-item-id="{{item.id}}"><i class="fa-solid fa-trash"></i></button>
             </li>
           {{else}}
@@ -180,58 +233,53 @@
     </section>
 
     <section class="tab {{tabs.journal.cssClass}}" data-group="primary" data-tab="journal">
-      <section class="entity-panel entity-discoveries-panel">
-        <header class="entity-panel-title">
-          <div>
-            <h2>Découvertes</h2>
-            <p>{{discoveries.revealed}} révélée(s) / {{discoveries.unlocked}} débloquée(s) / {{discoveries.total}}</p>
-          </div>
-          <button type="button" data-action="openJournal"><i class="fa-solid fa-book-open"></i> Ouvrir le Journal</button>
-        </header>
-
-        <div class="entity-discovery-progress">
-          <div>
-            <span>Révélées</span>
-            <strong>{{discoveries.revealed}} / {{discoveries.total}}</strong>
-          </div>
-          <div>
-            <span>Débloquées</span>
-            <strong>{{discoveries.unlocked}} / {{discoveries.total}}</strong>
-          </div>
-          <div>
-            <span>En attente</span>
-            <strong>{{discoveries.pending}}</strong>
-          </div>
-        </div>
-
-        {{#if discoveries.hasPending}}
-          <div class="entity-discovery-ready">
-            <i class="fa-solid fa-eye"></i>
+      <div class="entity-journal-grid">
+        <section class="entity-panel entity-discoveries-panel">
+          <header class="entity-panel-title">
             <div>
-              <strong>Découverte {{discoveries.nextIndex}} disponible</strong>
-              <p>Son contenu est encore masqué.</p>
+              <span class="entity-kicker">ARCHIVES DE CAMPAGNE</span>
+              <h2>Découvertes</h2>
+              <p>{{discoveries.revealed}} révélée(s) / {{discoveries.unlocked}} débloquée(s) / {{discoveries.total}}</p>
             </div>
-            <button type="button" class="entity-primary" data-action="revealDiscovery">Révéler</button>
-          </div>
-        {{else}}
-          {{#if discoveries.complete}}
-            <p class="entity-chat-success"><i class="fa-solid fa-circle-check"></i> Les 10 Découvertes ont été révélées.</p>
-          {{else}}
-            <p class="entity-empty">Accomplissez une Mission pour débloquer la prochaine Découverte.</p>
-          {{/if}}
-        {{/if}}
-      </section>
+            <button type="button" data-action="openJournal"><i class="fa-solid fa-book-open"></i> Journal</button>
+          </header>
 
-      <section class="entity-panel entity-notes">
-        <header class="entity-panel-title">
-          <div>
-            <h2>Notes rapides</h2>
-            <p>Notes générales du PIA. Les Missions et Découvertes sont journalisées dans leurs pages dédiées.</p>
+          <div class="entity-discovery-progress">
+            <div><span>Révélées</span><strong>{{discoveries.revealed}} / {{discoveries.total}}</strong></div>
+            <div><span>Débloquées</span><strong>{{discoveries.unlocked}} / {{discoveries.total}}</strong></div>
+            <div><span>En attente</span><strong>{{discoveries.pending}}</strong></div>
           </div>
-          <button type="button" data-action="openJournal"><i class="fa-solid fa-book-open"></i> Ouvrir le Journal</button>
-        </header>
-        <textarea name="system.notes">{{system.notes}}</textarea>
-      </section>
+
+          {{#if discoveries.hasPending}}
+            <div class="entity-discovery-ready">
+              <i class="fa-solid fa-eye"></i>
+              <div>
+                <strong>Découverte {{discoveries.nextIndex}} disponible</strong>
+                <p>Son contenu est encore masqué.</p>
+              </div>
+              <button type="button" class="entity-primary" data-action="revealDiscovery">Révéler</button>
+            </div>
+          {{else}}
+            {{#if discoveries.complete}}
+              <p class="entity-chat-success"><i class="fa-solid fa-circle-check"></i> Les 10 Découvertes ont été révélées.</p>
+            {{else}}
+              <p class="entity-empty">Accomplissez une Mission pour débloquer la prochaine Découverte.</p>
+            {{/if}}
+          {{/if}}
+        </section>
+
+        <section class="entity-panel entity-notes entity-notes-console">
+          <header class="entity-panel-title">
+            <div>
+              <span class="entity-kicker">MÉMOIRE LOCALE</span>
+              <h2>Notes rapides</h2>
+              <p>Notes générales du PIA. Missions et Découvertes sont consignées dans les pages dédiées.</p>
+            </div>
+            <button type="button" data-action="openJournal"><i class="fa-solid fa-book-open"></i> Ouvrir</button>
+          </header>
+          <textarea name="system.notes">{{system.notes}}</textarea>
+        </section>
+      </div>
     </section>
   </section>
 </div>
