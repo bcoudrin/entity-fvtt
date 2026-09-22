@@ -1,3 +1,25 @@
+export const EXTRA_IMPROVEMENTS = [
+  { key: "extra-nanodrone-recharge-battery", name: "Batterie de recharge pour nanodrones", energyCost: 2, effectType: "abilityBonus", effectKey: "robotics", effectValue: 1, description: "Petite batterie solaire permettant de recharger les nanodrones dans un délai acceptable. Gagnez +1 en Robotique." },
+  { key: "extra-micro-precision-tools", name: "Outils de micro-précision", energyCost: 2, effectType: "abilityBonus", effectKey: "engineering", effectValue: 1, description: "Outils destinés aux réparations particulièrement délicates. Gagnez +1 en Ingénierie." },
+  { key: "extra-enhanced-matrix", name: "Matrice améliorée", energyCost: 2, effectType: "abilityBonus", effectKey: "computing", effectValue: 1, description: "Augmente fortement la capacité de traitement de l’IA et ses capacités de calcul. Gagnez +1 en Informatique." },
+  { key: "extra-physical-hazard-predictor", name: "Calculateur de prédiction des aléas physiques", energyCost: 2, effectType: "abilityBonus", effectKey: "physics", effectValue: 1, description: "Anticipe plus précisément les changements physiques de l’environnement. Gagnez +1 en Physique." },
+  { key: "extra-lifeform-analyzer", name: "Analyseur de formes de vie", energyCost: 2, effectType: "abilityBonus", effectKey: "biology", effectValue: 1, description: "Détermine les principales caractéristiques des formes de vie rencontrées. Gagnez +1 en Biologie." },
+  { key: "extra-portable-chemistry-lab", name: "Laboratoire portatif de chimie", energyCost: 2, effectType: "abilityBonus", effectKey: "chemistry", effectValue: 1, description: "Laboratoire compact permettant de créer et d’analyser des solutions chimiques. Gagnez +1 en Chimie." },
+  { key: "extra-oxygen-reserve", name: "Réserve d’oxygène supplémentaire", energyCost: 2, effectType: "abilityBonus", effectKey: "survival", effectValue: 1, description: "Bouteille d’oxygène de secours destinée aux situations critiques. Gagnez +1 en Survie." },
+  { key: "extra-frequency-analyzer", name: "Analyseur de fréquences", energyCost: 2, effectType: "abilityBonus", effectKey: "communication", effectValue: 1, description: "Analyse les différentes fréquences à la recherche d’informations utiles. Gagnez +1 en Communication." },
+  { key: "extra-sensor-sweep", name: "Balayage sensoriel", energyCost: 2, effectType: "abilityBonus", effectKey: "navigation", effectValue: 1, description: "Batterie de senseurs très sensibles pour optimiser la perception de l’environnement. Gagnez +1 en Navigation." },
+
+  { key: "extra-advanced-nanodrone-controller", name: "Contrôleur de nanodrones avancé", energyCost: 3, effectType: "advantage", effectKey: "robotics", effectValue: 1, description: "Console avancée destinée au contrôle précis des drones. Avantage au jet d’Action en Robotique." },
+  { key: "extra-holographic-structure-analyzer", name: "Analyseur holographique de structures", energyCost: 3, effectType: "advantage", effectKey: "engineering", effectValue: 1, description: "Scanne les structures et modélise leur intérieur et leur extérieur en trois dimensions. Avantage au jet d’Action en Ingénierie." },
+  { key: "extra-hacking-console", name: "Console de hacking", energyCost: 3, effectType: "advantage", effectKey: "computing", effectValue: 1, description: "Console spécialisée permettant de pirater plus facilement les systèmes protégés. Avantage au jet d’Action en Informatique." },
+  { key: "extra-physics-sampling-unit", name: "Unité de prélèvement (physique)", energyCost: 3, effectType: "advantage", effectKey: "physics", effectValue: 1, description: "Permet un échantillonnage propre et rapide d’éléments liés à la physique locale. Avantage au jet d’Action en Physique." },
+  { key: "extra-biology-sampling-unit", name: "Unité de prélèvement (biologie)", energyCost: 3, effectType: "advantage", effectKey: "biology", effectValue: 1, description: "Permet un échantillonnage propre et rapide d’éléments biologiques. Avantage au jet d’Action en Biologie." },
+  { key: "extra-chemistry-sampling-unit", name: "Unité de prélèvement (chimie)", energyCost: 3, effectType: "advantage", effectKey: "chemistry", effectValue: 1, description: "Permet un échantillonnage propre et rapide d’éléments chimiques. Avantage au jet d’Action en Chimie." },
+  { key: "extra-exoskeleton", name: "Exosquelette", energyCost: 3, effectType: "advantage", effectKey: "survival", effectValue: 1, description: "Exosquelette perfectionné augmentant les capacités physiques et la vitesse, notamment en terrain difficile. Avantage au jet d’Action en Survie." },
+  { key: "extra-advanced-portable-communications", name: "Unité portative de communication avancée", energyCost: 3, effectType: "advantage", effectKey: "communication", effectValue: 1, description: "Traducteur universel doté de capacités avancées d’analyse des langages. Avantage au jet d’Action en Communication." },
+  { key: "extra-thermal-compass", name: "Boussole thermique", energyCost: 3, effectType: "advantage", effectKey: "navigation", effectValue: 1, description: "Boussole haute technologie destinée à retrouver son chemin dans les environnements difficiles. Avantage au jet d’Action en Navigation." }
+];
+
 export const EXTRA_STRUCTURES = [
   { key: "extra-robot-recycling-plant", name: "Usine de Recyclage de Robots", effectType: "abilityBonus", effectKey: "robotics", effectValue: 1, description: "Recycle robots et drones pour en fabriquer de nouveaux plus performants. Gagnez +1 en Robotique." },
   { key: "extra-electronic-components-fabricator", name: "Unité de Fabrication de Composants Électroniques", effectType: "abilityBonus", effectKey: "engineering", effectValue: 1, description: "Fabrique de manière autonome les composants électroniques nécessaires. Gagnez +1 en Ingénierie." },
@@ -41,6 +63,11 @@ export const EXTRA_MISSIONS = [
   { key: "extra-mission-17", name: "Comprendre l’incompréhensible", aspectsRequired: 3, structureName: "Décrypteur/Encodeur de Signaux", description: "Fabriquez un Décrypteur/Encodeur de Signaux pour comprendre les langages extraterrestres ou autres." },
   { key: "extra-mission-18", name: "Voir et entendre plus loin", aspectsRequired: 3, structureName: "Senseurs à Haute Fréquence", description: "Créez des Senseurs à Haute Fréquence pour étendre votre champ de perception." }
 ];
+
+export function isExtraImprovementKey(key) {
+  return String(key || "").startsWith("extra-") &&
+    EXTRA_IMPROVEMENTS.some((item) => item.key === key);
+}
 
 export function isExtraMissionKey(key) {
   return String(key || "").startsWith("extra-mission-");
