@@ -4,6 +4,7 @@ import { openAdvancedExplorationPanel } from "./advanced-exploration-panel.mjs";
 import { openAdvancedSecondaryPanel } from "./advanced-secondary-panel.mjs";
 import { openCustomEncounterPanel } from "./custom-encounter-panel.mjs";
 import { canCustomizeEncounter } from "../custom-encounter.mjs";
+import { isExtraImprovementKey } from "../data/extras-items.mjs";
 import {
   addAspectAndAdvance,
   advanceEncounter,
@@ -201,6 +202,14 @@ export class ExpeditionPanel extends HandlebarsApplicationMixin(ApplicationV2) {
         )
       ))
       .sort((a, b) => a.name.localeCompare(b.name, "fr"));
+
+    context.baseAvailableImprovements = context.availableImprovements.filter((item) =>
+      !isExtraImprovementKey(item.getFlag(SYSTEM_ID, "coreKey"))
+    );
+    context.extraAvailableImprovements = context.availableImprovements.filter((item) =>
+      isExtraImprovementKey(item.getFlag(SYSTEM_ID, "coreKey"))
+    );
+    context.hasExtraAvailableImprovements = context.extraAvailableImprovements.length > 0;
 
     context.constraints = Array.from(actor.system.constraints || []).map((label, index) => ({ label, index }));
     context.canInstall = Number(actor.system.resources?.value || 0) >= 10 && actor.suitState.free > 0;
