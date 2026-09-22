@@ -65,6 +65,8 @@ export class AdvancedExplorationPanel extends HandlebarsApplicationMixin(Applica
     context.descriptor = resultView(state.latest.descriptors);
     context.sky = resultView(state.latest.sky);
     context.distance = resultView(state.latest.distance);
+    context.wrecks = resultView(state.latest.wrecks);
+    context.soundsLights = resultView(state.latest.soundsLights);
     context.alienLife = state.alienLife || null;
     return context;
   }
