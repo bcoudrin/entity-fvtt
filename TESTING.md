@@ -960,3 +960,28 @@ Ce jalon n’ajoute volontairement pas de nouvelle mécanique : il vérifie qu�
    - l’effet armé est supprimé comme les effets des Améliorations de base ;
    - l’Énergie dépensée n’est pas transformée en effet gratuit dans la nouvelle Mission.
 10. Vérifier qu’aucune table **Carcasses et épaves** ni **Sons et lumières** n’est encore intégrée par cette version.
+
+
+## Régression v0.15.0 — Extras : Carcasses/Épaves et Sons/Lumières
+
+1. Démarrer une Expédition, identifier le Lieu puis ouvrir **Enrichir l’Exploration**.
+   - une section **Extras — Ambiance et vestiges** apparaît ;
+   - elle propose **Carcasses et épaves** et **Sons et lumières**.
+2. Tirer plusieurs fois **Carcasses et épaves**.
+   - chaque tirage utilise 1d100 ;
+   - les bornes basses/hautes correspondent à la table : 01–02 = Chasseur stellaire écrasé, 99–100 = Scaphandre vide à la visière brisée ;
+   - seul le dernier résultat reste affiché dans le panneau ;
+   - tous les tirages effectués restent dans le Journal.
+3. Tirer plusieurs fois **Sons et lumières**.
+   - chaque tirage utilise 1d100 ;
+   - 01–02 = Air scintillant, 99–100 = Obscurité totale ;
+   - persistance et journalisation fonctionnent comme pour les autres Oracles d’Exploration.
+4. Fermer puis rouvrir le panneau pendant la même Expédition.
+   - les derniers résultats des deux tables restent visibles.
+5. Recharger Foundry pendant la même Expédition.
+   - les deux derniers résultats persistent.
+6. Commencer une nouvelle Expédition.
+   - les résultats affichés sont remis à zéro ;
+   - leur historique reste dans le Journal de Mission.
+7. Vérifier que ces deux Oracles ne modifient jamais Énergie, Ressources, Données, Contraintes, Défaillances, Aspects, Rencontres ou gains d’Activité Secondaire.
+8. Vérifier que les deux tables couvrent bien 1–100 sans trou ni chevauchement.
