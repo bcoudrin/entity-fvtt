@@ -117,7 +117,7 @@ Un audit règle par règle des pages imprimées 6 à 30 est maintenu dans [AUDIT
 - l’Unité de conversion adaptative des Ressources est disponible explicitement lors des Opportunités et Trouvailles de Lieu ;
 - la Valeur de Menace est suivie jet par jet : chaque résultat est enregistré explicitement depuis le Chat, puis le panneau détermine si le Défi est réussi ou échoué avant validation ;
 - les Règles Avancées p.32–63 sont couvertes ; voir [AUDIT_ADVANCED_RULES.md](AUDIT_ADVANCED_RULES.md) ;
-- les **Extras** sont maintenant en cours d’intégration : 18 Missions additionnelles, leurs 18 Structures de récompense et les 18 Améliorations additionnelles sont disponibles ; voir [EXTRAS_STATUS.md](EXTRAS_STATUS.md).
+- les **Extras p.65–71** sont désormais intégrés : 18 Missions additionnelles, 18 Structures, 18 Améliorations, ainsi que les tables **Carcasses et épaves** et **Sons et lumières** ; voir [EXTRAS_STATUS.md](EXTRAS_STATUS.md).
 
 
 
