@@ -104,7 +104,7 @@ La succession conserve le même Actor Foundry afin de garder la continuité de c
 - les trois Améliorations de départ reviennent après création du successeur ;
 - les Structures restent en place.
 
-Le Journal consigne la destruction dans la page de la Mission interrompue, puis la succession dans le journal général. Les Découvertes et l’historique restent consultables comme archives de campagne ; seuls les bonus de Structures sont transférés au nouveau personnage.
+Le Journal consigne la destruction dans la page de la Mission interrompue, puis la succession dans le journal général. **Journal, Découvertes débloquées/révélées et historique des Missions restent dans la continuité de campagne**, en plus des Structures. Le nouveau PIA repart en revanche avec un état de personnage neuf.
 
 ## Audit des règles de base
 
@@ -119,7 +119,7 @@ Un audit règle par règle des pages imprimées 6 à 30 est maintenu dans [AUDIT
 - les Règles Avancées p.32–63 sont couvertes ; voir [AUDIT_ADVANCED_RULES.md](AUDIT_ADVANCED_RULES.md) ;
 - les **Extras p.65–71** sont désormais intégrés : 18 Missions additionnelles, 18 Structures, 18 Améliorations, ainsi que les tables **Carcasses et épaves** et **Sons et lumières** ; voir [EXTRAS_STATUS.md](EXTRAS_STATUS.md).
 - la fiche PIA a reçu une passe visuelle complète inspirée de la feuille imprimée : voir [VISUAL_AUDIT.md](VISUAL_AUDIT.md) ;
-- l’état de QA global et le dernier point de règle à confirmer avant une 1.0 sont suivis dans [FINAL_QA.md](FINAL_QA.md).
+- l’état de QA global est suivi dans [FINAL_QA.md](FINAL_QA.md) et la recette manuelle finale dans [ACCEPTANCE_1_0.md](ACCEPTANCE_1_0.md).
 
 
 
