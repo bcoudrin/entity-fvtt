@@ -7,8 +7,8 @@ Périmètre : pages imprimées 65 à 71.
 | Missions additionnelles p.65 | **Intégré** | 18 Missions supplémentaires, groupées séparément dans le sélecteur de Mission. |
 | Structures additionnelles p.68–69 | **Intégré** | 18 Structures de récompense correspondant une à une aux Missions additionnelles. |
 | Améliorations additionnelles p.66–67 | **Intégré** | 18 modules : neuf bonus +1 (2E) et neuf Avantages (3E), un par Capacité. |
-| Carcasses et épaves p.70 | À intégrer | Table d100 narrative. |
-| Sons et lumières p.71 | À intégrer | Table narrative. |
+| Carcasses et épaves p.70 | **Intégré** | Table d100 narrative accessible depuis l’Exploration avancée. |
+| Sons et lumières p.71 | **Intégré** | Table d100 narrative accessible depuis l’Exploration avancée. |
 | Feuille de personnage p.72+ | Référence visuelle | La fiche Foundry existe déjà ; une passe visuelle finale pourra comparer sa présentation au support imprimé. |
 
 ## Améliorations additionnelles
@@ -26,3 +26,8 @@ Les neuf suivantes donnent chacune **une relance d’un dé** pour une Capacité
 ## Missions et Découvertes
 
 Les Missions additionnelles utilisent le même moteur de Mission que les Missions de base : elles demandent 4 Aspects pour les Extras 1–9 et 3 Aspects pour les Extras 10–18, construisent leur Structure associée à l’accomplissement, éliminent les Contraintes de fin de Mission et participent à la progression des Découvertes tant que les dix Découvertes ne sont pas encore toutes débloquées.
+
+
+## Tables d’ambiance des Extras
+
+**Carcasses et épaves** et **Sons et lumières** sont ajoutées comme Oracles facultatifs dans le panneau d’Exploration avancée. Elles utilisent chacune 50 plages de deux valeurs couvrant exactement 1–100. Comme les autres Oracles narratifs, elles peuvent être relancées librement, leur dernier résultat reste visible pendant l’Expédition et chaque tirage est journalisé, sans modifier l’état mécanique du PIA.
