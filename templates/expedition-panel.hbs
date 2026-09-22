@@ -357,9 +357,18 @@
           <h4>Amélioration — 10 Ressources</h4>
           <div class="entity-inline-select">
             <select name="improvementId">
-              {{#each availableImprovements as |item|}}
-                <option value="{{item.id}}">{{item.name}}</option>
-              {{/each}}
+              <optgroup label="Améliorations de base">
+                {{#each baseAvailableImprovements as |item|}}
+                  <option value="{{item.id}}">{{item.name}} — {{item.system.energyCost}}E</option>
+                {{/each}}
+              </optgroup>
+              {{#if hasExtraAvailableImprovements}}
+                <optgroup label="Extras — Améliorations additionnelles">
+                  {{#each extraAvailableImprovements as |item|}}
+                    <option value="{{item.id}}">{{item.name}} — {{item.system.energyCost}}E</option>
+                  {{/each}}
+                </optgroup>
+              {{/if}}
             </select>
             <button type="button" data-action="installImprovement" {{#unless canInstall}}disabled{{/unless}}><i class="fa-solid fa-screwdriver-wrench"></i> Installer</button>
           </div>
