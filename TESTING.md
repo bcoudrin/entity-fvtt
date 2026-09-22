@@ -914,3 +914,49 @@ Ce jalon n’ajoute volontairement pas de nouvelle mécanique : il vérifie qu�
    - les 18 + 18 Items sont présents sans dupliquer le contenu de base ;
    - un second rechargement ne crée pas de doublons.
 10. Vérifier qu’aucune Amélioration additionnelle, table Carcasses/Épaves ou table Sons/Lumières n’est encore ajoutée par cette version.
+
+
+## Régression v0.14.0 — Extras : Améliorations additionnelles
+
+1. Recharger un monde provenant de v0.13.0.
+   - le dossier **Entité — Extras — Améliorations** est créé automatiquement ;
+   - il contient 18 Items ;
+   - un second rechargement ne crée aucun doublon.
+2. Arriver à l’Activité Secondaire **Amélioration — 10 Ressources**.
+   - le sélecteur distingue **Améliorations de base** et **Extras — Améliorations additionnelles** ;
+   - le coût énergétique imprimé est visible à côté de chaque module Extra.
+3. Installer une Amélioration Extra avec exactement 10 Ressources.
+   - 10 Ressources sont dépensées ;
+   - l’Amélioration occupe un emplacement de Combinaison ;
+   - son coût 2E/3E n’est pas dépensé à l’installation : il correspond à son activation sur un jet.
+4. Tester un module +1, par exemple **Batterie de recharge pour nanodrones (2E)**.
+   - l’activer dépense 2 Énergies ;
+   - il est armé uniquement pour Robotique ;
+   - le prochain jet de Robotique reçoit +1 au seuil ;
+   - le bonus est consommé après ce jet.
+5. Tester un module Avantage, par exemple **Contrôleur de nanodrones avancé (3E)**.
+   - l’activer dépense 3 Énergies ;
+   - le prochain jet de Robotique utilise l’Avantage ;
+   - l’effet est ensuite consommé.
+6. Vérifier les neuf paires de Capacités :
+   - Robotique ;
+   - Ingénierie ;
+   - Informatique ;
+   - Physique ;
+   - Biologie ;
+   - Chimie ;
+   - Survie ;
+   - Communication ;
+   - Navigation.
+   Chaque Capacité doit posséder exactement un Extra +1 (2E) et un Extra Avantage (3E).
+7. Installer à la fois l’Amélioration de base et l’Amélioration Extra donnant +1 à la même Capacité.
+   - les deux peuvent coexister car ce sont deux modules distincts ;
+   - si les deux sont activés avant un jet compatible, chacun paie son coût et les deux bonus +1 sont additionnés.
+8. Installer à la fois deux modules distincts donnant Avantage à la même Capacité.
+   - ils peuvent coexister ;
+   - l’Avantage reste un état unique du jet : deux sources d’Avantage ne créent pas un quatrième dé ;
+   - n’activer qu’un seul module suffit donc sauf raison narrative particulière.
+9. Armer un module Extra puis commencer une nouvelle Mission sans effectuer le jet.
+   - l’effet armé est supprimé comme les effets des Améliorations de base ;
+   - l’Énergie dépensée n’est pas transformée en effet gratuit dans la nouvelle Mission.
+10. Vérifier qu’aucune table **Carcasses et épaves** ni **Sons et lumières** n’est encore intégrée par cette version.
