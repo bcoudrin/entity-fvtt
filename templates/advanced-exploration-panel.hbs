@@ -92,6 +92,33 @@
       {{/if}}
     </section>
 
+    <section class="entity-panel entity-extra-oracles-panel">
+      <span class="entity-kicker">EXTRAS — AMBIANCE ET VESTIGES</span>
+      <h3>Carcasses, épaves, sons et lumières</h3>
+      <p>Ces deux tables des Extras servent à enrichir librement un Lieu avec un vestige matériel ou une ambiance sensorielle.</p>
+      <div class="entity-two-actions">
+        <button type="button" data-action="rollTable" data-table="wrecks">
+          <i class="fa-solid fa-shuttle-space"></i> Carcasses et épaves
+        </button>
+        <button type="button" data-action="rollTable" data-table="soundsLights">
+          <i class="fa-solid fa-wave-square"></i> Sons et lumières
+        </button>
+      </div>
+
+      {{#if wrecks}}
+        <div class="entity-advanced-oracle-result">
+          <strong>Carcasses et épaves — d100 {{wrecks.roll}}</strong>
+          <p>{{wrecks.text}}</p>
+        </div>
+      {{/if}}
+      {{#if soundsLights}}
+        <div class="entity-advanced-oracle-result entity-advanced-oracle-secondary">
+          <strong>Sons et lumières — d100 {{soundsLights.roll}}</strong>
+          <p>{{soundsLights.text}}</p>
+        </div>
+      {{/if}}
+    </section>
+
     <p class="entity-dialog-note">Ces résultats n’altèrent aucun état mécanique du PIA. Ils servent à visualiser et enrichir l’Exploration, conformément au rôle des tables d’Oracle.</p>
   </div>
 </div>
