@@ -118,6 +118,8 @@ Un audit règle par règle des pages imprimées 6 à 30 est maintenu dans [AUDIT
 - la Valeur de Menace est suivie jet par jet : chaque résultat est enregistré explicitement depuis le Chat, puis le panneau détermine si le Défi est réussi ou échoué avant validation ;
 - les Règles Avancées p.32–63 sont couvertes ; voir [AUDIT_ADVANCED_RULES.md](AUDIT_ADVANCED_RULES.md) ;
 - les **Extras p.65–71** sont désormais intégrés : 18 Missions additionnelles, 18 Structures, 18 Améliorations, ainsi que les tables **Carcasses et épaves** et **Sons et lumières** ; voir [EXTRAS_STATUS.md](EXTRAS_STATUS.md).
+- la fiche PIA a reçu une passe visuelle complète inspirée de la feuille imprimée : voir [VISUAL_AUDIT.md](VISUAL_AUDIT.md) ;
+- l’état de QA global et le dernier point de règle à confirmer avant une 1.0 sont suivis dans [FINAL_QA.md](FINAL_QA.md).
 
 
 
