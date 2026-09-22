@@ -14,6 +14,7 @@ import { isDestroyedByDamage, successorResetUpdate } from "../module/destruction
 import { installEffectPlan } from "../module/improvement-rules.mjs";
 import { askOracleOutcome } from "../module/oracle-rules.mjs";
 import { ADVANCED_EXPLORATION_TABLES, ALIEN_LIFE_COLUMNS } from "../module/data/advanced-exploration-tables.mjs";
+import { EXTRA_ORACLE_TABLES } from "../module/data/extras-oracle-tables.mjs";
 import { ADVANCED_NARRATIVE_TABLES } from "../module/data/advanced-narrative-tables.mjs";
 import { suggestedSecondaryOracles } from "../module/advanced-secondary.mjs";
 import {
@@ -155,6 +156,15 @@ for (const [column, entries] of Object.entries(ALIEN_LIFE_COLUMNS)) {
   validateCoverage({ name: "Formes de Vie — " + column, entries }, 1, 100);
   assert.equal(entries.length, 50, "50 plages attendues pour la colonne " + column);
 }
+
+for (const table of Object.values(EXTRA_ORACLE_TABLES)) {
+  validateCoverage(table, 1, 100);
+  assert.equal(table.entries.length, 50, "50 plages d100 attendues pour " + table.name);
+}
+assert.equal(EXTRA_ORACLE_TABLES.wrecks.entries[0].text, "Chasseur stellaire écrasé");
+assert.equal(EXTRA_ORACLE_TABLES.wrecks.entries.at(-1).text, "Scaphandre vide à la visière brisée");
+assert.equal(EXTRA_ORACLE_TABLES.soundsLights.entries[0].text, "Air scintillant");
+assert.equal(EXTRA_ORACLE_TABLES.soundsLights.entries.at(-1).text, "Obscurité totale");
 
 for (const table of Object.values(ADVANCED_NARRATIVE_TABLES)) {
   validateCoverage(table, 1, 100);
