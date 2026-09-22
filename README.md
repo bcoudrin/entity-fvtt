@@ -13,7 +13,7 @@ Le système couvre les règles de base jusqu’à la page 30 ainsi que les **Rè
 - boutons de Chat pour appliquer explicitement Contraintes, Défaillances et effets d’Activités Secondaires ;
 - résolution suivie des Opportunités : leur gain n’est disponible qu’après un jet d’Action réussi ;
 - combinaison spatiale à 20 emplacements ;
-- 23 Améliorations de base, dont les 3 Améliorations de départ ;
+- 23 Améliorations de base, dont les 3 Améliorations de départ, plus 18 Améliorations additionnelles des Extras ;
 - 21 Structures et leurs effets structurés ;
 - 21 Missions ;
 - 10 Découvertes, débloquées dans l’ordre à chaque Mission accomplie, puis révélées explicitement ;
@@ -117,7 +117,7 @@ Un audit règle par règle des pages imprimées 6 à 30 est maintenu dans [AUDIT
 - l’Unité de conversion adaptative des Ressources est disponible explicitement lors des Opportunités et Trouvailles de Lieu ;
 - la Valeur de Menace est suivie jet par jet : chaque résultat est enregistré explicitement depuis le Chat, puis le panneau détermine si le Défi est réussi ou échoué avant validation ;
 - les Règles Avancées p.32–63 sont couvertes ; voir [AUDIT_ADVANCED_RULES.md](AUDIT_ADVANCED_RULES.md) ;
-- les **Extras** sont maintenant en cours d’intégration : 18 Missions additionnelles et leurs 18 Structures de récompense sont disponibles ; voir [EXTRAS_STATUS.md](EXTRAS_STATUS.md).
+- les **Extras** sont maintenant en cours d’intégration : 18 Missions additionnelles, leurs 18 Structures de récompense et les 18 Améliorations additionnelles sont disponibles ; voir [EXTRAS_STATUS.md](EXTRAS_STATUS.md).
 
 
 
