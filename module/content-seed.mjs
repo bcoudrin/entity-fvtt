@@ -1,5 +1,5 @@
 import { CORE_IMPROVEMENTS, CORE_MISSIONS, CORE_STRUCTURES } from "./data/core-items.mjs";
-import { EXTRA_MISSIONS, EXTRA_STRUCTURES } from "./data/extras-items.mjs";
+import { EXTRA_IMPROVEMENTS, EXTRA_MISSIONS, EXTRA_STRUCTURES } from "./data/extras-items.mjs";
 import { createCoreRollTables } from "./roll-tables.mjs";
 
 async function ensureFolder(name) {
@@ -39,6 +39,7 @@ export async function seedCoreContent() {
   }
 
   const improvementFolder = await ensureFolder("Entité — Améliorations");
+  const extraImprovementFolder = await ensureFolder("Entité — Extras — Améliorations");
   const structureFolder = await ensureFolder("Entité — Structures");
   const missionFolder = await ensureFolder("Entité — Missions");
   const extraStructureFolder = await ensureFolder("Entité — Extras — Structures");
@@ -47,6 +48,10 @@ export async function seedCoreContent() {
   const improvements = [];
   for (const definition of CORE_IMPROVEMENTS) {
     improvements.push(await upsertCoreItem(definition, "improvement", improvementFolder.id));
+  }
+  const extraImprovements = [];
+  for (const definition of EXTRA_IMPROVEMENTS) {
+    extraImprovements.push(await upsertCoreItem(definition, "improvement", extraImprovementFolder.id));
   }
 
   const structures = [];
@@ -69,5 +74,5 @@ export async function seedCoreContent() {
 
   const tables = await createCoreRollTables();
   ui.notifications.info("Contenu Entité importé : règles de base, règles avancées et Extras intégrés.");
-  return { improvements, structures, extraStructures, missions, extraMissions, tables };
+  return { improvements, extraImprovements, structures, extraStructures, missions, extraMissions, tables };
 }
