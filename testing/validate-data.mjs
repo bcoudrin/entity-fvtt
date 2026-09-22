@@ -1,6 +1,12 @@
 import assert from "node:assert/strict";
 import { CORE_DISCOVERIES, CORE_IMPROVEMENTS, CORE_MISSIONS, CORE_STRUCTURES } from "../module/data/core-items.mjs";
-import { EXTRA_MISSIONS, EXTRA_STRUCTURES, isExtraMissionKey } from "../module/data/extras-items.mjs";
+import {
+  EXTRA_IMPROVEMENTS,
+  EXTRA_MISSIONS,
+  EXTRA_STRUCTURES,
+  isExtraImprovementKey,
+  isExtraMissionKey
+} from "../module/data/extras-items.mjs";
 import { CORE_TABLES } from "../module/data/tables.mjs";
 import { clampDataSpend, locationEncounterPlan, opportunityOutcome, parseEncounterRewards, resolveChallengeOutcome, secondaryGain, travelEncounterType } from "../module/workflow-rules.mjs";
 import { isExactDistribution, validateCreationState } from "../module/creation-rules.mjs";
@@ -58,6 +64,25 @@ for (const mission of CORE_MISSIONS) {
 }
 
 assert.equal(CORE_DISCOVERIES.length, 10, "10 Découvertes attendues");
+
+assert.equal(EXTRA_IMPROVEMENTS.length, 18, "18 Améliorations additionnelles attendues");
+assert.ok(EXTRA_IMPROVEMENTS.every((item) => isExtraImprovementKey(item.key)), "Toutes les Améliorations additionnelles utilisent un identifiant Extra");
+const extraImprovementBonuses = EXTRA_IMPROVEMENTS.filter((item) => item.effectType === "abilityBonus");
+const extraImprovementAdvantages = EXTRA_IMPROVEMENTS.filter((item) => item.effectType === "advantage");
+assert.equal(extraImprovementBonuses.length, 9, "9 Améliorations additionnelles donnent +1 à une Capacité");
+assert.equal(extraImprovementAdvantages.length, 9, "9 Améliorations additionnelles donnent l’Avantage");
+assert.ok(extraImprovementBonuses.every((item) => item.energyCost === 2 && item.effectValue === 1), "Les 9 bonus additionnels coûtent 2E et donnent +1");
+assert.ok(extraImprovementAdvantages.every((item) => item.energyCost === 3 && item.effectValue === 1), "Les 9 Avantages additionnels coûtent 3E");
+assert.deepEqual(
+  new Set(extraImprovementBonuses.map((item) => item.effectKey)),
+  new Set(["robotics", "engineering", "computing", "physics", "biology", "chemistry", "survival", "communication", "navigation"]),
+  "Les 9 Capacités sont couvertes une fois par les Améliorations additionnelles +1"
+);
+assert.deepEqual(
+  new Set(extraImprovementAdvantages.map((item) => item.effectKey)),
+  new Set(["robotics", "engineering", "computing", "physics", "biology", "chemistry", "survival", "communication", "navigation"]),
+  "Les 9 Capacités sont couvertes une fois par les Améliorations additionnelles d’Avantage"
+);
 
 assert.equal(EXTRA_MISSIONS.length, 18, "18 Missions additionnelles attendues");
 assert.equal(EXTRA_STRUCTURES.length, 18, "18 Structures additionnelles de récompense attendues");
