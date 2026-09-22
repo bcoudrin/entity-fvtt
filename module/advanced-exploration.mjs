@@ -1,5 +1,6 @@
 import { SYSTEM_ID } from "./constants.mjs";
 import { ADVANCED_EXPLORATION_TABLES, ALIEN_LIFE_COLUMNS } from "./data/advanced-exploration-tables.mjs";
+import { EXTRA_ORACLE_TABLES } from "./data/extras-oracle-tables.mjs";
 import { appendJournalEntry } from "./journal.mjs";
 import { resolveRangedEntry } from "./workflow-rules.mjs";
 
@@ -60,7 +61,7 @@ async function postOracle(actor, title, body) {
 }
 
 async function rollTableEntry(tableKey) {
-  const table = ADVANCED_EXPLORATION_TABLES[tableKey];
+  const table = ADVANCED_EXPLORATION_TABLES[tableKey] || EXTRA_ORACLE_TABLES[tableKey];
   if (!table) return null;
   const roll = await new Roll(table.formula || "1d100").evaluate();
   const entry = resolveRangedEntry(table.entries, Number(roll.total));
@@ -128,7 +129,7 @@ export async function scanDestinationStructure(actor) {
 
 export async function rollAdvancedExplorationTable(actor, tableKey) {
   if (!actor || actor.type !== "pia") return false;
-  const table = ADVANCED_EXPLORATION_TABLES[tableKey];
+  const table = ADVANCED_EXPLORATION_TABLES[tableKey] || EXTRA_ORACLE_TABLES[tableKey];
   if (!table) return false;
 
   const result = await rollTableEntry(tableKey);
